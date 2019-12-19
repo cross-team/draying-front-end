@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Input } from 'reactstrap'
-
-import FormValidator from '../utils/form-validator.js/index.js.js'
+import FormValidator from '../utils/form-validator'
 
 function Login({ login }) {
   const [state, setState] = useState({
@@ -74,7 +72,7 @@ function Login({ login }) {
           <form className="mb-3" name="formLogin" onSubmit={onSubmit}>
             <div className="form-group">
               <div className="input-group with-focus">
-                <Input
+                <input
                   type="email"
                   name="email"
                   className="border-right-0"
@@ -104,7 +102,7 @@ function Login({ login }) {
             </div>
             <div className="form-group">
               <div className="input-group with-focus">
-                <Input
+                <input
                   type="password"
                   id="id-password"
                   name="password"
