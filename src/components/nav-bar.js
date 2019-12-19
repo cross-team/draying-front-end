@@ -22,10 +22,10 @@ export default () => {
       <nav>
         <Link to="/">Home</Link>
         {` `}
-        <Link to="/app/profile">Profile</Link>
-        {` `}
         {isLoggedIn() ? (
           <>
+            <Link to="/app/profile">Profile | </Link>
+            <Link to="/app/dispatch">Dispatch | </Link>
             <Link
               href="/"
               onClick={event => {
@@ -35,7 +35,6 @@ export default () => {
             >
               Logout
             </Link>
-            <Link to="/app/dispatch">Dispatch</Link>
           </>
         ) : null}
       </nav>
