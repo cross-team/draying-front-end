@@ -20,7 +20,7 @@ export default () => {
     >
       <span>{content.message}</span>
       <nav>
-        <Link to="/">Home</Link>
+        <Link to="/">Home | </Link>
         {` `}
         {isLoggedIn() ? (
           <>
