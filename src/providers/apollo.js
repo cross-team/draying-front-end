@@ -8,13 +8,13 @@ import { resolvers, typeDefs } from '../resolvers'
 import { getUser } from '../services/auth'
 
 const cache = new InMemoryCache()
-const hasToken = !!getUser().token
+// const hasToken = !!getUser().token
 const client = new ApolloClient({
   cache,
   link: new HttpLink({
     uri: process.env.MIDDLE_END_URL || 'https://draying.herokuapp.com/',
     headers: {
-      authorization: hasToken ? `Bearer ${getUser().token}` : '',
+      // authorization: hasToken ? `Bearer ${getUser().token}` : '',
       'client-name': 'Draying.io [web]',
       'client-version': '1.0.0',
     },
