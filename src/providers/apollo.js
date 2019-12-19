@@ -12,7 +12,7 @@ const hasToken = !!getUser().token
 const client = new ApolloClient({
   cache,
   link: new HttpLink({
-    uri: process.env.MIDDLE_END_URL || 'https://draying.herokuapp.com/graphql',
+    uri: process.env.MIDDLE_END_URL || 'https://draying.herokuapp.com/',
     headers: {
       authorization: hasToken ? `Bearer ${getUser().token}` : '',
       'client-name': 'Draying.io [web]',
