@@ -27,7 +27,7 @@ export default function Dispatch() {
     <Grid container spacing={1}>
       {drayings && drayings.length > 0
         ? drayings.map(draying => (
-            <Grid item xs={3}>
+            <Grid item xs={6} sm={4} md={3}>
               <DrayingCard draying={draying} />
             </Grid>
           ))
