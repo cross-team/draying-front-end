@@ -136,11 +136,11 @@ function Login({ login }) {
                   <span className="fa fa-check"></span>Remember Me
                 </label>
               </div>
-              <div className="float-right">
+              {/* <div className="float-right">
                 <Link to="recover" className="text-muted">
                   Forgot your password?
                 </Link>
-              </div>
+              </div> */}
             </div>
             <button className="btn btn-block btn-primary mt-3" type="submit">
               Login
