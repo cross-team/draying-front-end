@@ -1,10 +1,11 @@
 import React from 'react'
 import NavBar from './nav-bar'
+import Container from '@material-ui/core/Container'
 
 const Layout = ({ children }) => (
-  <div className="container">
+  <Container maxWidth="lg">
     <NavBar />
     {children}
-  </div>
+  </Container>
 )
 export default Layout

@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import DrayingCard from './draying-card'
+import Grid from '@material-ui/core/Grid'
 
 export const GET_ALL_DRAYINGS = gql`
   query GetAllDrayings {
@@ -23,10 +24,14 @@ export default function Dispatch() {
   if (error) return <p>ERROR: {error.message}</p>
   const drayings = data.drayings ? data.drayings.drayings || [] : []
   return (
-    <>
+    <Grid container spacing={1}>
       {drayings && drayings.length > 0
-        ? drayings.map(draying => <DrayingCard draying={draying} />)
+        ? drayings.map(draying => (
+            <Grid item xs={3}>
+              <DrayingCard draying={draying} />
+            </Grid>
+          ))
         : ''}
-    </>
+    </Grid>
   )
 }

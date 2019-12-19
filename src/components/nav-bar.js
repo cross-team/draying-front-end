@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, navigate } from 'gatsby'
 import { isLoggedIn, logout } from '../services/auth'
+import Button from '@material-ui/core/Button'
 
 export default () => {
   const content = { message: '', login: true }
@@ -20,12 +21,18 @@ export default () => {
     >
       <span>{content.message}</span>
       <nav>
-        <Link to="/">Home | </Link>
+        <Link to="/">
+          <Button>Home</Button>
+        </Link>
         {` `}
         {isLoggedIn() ? (
           <>
-            <Link to="/app/profile">Profile | </Link>
-            <Link to="/app/dispatch">Dispatch | </Link>
+            <Link to="/app/profile">
+              <Button>Profile</Button>
+            </Link>
+            <Link to="/app/dispatch">
+              <Button>Dispatch</Button>
+            </Link>
             <Link
               to="/"
               onClick={event => {
@@ -33,7 +40,7 @@ export default () => {
                 logout(() => navigate(`/app/login`))
               }}
             >
-              Logout
+              <Button>Logout</Button>
             </Link>
           </>
         ) : null}

@@ -1,12 +1,14 @@
 import React from 'react'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 
 export default function DrayingCard({ draying }) {
   return (
-    <div className="card">
-      <div className="card-body">
+    <Card>
+      <CardContent>
         <p>Draying ID: {draying.id}</p>
         <p>Order ID: {draying.order.id}</p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
