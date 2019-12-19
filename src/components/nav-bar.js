@@ -27,7 +27,7 @@ export default () => {
             <Link to="/app/profile">Profile | </Link>
             <Link to="/app/dispatch">Dispatch | </Link>
             <Link
-              href="/"
+              to="/"
               onClick={event => {
                 event.preventDefault()
                 logout(() => navigate(`/app/login`))

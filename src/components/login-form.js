@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
 import FormValidator from '../utils/form-validator'
+import Container from '@material-ui/core/Container'
+import TextField from '@material-ui/core/TextField'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
 
 function Login({ login }) {
   const [state, setState] = useState({
@@ -65,82 +71,64 @@ function Login({ login }) {
     )
   }
   return (
-    <div className="block-center mt-4 wd-xl">
-      <div className="card card-flat">
-        <div className="card-body">
-          <p className="text-center py-2">SIGN IN TO CONTINUE.</p>
-          <form className="mb-3" name="formLogin" onSubmit={onSubmit}>
-            <div className="form-group">
-              <div className="input-group with-focus">
-                <input
-                  type="email"
-                  name="email"
-                  className="border-right-0"
-                  placeholder="Enter email"
-                  invalid={
-                    hasError('formLogin', 'email', 'required') ||
-                    hasError('formLogin', 'email', 'email')
-                  }
-                  onChange={validateOnChange}
-                  data-validate='["required", "email"]'
-                  value={state.formLogin.email}
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text text-muted bg-transparent border-left-0">
-                    <em className="fa fa-envelope"></em>
-                  </span>
-                </div>
-                {hasError('formLogin', 'email', 'required') && (
-                  <span className="invalid-feedback">Field is required</span>
-                )}
-                {hasError('formLogin', 'email', 'email') && (
-                  <span className="invalid-feedback">
-                    Field must be valid email
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="input-group with-focus">
-                <input
-                  type="password"
-                  id="id-password"
-                  name="password"
-                  className="border-right-0"
-                  placeholder="Password"
-                  invalid={hasError('formLogin', 'password', 'required')}
-                  onChange={validateOnChange}
-                  data-validate='["required"]'
-                  value={state.formLogin.password}
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text text-muted bg-transparent border-left-0">
-                    <em className="fa fa-lock"></em>
-                  </span>
-                </div>
-                <span className="invalid-feedback">Field is required</span>
-              </div>
-            </div>
-            <div className="clearfix">
-              <div className="checkbox c-checkbox float-left mt-0">
-                <label>
-                  <input type="checkbox" value="" name="remember" />
-                  <span className="fa fa-check"></span>Remember Me
-                </label>
-              </div>
-              {/* <div className="float-right">
+    <>
+      <Container maxWidth="sm">
+        <Grid container justify="center">
+          <Grid item xs={8} md={6}>
+            <Card>
+              <CardContent>
+                <p className="text-center py-2">SIGN IN TO CONTINUE.</p>
+                <form className="mb-3" name="formLogin" onSubmit={onSubmit}>
+                  <TextField
+                    id="email"
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="Enter email"
+                    error={
+                      hasError('formLogin', 'email', 'required') ||
+                      hasError('formLogin', 'email', 'email')
+                    }
+                    onChange={validateOnChange}
+                    value={state.formLogin.email}
+                    fullWidth
+                  />
+                  <TextField
+                    type="password"
+                    id="id-password"
+                    name="password"
+                    required
+                    className="border-right-0"
+                    placeholder="Password"
+                    invalid={hasError('formLogin', 'password', 'required')}
+                    onChange={validateOnChange}
+                    value={state.formLogin.password}
+                    fullWidth
+                  />
+
+                  <div className="clearfix">
+                    <div className="checkbox c-checkbox float-left mt-0">
+                      <label>
+                        <input type="checkbox" value="" name="remember" />
+                        <span className="fa fa-check"></span>Remember Me
+                      </label>
+                    </div>
+                    {/* <div className="float-right">
                 <Link to="recover" className="text-muted">
                   Forgot your password?
                 </Link>
               </div> */}
-            </div>
-            <button className="btn btn-block btn-primary mt-3" type="submit">
-              Login
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+                  </div>
+                  <Button variant="contained" type="submit">
+                    Login
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   )
 }
 
