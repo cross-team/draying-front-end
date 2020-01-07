@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  iconButton: {
+    color: theme.palette.primary.contrastText,
   }
 }))
 
@@ -52,7 +55,7 @@ export default function NavBar() {
   return (
     <AppBar>
       <Toolbar className={classes.toolbar}>
-        <IconButton onClick={toggleDrawer(true)}>
+        <IconButton onClick={toggleDrawer(true)} className={classes.iconButton}>
           <MenuIcon />
         </IconButton>
         <Tabs value={tab} onChange={handleChange}>
@@ -60,7 +63,7 @@ export default function NavBar() {
           <Tab label='ORDERS' icon={<TruckIcon />} />
           <Tab label='CLIENTS' icon={<TruckIcon />} />
         </Tabs>
-        <Avatar onClick={handleClick}>IO</Avatar>
+        <Avatar onClick={handleClick}>AB</Avatar>
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

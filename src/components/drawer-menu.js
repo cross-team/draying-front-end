@@ -12,8 +12,7 @@ import MoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
-    maxWidth: 360,
+    width: '256px',
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -50,8 +49,7 @@ export default function DrawerMenu(props) {
 
   return (
     <Drawer open={props.open} onClose={props.toggleDrawer(false)}>
-      <List>
-
+      <List className={classes.root}>
         <ListItem button onClick={handleDispatching}>
           <ListItemText primary="Dispatching" />
           {dispatching ? <LessIcon /> : <MoreIcon />}
@@ -66,7 +64,6 @@ export default function DrawerMenu(props) {
             </ListItem>
           </List>
         </Collapse>
-
         <ListItem button onClick={handleDrivers}>
           <ListItemText primary="Drivers" />
           {drivers ? <LessIcon /> : <MoreIcon />}
@@ -87,7 +84,6 @@ export default function DrawerMenu(props) {
             </ListItem>
           </List>
         </Collapse>
-
         <ListItem button onClick={handleOrders}>
           <ListItemText primary="Orders" />
           {orders ? <LessIcon /> : <MoreIcon />}
@@ -105,7 +101,6 @@ export default function DrawerMenu(props) {
             </ListItem>
           </List>
         </Collapse>
-
         <ListItem button onClick={handleClients}>
           <ListItemText primary="Clients" />
           {clients ? <LessIcon /> : <MoreIcon />}
@@ -126,7 +121,6 @@ export default function DrawerMenu(props) {
             </ListItem>
           </List>
         </Collapse>
-
         <ListItem button onClick={handlePreferences}>
           <ListItemText primary="Preferences" />
           {preferences ? <LessIcon /> : <MoreIcon />}
@@ -153,7 +147,6 @@ export default function DrawerMenu(props) {
             </ListItem>
           </List>
         </Collapse>
-
       </List>
     </Drawer>
   )
