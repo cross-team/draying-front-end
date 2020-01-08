@@ -20,10 +20,10 @@ jobs:
         npm run test --if-present
     - name: Azure Static Website Deploy
       uses: bacongobbler/azure-blob-storage-upload@v1.0.0
-        with:
-          source_dir: ./public
-          container_name: $web
-          connection_string: ${{ secrets.ConnectionString }}
+      with:
+        source_dir: ./public
+        container_name: $web
+        connection_string: ${{ secrets.ConnectionString }}
 #       uses: feeloor/azure-static-website-deploy@v0.1.0
 #       with:
 #         SOURCE_DIR: "./public"
