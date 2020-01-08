@@ -17,7 +17,7 @@ export default () => (
         </>
       ) : (
         <>
-          You should
+          You should first
           <Link to="/app/login">
             <Button variant="contained">Log in</Button>
           </Link>
