@@ -11,7 +11,7 @@ export default () => (
       {isLoggedIn() ? (
         <>
           You are logged in, so check your{' '}
-          <Link to="/app/profile">
+          <Link to="/app/dispatch">
             <Button variant="contained">profile</Button>
           </Link>
         </>
