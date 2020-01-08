@@ -13,6 +13,7 @@ module.exports = {
     title: `Draying io`,
     description: `Draying io description`,
     author: `@cross.team`,
+    lang: `en`,
   },
   plugins: [
     {
@@ -40,5 +41,6 @@ module.exports = {
     `gatsby-plugin-offline`,
     `@cross.team/gatsby-theme-material-ui`,
     `@cross.team/gatsby-theme-eslint`,
+    `gatsby-plugin-react-helmet`,
   ],
 }

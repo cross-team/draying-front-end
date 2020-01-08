@@ -55,7 +55,7 @@ export default function NavBar() {
   return (
     <AppBar>
       <Toolbar className={classes.toolbar}>
-        <IconButton onClick={toggleDrawer(true)} className={classes.iconButton}>
+        <IconButton onClick={toggleDrawer(true)} className={classes.iconButton} aria-label='Menu Button'>
           <MenuIcon />
         </IconButton>
         <Tabs value={tab} onChange={handleChange}>
