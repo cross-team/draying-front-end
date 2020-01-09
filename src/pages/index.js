@@ -10,17 +10,17 @@ export default () => (
     <p>
       {isLoggedIn() ? (
         <>
-          You are logged in, so check your{' '}
+          You are logged in, check your
           <Link to="/app/profile">
             <Button variant="contained">profile</Button>
           </Link>
         </>
       ) : (
         <>
-          You should{' '}
+          You should first
           <Link to="/app/login">
             <Button variant="contained">Log in</Button>
-          </Link>{' '}
+          </Link>
           to see restricted content
         </>
       )}
