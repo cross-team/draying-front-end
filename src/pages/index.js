@@ -2,13 +2,13 @@ import React from 'react'
 import { Link } from 'gatsby'
 import { isLoggedIn, getUser } from '../services/auth'
 import Login from '../components/login'
-import Dispatch from '../components/dispatch'
+import Drivers from '../components/drivers'
 import PrivateRoute from '../components/private-route'
 
 export default () => (
   <>
     {isLoggedIn() ? (
-      <PrivateRoute path="/app/dispatch" component={Dispatch} />
+      <PrivateRoute path="/app/drivers" component={Drivers} />
     ) : (
       <Login />
     )}

@@ -21,12 +21,12 @@ export default function Login() {
       setUser({ token, email })
       client.writeData({ data: { isLoggedIn: true } })
       if (isLoggedIn()) {
-        navigate(`/app/dispatch`)
+        navigate(`/app/drivers`)
       }
     },
   })
   if (isLoggedIn()) {
-    navigate(`/app/dispatch`)
+    navigate(`/app/drivers`)
   }
   if (loading) return <>loading...</>
   if (error) return <p>An error occurred</p>
