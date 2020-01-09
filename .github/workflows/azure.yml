@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env: 
+        MIDDLE_END_URL: ${{ secrets.MIDDLE_END_URL }}
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
