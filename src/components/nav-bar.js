@@ -17,6 +17,9 @@ import MenuIcon from '@material-ui/icons/Menu'
 import DrawerMenu from './drawer-menu'
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'sticky'
+  },
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -53,7 +56,7 @@ export default function NavBar() {
   };
 
   return (
-    <AppBar>
+    <AppBar className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <IconButton onClick={toggleDrawer(true)} className={classes.iconButton} aria-label='Menu Button'>
           <MenuIcon />
