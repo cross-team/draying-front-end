@@ -2,7 +2,6 @@
 
 Brief description of what this PR does, and why it is needed.
 
-Connects [ETM-XXXX](http://jira.noam.corp.frk.com:8080/browse/ETM-XXX)
 Closes #XX
 
  ### Demo
