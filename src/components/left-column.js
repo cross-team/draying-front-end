@@ -3,7 +3,6 @@ import { Paper, makeStyles, Card } from '@material-ui/core/'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '256px',
     height: '100%'
   }
 }))
