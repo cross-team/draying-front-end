@@ -5,8 +5,10 @@ import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
+import { globalHistory as history } from '@reach/router'
 
 function Login({ login }) {
+  const { location: { hostname } } = history
   const [state, setState] = useState({
     formLogin: {
       email: '',
@@ -44,6 +46,7 @@ function Login({ login }) {
         user: {
           email: state.formLogin.email,
           password: state.formLogin.password,
+          host: hostname
         },
       },
     })
