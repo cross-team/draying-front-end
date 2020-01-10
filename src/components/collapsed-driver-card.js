@@ -33,6 +33,7 @@ const CollapsedDriverCard = ({ driver }) => {
   const classes = useStyles()
 
   fullName = `${driver.FirstName} ${driver.LastName}`
+  capacity = `${Math.round(driver.Capacity)}%`
 
   return (
     <Card className={classes.root}>
