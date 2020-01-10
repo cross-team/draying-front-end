@@ -36,8 +36,6 @@ function Login({ login }) {
         ...state[form.name],
       },
     })
-
-    console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
     e.preventDefault()
     login({
       variables: {
@@ -49,15 +47,6 @@ function Login({ login }) {
     })
   }
 
-  /* Simplify error check */
-  const hasError = (formName, inputName, method) => {
-    return (
-      state[formName] &&
-      state[formName].errors &&
-      state[formName].errors[inputName] &&
-      state[formName].errors[inputName][method]
-    )
-  }
   return (
     <>
       <Grid container justify="center">
