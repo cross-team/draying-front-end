@@ -31,11 +31,14 @@ const useStyles = makeStyles(theme => ({
 
 const CollapsedDriverCard = ({ driver }) => {
   const classes = useStyles()
+
+  fullName = `${driver.FirstName} ${driver.LastName}`
+
   return (
     <Card className={classes.root}>
-      <Avatar className={classes.margin}/>
+      <Avatar className={classes.margin} src={driver.Avatar}/>
       <div className={classes.dataContainer}>
-        <Typography>Firstname Lastname</Typography>
+        <Typography>{fullName}</Typography>
         <div className={classes.chipContainer}>
           <Chip label='Capacity'/>
           <div>
