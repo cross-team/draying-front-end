@@ -1,4 +1,4 @@
-name: Linux_Node_Workflow_ScmCred
+name: Pull_Request_Tests
 
 on:
   pull_request:
