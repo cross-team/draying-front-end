@@ -1,11 +1,11 @@
 import React from 'react'
 import { render, fireEvent } from "@testing-library/react"
-import { MockedProvider } from "@apollo/client/testing"
+import { MockedProvider } from "@apollo/react-testing"
 import Login, { LOGIN_USER } from '../login'
 
 describe( 'login', () => {
-  it('logs in correctly', () => {
-    
+  it('logs in correctly', async () => {
+
     const loginUser = { token: 'pweiorughfeil', email: 'person@email.com' }
 
     const mocks = [
@@ -16,7 +16,7 @@ describe( 'login', () => {
         result: { data: { loginUser } },
       },
     ]
-    
+
     const {
       findByPlaceholderText,
       findByText,
@@ -26,20 +26,22 @@ describe( 'login', () => {
       </MockedProvider>
     )
 
-    const emailInput = findByPlaceholderText(/Enter email/i)
+    const emailInput = await findByPlaceholderText(/Enter email/i)
+
     fireEvent.change(emailInput, {
       target: {
         value: 'person@email.com'
       }
     })
-    const pwordInput = findByPlaceholderText(/Password/i)
+    const pwordInput = await findByPlaceholderText(/Password/i)
     fireEvent.change(emailInput, {
       target: {
         value: 'password'
       }
     })
-    const loginButton = findByText(/Login/i)
+    const loginButton = await findByText(/Login/i)
     fireEvent.click(loginButton)
+
 
   })
 })
