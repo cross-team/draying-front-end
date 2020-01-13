@@ -1,10 +1,9 @@
 import React from 'react'
 import { Router } from '@reach/router'
-import Profile from '../components/profile'
 import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
 import Dispatch from '../components/dispatch'
-import Shell from '../components/screens/shell'
+import Shell from '../components/shell'
 
 const App = () => (
   <Router>
