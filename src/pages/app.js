@@ -3,7 +3,7 @@ import { Router } from '@reach/router'
 import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
 import Dispatch from '../components/dispatch'
-import Shell from '../components/shell'
+import Shell from '../components/columns/shell'
 
 const App = () => (
   <Router>

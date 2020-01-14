@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import DrayingCard from './draying-card'
-import LeftColumn from './left-column'
+import LeftColumn from './columns/left-column'
 import { Grid } from '@material-ui/core/'
 
 export const GET_ALL_DRAYINGS = gql`
