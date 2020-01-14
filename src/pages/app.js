@@ -1,13 +1,14 @@
 import React from 'react'
 import { Router } from '@reach/router'
-import Profile from '../components/profile'
 import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
 import Dispatch from '../components/dispatch'
+import Shell from '../components/columns/shell'
 
 const App = () => (
   <Router>
      <PrivateRoute path="/app/dispatch" component={Dispatch} />
+     <PrivateRoute path="/app/shell" component={Shell} />
      <Login path="/app/login" />
   </Router>
 )
