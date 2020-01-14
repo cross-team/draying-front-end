@@ -20,21 +20,20 @@ const useStyles = makeStyles(theme => ({
 export const GET_COLUMN_STATE = gql`
   query getColumnState {
     columnState @client {
-      middleHidden,
       rightHidden
     }
   }
 `
 
-const MiddleColumn = ({ children }) => {
+const RightColumn = ({ children }) => {
   const classes = useStyles()
-  const { data: { columnState: { middleHidden, rightHidden } } } = useQuery(GET_COLUMN_STATE)
+  const { data: { columnState: { rightHidden } } } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid item xs={12} sm={ rightHidden ? 8 : 4 } hidden={middleHidden} className={classes.item}>
+    <Grid item xs={12} sm={4} hidden={rightHidden} className={classes.item}>
       <Paper className={classes.column}>
         {children}
       </Paper>
     </Grid>
   )
 }
-export default MiddleColumn
+export default RightColumn
