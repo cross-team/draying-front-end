@@ -20,7 +20,7 @@ export default function Login() {
   const client = useApolloClient()
   const [userMessage, setUserMessage] = useState('')
   const [login, { loading, error }] = useMutation(LOGIN_USER, {
-    onCompleted({ login: { token, email } }) {
+    onCompleted({ login: { token, email, message } }) {
       setUser({ token, email })
       client.writeData({ data: { isLoggedIn: true } })
       if (isLoggedIn()) {
