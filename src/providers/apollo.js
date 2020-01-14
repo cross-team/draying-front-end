@@ -27,6 +27,12 @@ const client = new ApolloClient({
 cache.writeData({
   data: {
     isLoggedIn: !!getUser(),
+    columnState: {
+      __typename: 'ColumnState',
+      leftHidden: false,
+      middleHidden: false,
+      rightHidden: true
+    }
   },
 })
 

@@ -12,13 +12,14 @@
     "serve": "gatsby serve",
     "build:serve": "gatsby clean && gatsby build && gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@cross.team/gatsby-theme-eslint": "^1.0.1",
     "@cross.team/gatsby-theme-fontawesome": "^1.0.0",
     "@cross.team/gatsby-theme-material-ui": "^1.1.0",
+    "@material-ui/styles": "^4.8.2",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.16",
@@ -27,16 +28,19 @@
     "gatsby-plugin-offline": "^3.0.29",
     "gatsby-plugin-react-axe": "^0.3.0",
     "gatsby-plugin-react-helmet": "^3.1.18",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-helmet": "^5.2.1",
-    "validator": "^12.1.0"
+    "react-helmet": "^5.2.1"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "apollo": "^2.21.2",
+    "apollo-link": "^1.2.13",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "prettier": "^1.19.1"
   },
   "repository": {

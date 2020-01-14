@@ -8,10 +8,8 @@ import LeftColumn from './left-column'
 
 export const GET_ALL_DRAYINGS = gql`
   query GetAllDrayings {
-    drayings {
-      cursor
-      hasMore
-      drayings {
+    drayings(last: 7) {
+      nodes {
         id
         order {
           id
@@ -24,7 +22,7 @@ export default function Drivers() {
   const { data, loading, error } = useQuery(GET_ALL_DRAYINGS)
   if (loading) return <>Loading...</>
   if (error) return <p>ERROR: {error.message}</p>
-  const drayings = data.drayings ? data.drayings.drayings || [] : []
+  const drayings = data.drayings ? data.drayings.nodes || [] : []
   return (
     <Grid container spacing={0}>
       <Grid item xs={4}>

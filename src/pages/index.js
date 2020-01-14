@@ -1,8 +1,7 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import { isLoggedIn, getUser } from '../services/auth'
-import Login from '../components/login'
+import { isLoggedIn } from '../services/auth'
 import Drivers from '../components/drivers'
+import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
 
 export default () => (
