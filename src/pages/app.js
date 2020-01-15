@@ -2,7 +2,7 @@ import React from 'react'
 import { Router } from '@reach/router'
 import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
-import Drivers from '../components/drivers'
+import Drivers from '../components/drivers/drivers'
 
 const App = () => (
   <Router>
