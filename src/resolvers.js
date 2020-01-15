@@ -17,6 +17,10 @@ export const typeDefs = gql`
     rightHidden: Boolean!
   }
 
+  type selectedDriver {
+    id: ID!
+  }
+
 `
 
 export const resolvers = {

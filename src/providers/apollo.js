@@ -27,6 +27,9 @@ const client = new ApolloClient({
 cache.writeData({
   data: {
     isLoggedIn: !!getUser(),
+    selectedDriver: {
+      id: '',
+    },
     columnState: {
       __typename: 'ColumnState',
       leftHidden: false,
