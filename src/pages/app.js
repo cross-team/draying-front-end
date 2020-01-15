@@ -2,13 +2,11 @@ import React from 'react'
 import { Router } from '@reach/router'
 import Login from '../components/login/login'
 import PrivateRoute from '../components/private-route'
-import Dispatch from '../components/dispatch'
-import Shell from '../components/columns/shell'
+import Drivers from '../components/drivers/drivers'
 
 const App = () => (
   <Router>
-     <PrivateRoute path="/app/dispatch" component={Dispatch} />
-     <PrivateRoute path="/app/shell" component={Shell} />
+     <PrivateRoute path="/app/drivers" component={Drivers} />
      <Login path="/app/login" />
   </Router>
 )
