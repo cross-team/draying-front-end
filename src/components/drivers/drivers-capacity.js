@@ -6,8 +6,8 @@ import Loading from '../loading'
 import CollapsedDriverCard from './collapsed-driver-card'
 
 export const GET_DRIVERS = gql`
-  query allDriversCapacity($first: Int) {
-    drivers: driversCapacity(first: $first) {
+  query allDriversCapacity($first: Int, $date: String) {
+    drivers: driversCapacity(first: $first, date: $date) {
       nodes {
         id
         firstName
@@ -25,7 +25,9 @@ export const GET_DRIVERS = gql`
 `
 
 export default function DriversCapacity() {
-  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25 } })
+  const today = new Date(2020, 0, 15)
+  const date = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`
+  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: date } })
 
   if ( loading ) {
     return <Loading />

@@ -6,7 +6,10 @@ import {
   Typography,
   Chip
 } from '@material-ui/core/'
-import { ChevronRight } from '@material-ui/icons/'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleRight } from '@fortawesome/pro-light-svg-icons/'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,8 +41,19 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+export const SET_DISPATCH_STATE = gql`
+  mutation setDispatchState($selectedDriver: ID) {
+    setDispatchState(selectedDriver: $selectedDriver) @client {
+      selectedDriver
+    }
+  }
+`
+
 const CollapsedDriverCard = ({ driver }) => {
   const classes = useStyles()
+
+  const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
+
   const fullName = `${driver.firstName} ${driver.lastName}`
   const initials = `${driver.firstName[0].toUpperCase()}${driver.lastName[0].toUpperCase()}`
   const capacity = Math.round(100 - driver.capacity)
@@ -58,10 +72,9 @@ const CollapsedDriverCard = ({ driver }) => {
     currentETA = new Date(driver.trip.currentDestination.estimatedScheduledCompletedAt)
     minutes = Math.round((currentETA.getTime() - Date.now())/60000)
   }
-  console.log(currentETA)
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={() => setDispatchState({variables: { selectedDriver: driver.id }})}>
       <Avatar className={classes.margin}>{initials}</Avatar>
       <div className={classes.dataContainer}>
         <Typography>{fullName}</Typography>
@@ -76,7 +89,7 @@ const CollapsedDriverCard = ({ driver }) => {
           </div>
         </div>
       </div>
-      <ChevronRight className={classes.margin} />
+      <FontAwesomeIcon icon={faAngleRight} className={classes.margin} />
     </Card>
   )
 }

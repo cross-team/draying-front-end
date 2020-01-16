@@ -5,10 +5,12 @@ export const typeDefs = gql`
   extend type Query {
     isLoggedIn: Boolean!
     columnState: ColumnState!
+    dispatchState: DispatchState!
   }
 
   extend type Mutation {
     setColumnState(hideLeft: Boolean, hideMiddle: Boolean, hideRight: Boolean): ColumnState!
+    setDispatchState(selectedDriver: ID): DispatchState!
   }
 
   type ColumnState {
@@ -17,8 +19,8 @@ export const typeDefs = gql`
     rightHidden: Boolean!
   }
 
-  type selectedDriver {
-    id: ID!
+  type DispatchState {
+    selectedDriver: ID!
   }
 
 `
@@ -40,6 +42,15 @@ export const resolvers = {
         columnState: {
           __typename: 'ColumnState',
           ...data,
+        }
+      }})
+      return null;
+    },
+    setDispatchState: (_root, { selectedDriver }, { cache }) => {
+      cache.writeData({ data: {
+        dispatchState: {
+          __typename: 'DispatchState',
+          selectedDriver: selectedDriver,
         }
       }})
       return null;
