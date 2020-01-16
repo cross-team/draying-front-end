@@ -44,6 +44,8 @@ export const resolvers = {
           ...data,
         }
       }})
+      
+
       return null;
     },
     setDispatchState: (_root, { selectedDriver }, { cache }) => {
