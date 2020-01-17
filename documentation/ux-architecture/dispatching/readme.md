@@ -30,9 +30,9 @@ Route - all of a driver's trips in a single day
 
 The aim is to define what actions, types, statuses, stages and other attributes apply to what entities.  
 
-Trip --> Container
-Delivery Location --> Container (i.e. not leg or trip)
-*Add Stop --> Trip (Needs to be confirmed. Is the delivery location modified?)*
+- Trip --> Container
+- elivery Location --> Container (i.e. not leg or trip)
+- *Add Stop --> Trip (Needs to be confirmed. Is the delivery location modified?)*
 
 ## Actions
 

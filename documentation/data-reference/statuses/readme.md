@@ -9,6 +9,30 @@
 
 *We should define whether these are stages or statuses or identify another term for these 'master' stages.  I'm going to call them **master stages** in the meantime for clarity.
 
+### New List - Added 1/17/2020**
+
+Reference: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages or [containerstages.json](../api-reference/JSON/containerstages.json)
+
+Items updated 1/17/2020 are **in bold.**  Ids in new list are equivalent to ids in old list.
+
+Master Stage | id
+--- | ---
+CANCELED | 1 |
+**PENDING** | 2 |
+**CONFIGURED** | 3 |
+PLANNED | 4 |
+**TO DISPATCH** | 5 |
+DISPATCHED | 6 |
+**STARTED/DELIVERED** | 7 |
+OPEN | 8 |
+COMPLETED | 9 |
+REVIEWED | 10 |
+INVOICED | 11 |
+PARTIAL_PAID | 12 |
+PAID | 13 |
+
+### Old List
+
 Master Stage | id
 --- | ---
 CANCELED | 1 |
@@ -42,8 +66,10 @@ CANCELED | 1 |
 INCOMPLETED | 2 |
 PENDING | 3 |
 PLANNED | 4 |
-PRE_SCHEDULED | 5 | To dispatch
-DISPATCHED | 6 | Yard Before, Client, Yard After
+PRE_SCHEDULED | 5 | To Dispatch
+DISPATCHED | 6 | Yard Before
+DISPATCHED | 6 | Client
+DISPATCHED | 6 | Yard After
 DELIVERED | 7 |
 OPEN | 8 |
 COMPLETED | 9 | Completed
@@ -72,10 +98,6 @@ PAID | 12 |
 
 ## Trip Status
 
-*The assumption is that the trip status is applied to the trip, not the container.  Needs to be confirmed.*
-
-*How trip status is mapped needs to be defined.  Is it related to master stage?*
-
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses
 
 Reference [tripstatuses.json](../api-reference/JSON/tripstatuses.json)
@@ -84,11 +106,11 @@ id | Name
 --- | ---
 1 | Cancel
 2 | Lost
-3 | To dispatch
+3 | To dispatch *not used*
 4 | Pre-dispatch
 5 | In movement
 6 | Completed
-7 | Reviewed
+7 | Reviewed *not used*
 
 ### Container Port Status
 

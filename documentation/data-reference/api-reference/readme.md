@@ -1,55 +1,29 @@
 # API Reference
 
+Note: it is important to distinguish between a data type and a data point.  Example:
+
+- Current Location Type: "Yard"
+- Current Location Name(?): Jim's Yard
+- Current Location Address(?): 555 Main Street
+
 ## Document To-Do
 
 - [ ] Add images of old designs with markup referencing endpoints - @jas0nmjames
 - [ ] Add images of new designs with endpoints mapped - @jas0nmjames
 
-## Drayings
+## Drayings (Containers)
 
 ### Draying
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/draying/
-
-Endpoints: See [Draying.json](./JSON/Draying.json)
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/draying/ or see [Draying.json](./JSON/Draying.json)
 
 ### Draying/ActionLocation
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation
-
-Endpoints: See [ActionLocation.json](./JSON/ActionLocation.json)
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation or see [ActionLocation.json](./JSON/ActionLocation.json)
 
 ### Draying/Dispatching
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching
-
-Endpoints: See [Dispatching.json](./JSON/Dispatching.json)
-
-### Trip Actions
-
-API: 
-
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions or see [tripactions.json](./JSON/tripactions.json)
-
-id | Variable Name | Short Name
---- | --- | ---
-1 | Pre-Pull | PP
-2 | Full to Yard | FY
-3 | Empty to Yard | EY
-4 | Live Load | Live L
-5 | Live Unload | Live U
-6 | Drop | Drop
-7 | Yard Stop | YS
-8 | Return to Terminal | RT
-9 | Return to Depot | RD
-10 | Drop Extra Stop | EXD
-11 | Live Extra Stop | EXL
-12 | Container to Yard | CTY
-13 | Skip | SK
-14 | Street Turn | ST
-15 | Pick At Client | PK
-16 | Pick And Return | P&R
-17 | Return From Client | RfC
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching or see [Dispatching.json](./JSON/Dispatching.json)
 
 ### Location Actions
 
@@ -78,12 +52,58 @@ id | Name
   - If the first location ("Location A" in the first leg) in the trip is "start day", the trip card starting location **is NOT** "Location A".  It is Location B, or whichever next location has a location action of 1-6.
 - After a main action (location actions 1-6) is started, the next location action should be the trip's endpoint, or destination.  *this point may need some clarity*
 
-### Appointment Locations?
+## Trips
 
-TBD
-TBD
-TBD
+### Trip Actions
 
+API: 
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions or see [tripactions.json](./JSON/tripactions.json)
+
+id | Type Name | Short Name
+--- | --- | ---
+1 | Pre-Pull | PP
+2 | Full to Yard | FY
+3 | Empty to Yard | EY
+4 | Live Load | Live L
+5 | Live Unload | Live U
+6 | Drop | Drop
+7 | Yard Stop | YS
+8 | Return to Terminal | RT
+9 | Return to Depot | RD
+10 | Drop Extra Stop | EXD
+11 | Live Extra Stop | EXL
+12 | Container to Yard | CTY
+13 | Skip | SK
+14 | Street Turn | ST
+15 | Pick At Client | PK
+16 | Pick And Return | P&R
+17 | Return From Client | RfC
+
+### Appointment Locations
+
+#### Appointment Location Types
+
+API: 
+
+Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmentlocationtypes or [appointmentlocationtypes.json](./JSON/appointmentlocationtypes.json)
+
+id | Type Name | Short Name
+--- | --- | ---
+1 | Terminal | T
+2 | Client | C
+3 | Return Terminal | RT
+
+#### Appointment Types
+
+API: 
+
+Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmenttypes or [appointmenttypes.json](./JSON/appointmenttypes.json)
+
+id | Type Name | Short Name
+--- | --- | ---
+1 | Delivery | DL
+2 | Pickup | PU
 
 ## Drivers
 
@@ -112,17 +132,11 @@ Endpoints
 
 ### Delivery locations
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/
-
-### Delivery Location Types
-
 *Is this related to the container or the trip?*
 
-API: 
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes
-
-Or see [locationtypes.json](./JSON/locationtypes.json).
+Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
 
 id | Variable (Name, Description)
 --- | ---
@@ -158,24 +172,26 @@ Endpoints
 
 API: 
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostReasons
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostReasons
 
-- Waiting Time
-- Container Cleaning
-- Scale Cost
-- Other Costs
-- Storage
-- Terminal Fees
-- Damaged Chassis
-- Damaged Container
-- Terminal Fines
-- Other Costs
+Type |
+--- |
+Waiting Time |
+Container Cleaning |
+Scale Cost |
+Other Costs |
+Storage |
+Terminal Fees |
+Damaged Chassis |
+Damaged Container |
+Terminal Fines |
+Other Costs |
 
 ### Cost Types
 
 API: 
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostTypes
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostTypes
 
 - Trip
 - Container
@@ -188,7 +204,7 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Company/me
 
 API: 
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/contacttypes
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/contacttypes
 
 - Ops / Logistics
 - Accounting
@@ -198,7 +214,7 @@ Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/contacttypes
 
 API: 
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/phonetypes
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/phonetypes
 
 - Mobile
 - Landline

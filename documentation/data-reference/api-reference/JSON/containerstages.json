@@ -1,0 +1,58 @@
+{
+  "status": true,
+  "data": [
+    {
+      "ContainerStageId": 1,
+      "Name": "Cancelled"
+    },
+    {
+      "ContainerStageId": 2,
+      "Name": "Pending"
+    },
+    {
+      "ContainerStageId": 3,
+      "Name": "Configured"
+    },
+    {
+      "ContainerStageId": 4,
+      "Name": "Planned"
+    },
+    {
+      "ContainerStageId": 5,
+      "Name": "To Dispatch"
+    },
+    {
+      "ContainerStageId": 6,
+      "Name": "Dispatched"
+    },
+    {
+      "ContainerStageId": 7,
+      "Name": "Started/Delivered"
+    },
+    {
+      "ContainerStageId": 8,
+      "Name": "Open"
+    },
+    {
+      "ContainerStageId": 9,
+      "Name": "Completed"
+    },
+    {
+      "ContainerStageId": 10,
+      "Name": "Reviewed"
+    },
+    {
+      "ContainerStageId": 11,
+      "Name": "Invoiced"
+    },
+    {
+      "ContainerStageId": 12,
+      "Name": "Partial Paid"
+    },
+    {
+      "ContainerStageId": 13,
+      "Name": "Paid"
+    }
+  ],
+  "message": ""
+}
