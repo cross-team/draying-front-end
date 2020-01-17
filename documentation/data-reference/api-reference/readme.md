@@ -78,6 +78,13 @@ id | Name
   - If the first location ("Location A" in the first leg) in the trip is "start day", the trip card starting location **is NOT** "Location A".  It is Location B, or whichever next location has a location action of 1-6.
 - After a main action (location actions 1-6) is started, the next location action should be the trip's endpoint, or destination.  *this point may need some clarity*
 
+### Appointment Locations?
+
+TBD
+TBD
+TBD
+
+
 ## Drivers
 
 ### Driver
@@ -108,6 +115,8 @@ Endpoints
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/
 
 ### Delivery Location Types
+
+*Is this related to the container or the trip?*
 
 API: 
 
