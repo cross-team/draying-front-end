@@ -1,0 +1,48 @@
+{
+  "status": true,
+  "data": [
+    {
+      "LocationTypeId": 2,
+      "Name": "Client",
+      "Order": 2,
+      "Active": false
+    },
+    {
+      "LocationTypeId": 7,
+      "Name": "Client Street Turn",
+      "Order": 7,
+      "Active": false
+    },
+    {
+      "LocationTypeId": 1,
+      "Name": "Default",
+      "Order": 1,
+      "Active": true
+    },
+    {
+      "LocationTypeId": 4,
+      "Name": "Depot",
+      "Order": 4,
+      "Active": false
+    },
+    {
+      "LocationTypeId": 5,
+      "Name": "Port",
+      "Order": 5,
+      "Active": false
+    },
+    {
+      "LocationTypeId": 6,
+      "Name": "Yard",
+      "Order": 6,
+      "Active": false
+    },
+    {
+      "LocationTypeId": 3,
+      "Name": "Yard",
+      "Order": 3,
+      "Active": false
+    }
+  ],
+  "message": ""
+}
