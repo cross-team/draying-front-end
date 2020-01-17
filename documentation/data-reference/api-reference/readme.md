@@ -27,9 +27,12 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching 
 
 ### Location Actions
 
+- [ ] See screenshot 2:35pm, these are the location lists (leg list)
+- [ ] Add to UI
+
 API: 
 
-Variables: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action or see [Actions.json](./JSON/Actions.json)
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action or see [Actions.json](./JSON/Actions.json)
 
 id | Name
 --- | ---
@@ -80,7 +83,15 @@ id | Type Name | Short Name
 16 | Pick And Return | P&R
 17 | Return From Client | RfC
 
+### Trip Locations
+
+![trip-locations-api]
+
+- [ ] To be further elaborated on
+
 ### Appointment Locations
+
+- Note: in the current UI these are APPT: Appointments.
 
 #### Appointment Location Types
 
@@ -130,17 +141,17 @@ Endpoints
 
 ## Other
 
-### Delivery locations
+### Delivery Locations
 
-*Is this related to the container or the trip?*
+Note: Related to container (not trip or leg)
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
 
-Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
+**Types**: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
 
 id | Variable (Name, Description)
 --- | ---
-1 | Default ***What is this use case?***
+1 | Default
 2 | Client
 3 | Yard, Before Client
 4 | Depot
@@ -218,3 +229,7 @@ Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/phonetypes
 
 - Mobile
 - Landline
+
+<!--- Image Links Reference -->
+
+[trip-locations-api]: ./assets/trip-locations_2020-01-17.png

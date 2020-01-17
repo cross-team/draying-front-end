@@ -13,41 +13,21 @@
 
 Reference: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages or [containerstages.json](../api-reference/JSON/containerstages.json)
 
-Items updated 1/17/2020 are **in bold.**  Ids in new list are equivalent to ids in old list.
-
-Master Stage | id
+Container Stage | id
 --- | ---
 CANCELED | 1 |
-**PENDING** | 2 |
-**CONFIGURED** | 3 |
+PENDING | 2 |
+CONFIGURED | 3 |
 PLANNED | 4 |
-**TO DISPATCH** | 5 |
+TO DISPATCH | 5 |
 DISPATCHED | 6 |
-**STARTED/DELIVERED** | 7 |
+STARTED/DELIVERED | 7 |
 OPEN | 8 |
 COMPLETED | 9 |
 REVIEWED | 10 |
 INVOICED | 11 |
 PARTIAL_PAID | 12 |
 PAID | 13 |
-
-### Old List
-
-Master Stage | id
---- | ---
-CANCELED | 1 |
-INCOMPLETED | 2 |
-PENDING | 3 |
-PLANNED | 4 |
-PRE_SCHEDULED | 5 |
-DISPATCHED | 6 |
-DELIVERED | 7 |
-OPEN | 8 |
-COMPLETED | 9 |
-REVIEWED | 10 |
-INVOICED | 11 |
-PARTIAL_PAID | 12 |
-PAID | 12 ***(Should this be "13"?)*** |
 
 ## Container Stage Based on Master Stage & Location Type
 
@@ -60,7 +40,9 @@ For example
 
 Reference [Delivery Location Types](../api-reference/readme.md#delivery-location-types) in the api-reference readme.
 
-Master Stage | id | Container Stage
+- [ ] Need to update Container Stage list
+
+Container Stage | id | Container Current Location
 --- | --- | ---
 CANCELED | 1 |
 INCOMPLETED | 2 |
@@ -78,9 +60,11 @@ INVOICED | 11 |
 PARTIAL_PAID | 12 |
 PAID | 12 |
 
-## Delivery Order "DO" Status Based on Master Stage
+## Delivery Order "DO" Status Based on Container Stage
 
-Master Stage | id | Container Stage
+- [ ] Need to update Container Stage list
+
+Container Stage | id | Delivery Order Status
 --- | --- | ---
 CANCELED | 1 |
 INCOMPLETED | 2 | On the Sea
@@ -98,6 +82,9 @@ PAID | 12 |
 
 ## Trip Status
 
+- [ ] Include in UI
+- Note: This is the "leg status" column in https://dev-mercuriotransport.azurewebsites.net/Dashboard/DriverPayment 
+
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses
 
 Reference [tripstatuses.json](../api-reference/JSON/tripstatuses.json)
@@ -113,6 +100,8 @@ id | Name
 7 | Reviewed *not used*
 
 ### Container Port Status
+
+- [ ] Include in UI
 
 *How port status is mapped needs to be defined.  Is it related to master stage?*
 

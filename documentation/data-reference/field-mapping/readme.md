@@ -24,6 +24,14 @@ Select a driver to view the full card:
 
 ![full-card]
 
+#### Card Stops Shown
+
+![card-stops-shown]
+
+#### Card Stops Hidden
+
+![card-stops-hidden]
+
 ## New Application Design
 
 <!--- Image Links Reference -->
@@ -31,3 +39,5 @@ Select a driver to view the full card:
 [kanban-card]: ./assets/dev-dispatching-kanban-card.png
 [kanban-card-2]: ./assets/dev-dispatching-kanban-card-2.png
 [full-card]: ./assets/dev-dispatching-full-card.png
+[card-stops-shown]: ./assets/dev-dispatching-card-stops-shown.png
+[card-stops-hidden]: ./assets/dev-dispatching-card-stops-hidden.png

@@ -13,11 +13,14 @@
 │   │   │   │   └── End Location
 ```
 
+- [ ] What's the difference between a booking number and a container number?
+- [ ] A trip's terminal location: difference between import and export?
+
 ### Drivers
 
 ```bash
-├── Driver
-│   └── Route(s)
+├── Driver a.k.a. ______
+│   └── Route(s) a.k.a. Schedule
 │   │   └── Trip(s)
 ```
 
