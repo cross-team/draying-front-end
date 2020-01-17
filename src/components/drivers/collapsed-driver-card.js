@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight } from '@fortawesome/pro-light-svg-icons/'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
@@ -16,6 +16,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
+  },
+  selected: {
+    backgroundColor: '#ebf5ff'
   },
   dataContainer: {
     width: '100%',
@@ -49,10 +52,21 @@ export const SET_DISPATCH_STATE = gql`
   }
 `
 
+export const GET_DISPATCH_STATE = gql`
+  query getDispatchState {
+    dispatchState @client {
+      selectedDriver
+    }
+  }
+`
+
 const CollapsedDriverCard = ({ driver }) => {
   const classes = useStyles()
 
+  const { data: { dispatchState: { selectedDriver } } } = useQuery(GET_DISPATCH_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
+
+  const isSelected = (selectedDriver === driver.id)
 
   const fullName = `${driver.firstName} ${driver.lastName}`
   const initials = `${driver.firstName[0].toUpperCase()}${driver.lastName[0].toUpperCase()}`
@@ -74,7 +88,7 @@ const CollapsedDriverCard = ({ driver }) => {
   }
 
   return (
-    <Card className={classes.root} onClick={() => setDispatchState({variables: { selectedDriver: driver.id }})}>
+    <Card className={`${classes.root} ${isSelected && classes.selected}`} onClick={() => setDispatchState({variables: { selectedDriver: driver.id }})}>
       <Avatar className={classes.margin}>{initials}</Avatar>
       <div className={classes.dataContainer}>
         <Typography>{fullName}</Typography>

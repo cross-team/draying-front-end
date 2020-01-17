@@ -6,6 +6,7 @@ import DriverHeader from './driver-header'
 import DriverTripCard from './driver-trip-card'
 
 // export const GET_DRIVER_TRIPS = gql``
+
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
     dispatchState @client {
@@ -38,10 +39,14 @@ export default function DriverTrip() {
     )
   } */}
 
-  return (
+  return(
     <div className={classes.root}>
-      <DriverHeader />
-      <DriverTripCard />
+      { selectedDriver && (
+        <>
+          <DriverHeader selectedDriver={selectedDriver}/>
+          <DriverTripCard />
+        </>
+      ) }
     </div>
   )
 }

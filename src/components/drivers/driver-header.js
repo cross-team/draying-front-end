@@ -25,13 +25,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const DriverHeader = () => {
+const DriverHeader = ( { selectedDriver } ) => {
   const classes = useStyles()
 
   return (
     <Card className={classes.root}>
       <div className={classes.container}>
-        <Avatar className={classes.margin}>FL</Avatar>
+        <Avatar className={classes.margin}>{ selectedDriver }</Avatar>
         <div>
           <Typography>Firstname Lastname</Typography>
           <Typography variant='caption'>(123)-456-7890</Typography>
