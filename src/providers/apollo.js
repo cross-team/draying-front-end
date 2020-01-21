@@ -30,6 +30,12 @@ cache.writeData({
     dispatchState: {
       __typename: 'DispatchState',
       selectedDriver: '',
+      selectedDate: {
+        __typename: 'Date',
+        day: 0,
+        month: 0,
+        year: 0,
+      },
     },
     columnState: {
       __typename: 'ColumnState',

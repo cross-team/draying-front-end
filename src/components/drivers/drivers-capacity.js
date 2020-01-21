@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import { Typography } from '@material-ui/core/'
 import Loading from '../loading'
 import CollapsedDriverCard from './collapsed-driver-card'
+import FindAndSort from './find-and-sort'
 
 export const GET_DRIVERS = gql`
   query allDriversCapacity($first: Int, $date: String) {
@@ -12,11 +13,13 @@ export const GET_DRIVERS = gql`
         id
         firstName
         lastName
-        capacity
-        pendingTripsCount
-        trip {
-          currentDestination {
-            estimatedScheduledCompletedAt
+        capacityInfo {
+          pendingTripsCount
+          capacity
+          activeTripCapacity {
+            currentDestination {
+              estimatedScheduledCompletedAt
+            }
           }
         }
       }
@@ -26,8 +29,8 @@ export const GET_DRIVERS = gql`
 
 export default function DriversCapacity() {
   const today = new Date(2020, 0, 15)
-  const date = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`
-  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: date } })
+  const queryDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`
+  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: queryDate } })
 
   if ( loading ) {
     return <Loading />
@@ -48,5 +51,10 @@ export default function DriversCapacity() {
     <CollapsedDriverCard driver={driver} />
   )
 
-  return driverCards
+  return (
+    <>
+      <FindAndSort />
+      {driverCards}
+    </>
+  )
 }

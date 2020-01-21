@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import { GET_COLUMN_STATE } from './components/columns/shell'
+import { GET_DISPATCH_STATE } from './components/drivers/driver-trips'
 
 export const typeDefs = gql`
   extend type Query {
@@ -21,6 +22,13 @@ export const typeDefs = gql`
 
   type DispatchState {
     selectedDriver: ID!
+    selectedDate: String!
+  }
+
+  type Date {
+    day: Int!
+    month: Int!
+    year: Int!
   }
 
 `
@@ -48,11 +56,30 @@ export const resolvers = {
 
       return null;
     },
-    setDispatchState: (_root, { selectedDriver }, { cache }) => {
+    setDispatchState: (_root, { selectedDriver, selectedDate }, { cache }) => {
+      const { dispatchState } = cache.readQuery({
+        query: GET_DISPATCH_STATE
+      })
+      debugger
+      let data = dispatchState
+      if (selectedDate) {
+        const { day, month, year } = selectedDate
+        data.selectedDate = {
+          __typename: 'Date',
+          day,
+          month,
+          year
+        }
+      }
+      debugger
+      if (selectedDriver) {
+        data.selectedDriver = selectedDriver
+      }
+      debugger
       cache.writeData({ data: {
         dispatchState: {
           __typename: 'DispatchState',
-          selectedDriver: selectedDriver,
+          ...data,
         }
       }})
       return null;

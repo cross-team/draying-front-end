@@ -26,15 +26,12 @@ const useStyles = makeStyles(theme => ({
   rightContainer: {
     width: '36%'
   },
-  tbdContainer: {
+  actionContainer: {
     width: '100%',
     backgroundColor: theme.palette.danger.light,
     display: 'flex',
     justifyContent: 'flex-end',
     marginBottom: theme.spacing(1),
-  },
-  tbdText: {
-    color: theme.palette.danger.dark
   },
   statusContainer: {
     width: '100%',
@@ -42,31 +39,33 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  statusText: {
+  tabText: {
     color: '#979797'
   }
 }))
 
-const DriverTripCard = () => {
+const DriverTripCard = ({ trip }) => {
   const classes = useStyles()
 
   return (
     <Card className={classes.root}>
       <div className={classes.container}>
         <div>
-          <Typography>Driver Name</Typography>
-          <Typography variant='caption'>Container # - Size, Type</Typography>
+          <Typography>{`${trip.driver.firstName} ${trip.driver.lastName}`}</Typography>
+          <Typography variant='caption'>{
+            `${trip.draying.container} - ${trip.draying.containerSize.name}, ${trip.draying.containerType.name}`
+          }</Typography>
         </div>
         <div className={classes.rightContainer}>
-          <div className={classes.tbdContainer}>
-            <Typography className={classes.tbdText}>TBD</Typography>
+          <div className={classes.actionContainer}>
+        <Typography className={classes.tabText}>{trip.action.name}</Typography>
           </div>
           <div className={classes.statusContainer}>
-            <Typography className={classes.statusText}>Trip Status</Typography>
+            <Typography className={classes.tabText}>{trip.status.name}</Typography>
           </div>
         </div>
       </div>
-      <TripCard />
+      <TripCard trip={trip} />
     </Card>
   )
 }

@@ -47,14 +47,30 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const TripCard = () => {
+const TripCard = ({ trip }) => {
   const classes = useStyles()
+
+  let currentDestinationIndex
+
+  for (const [index, location] of trip.locations.entries()) {
+    console.log('Locations: ', trip.locations)
+    console.log('Location: ', location)
+    if (location.locationAction.id >= 1 && location.locationAction.id <= 6) {
+      currentDestinationIndex = index + 1
+      break
+    }
+  }
+
+  let currentETA = 0
+  let minutes = 0
+  currentETA = new Date(trip.locations[currentDestinationIndex].estimatedScheduledCompletedAt)
+  minutes = Math.round((currentETA.getTime() - Date.now())/60000)
 
   return (
     <div className={classes.root}>
       <div className={classes.infoContainer}>
-        <Typography variant='caption'>Shipping Line</Typography>
-        <Typography variant='caption'>DeliverLocation</Typography>
+        <Typography variant='caption'>{trip.draying.shippingLine.name}</Typography>
+        <Typography variant='caption'>{trip.draying.deliveryLocation.nickName}</Typography>
       </div>
       <div className={classes.progressContainer}>
         <Avatar className={classes.locationDots} >{''}</Avatar>
@@ -62,21 +78,10 @@ const TripCard = () => {
         <Avatar className={classes.locationDots} >{''}</Avatar>
       </div>
       <div className={classes.progressContainer}>
-        <Typography variant='caption' className={classes.tripText}>Terminal Loc</Typography>
-        <Typography variant='caption' className={classes.tripTextETA}>Trip Est Time</Typography>
-        <Typography variant='caption' className={classes.tripText}>Delivery Loc #</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal.nickName}</Typography>
+        <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.terminalLocation.nickName}</Typography>
       </div>
-      {/* <Stepper activeStep={1} alternativeLabel>
-        <Step>
-          <StepLabel>Pickup Location</StepLabel>
-        </Step>
-        <Step>
-          <StepLabel>Trip ETA</StepLabel>
-        </Step>
-        <Step>
-          <StepLabel>Dropoff Location</StepLabel>
-        </Step>
-  </Stepper> */}
     </div>
   )
 }
