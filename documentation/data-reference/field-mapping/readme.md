@@ -1,5 +1,10 @@
 # Field Mapping
 
+## Document To Do
+
+- [ ] Add images of old designs with markup referencing endpoints - @jas0nmjames
+- [ ] Add images of new designs with endpoints mapped - @jas0nmjames
+
 ## Existing Application Design
 
 ### Dispatching
