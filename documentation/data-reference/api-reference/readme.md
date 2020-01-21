@@ -1,4 +1,4 @@
-# API Reference
+# Dispatching API Reference
 
 Note: it is important to distinguish between a data type and a data point.  Example:
 
@@ -6,12 +6,33 @@ Note: it is important to distinguish between a data type and a data point.  Exam
 - Current Location Name(?): Jim's Yard
 - Current Location Address(?): 555 Main Street
 
+See [Dispatching Entities](.../ux-architecture/dispatching/readme.md#dispatching-entities) for a breakdown of 'what is related to what'.
+
 ## Document To-Do
 
-- [ ] Add images of old designs with markup referencing endpoints - @jas0nmjames
-- [ ] Add images of new designs with endpoints mapped - @jas0nmjames
+## Orders
 
-## Drayings (Containers)
+### [STAGE/STATUS] Delivery Order "DO" Status Based on Container Stage
+
+- [ ] Need to update Container Stage list
+
+Container Stage | id | Delivery Order Status
+--- | --- | ---
+CANCELED | 1 |
+INCOMPLETED | 2 | On the Sea
+PENDING | 3 | On the Sea
+PLANNED | 4 | To Dispatch
+PRE_SCHEDULED | 5 | To Dispatch
+DISPATCHED | 6 | Dispatched
+DELIVERED | 7 | *not used*
+OPEN | 8 | *not used*
+COMPLETED | 9 | Completed
+REVIEWED | 10 | Reviewed
+INVOICED | 11 | Invoiced
+PARTIAL_PAID | 12 |
+PAID | 12 |
+
+## Containers
 
 ### Draying
 
@@ -25,69 +46,50 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocati
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching or see [Dispatching.json](./JSON/Dispatching.json)
 
-### Location Actions
+### [STATUS] (Container) Port Status
 
-- [ ] See screenshot 2:35pm, these are the location lists (leg list)
-- [ ] Add to UI
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerportstatuses
 
-API: 
+Reference [containerportstatus.json](../api-reference/JSON/containerportstatuses.json)
 
-Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action or see [Actions.json](./JSON/Actions.json)
-
-id | Name
---- | ---
-1 | Pick Empty
-2 | Pick Loaded
-3 | Drop Empty
-4 | Drop Loaded
-5 | Load
-6 | Unload
-7 | Chassis Swap
-8 | End of Day
-9 | Start Day
-
-**Important Notes:**
-
-- A Draying Trip Starts on location actions 1-6.  We'll call these "main actions".  This is how we determine what location to put on the trip card as the starting location.  
-- A Draying Trip does NOT start on location actions 7-9
-- Example:
-  - If the first location ("Location A" in the first leg) in the trip is "drop empty", the trip card starting location is "Location A".
-  - If the first location ("Location A" in the first leg) in the trip is "start day", the trip card starting location **is NOT** "Location A".  It is Location B, or whichever next location has a location action of 1-6.
-- After a main action (location actions 1-6) is started, the next location action should be the trip's endpoint, or destination.  *this point may need some clarity*
-
-## Trips
-
-### Trip Actions
-
-API: 
-
-Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions or see [tripactions.json](./JSON/tripactions.json)
-
-id | Type Name | Short Name
+id | Name | ShortName
 --- | --- | ---
-1 | Pre-Pull | PP
-2 | Full to Yard | FY
-3 | Empty to Yard | EY
-4 | Live Load | Live L
-5 | Live Unload | Live U
-6 | Drop | Drop
-7 | Yard Stop | YS
-8 | Return to Terminal | RT
-9 | Return to Depot | RD
-10 | Drop Extra Stop | EXD
-11 | Live Extra Stop | EXL
-12 | Container to Yard | CTY
-13 | Skip | SK
-14 | Street Turn | ST
-15 | Pick At Client | PK
-16 | Pick And Return | P&R
-17 | Return From Client | RfC
+1 | On the Sea | OS
+2 | Available | AV
+3 | Not released | NR
+4 | In Vessel | IV
+5 | Out of Port | OP
+6 | Street Turn | ST
+7 | Returned | RT
 
-### Trip Locations
+### [STAGE/STATUS] Container Current Location (Based on Container Stage & Location Type)
 
-![trip-locations-api]
+Reference [Delivery Location Types](../api-reference/readme.md#delivery-location-types).
 
-- [ ] To be further elaborated on
+Container Stage | id | Container Current Location
+--- | --- | ---
+CANCELED | 1 |
+INCOMPLETED | 2 |
+PENDING | 3 |
+PLANNED | 4 |
+PRE_SCHEDULED | 5 | To Dispatch
+DISPATCHED | 6 | Yard Before
+DISPATCHED | 6 | Client
+DISPATCHED | 6 | Yard After
+DELIVERED | 7 |
+OPEN | 8 |
+COMPLETED | 9 | Completed
+REVIEWED | 10 |
+INVOICED | 11 |
+PARTIAL_PAID | 12 |
+PAID | 12 |
+
+The master stage is indexed with the location type to determine the container stage.
+
+For example:
+
+- If master stage id = 6 (dispatched) and LocationTypeId = 3 (Yard Before), then Container Stage = Yard Before
+- If master stage id = 5 (pre-scheduled) then container stage = To dispatch
 
 ### Appointment Locations
 
@@ -116,6 +118,117 @@ id | Type Name | Short Name
 1 | Delivery | DL
 2 | Pickup | PU
 
+### Delivery Locations
+
+Note: Related to container (not trip or leg)
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
+
+#### Delivery Location Types
+
+Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
+
+id | Variable (Name, Description)
+--- | ---
+1 | Default
+2 | Client
+3 | Yard, Before Client
+4 | Depot
+5 | Port
+6 | Yard, After Client
+7 | Client Street Turn
+
+## Trips
+
+### [STATUS] Trip Status
+
+- [ ] Include in UI
+- Note: This is the "leg status" column in https://dev-mercuriotransport.azurewebsites.net/Dashboard/DriverPayment 
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses
+
+Reference [tripstatuses.json](../api-reference/JSON/tripstatuses.json)
+
+id | Name
+--- | ---
+1 | Cancel
+2 | Lost
+3 | To dispatch *not used*
+4 | Pre-dispatch
+5 | In movement
+6 | Completed
+7 | Reviewed *not used*
+
+### Trip Actions
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions or see [tripactions.json](./JSON/tripactions.json)
+
+id | Type Name | Short Name
+--- | --- | ---
+1 | Pre-Pull | PP
+2 | Full to Yard | FY
+3 | Empty to Yard | EY
+4 | Live Load | Live L
+5 | Live Unload | Live U
+6 | Drop | Drop
+7 | Yard Stop | YS
+8 | Return to Terminal | RT
+9 | Return to Depot | RD
+10 | Drop Extra Stop | EXD
+11 | Live Extra Stop | EXL
+12 | Container to Yard | CTY
+13 | Skip | SK
+14 | Street Turn | ST
+15 | Pick At Client | PK
+16 | Pick And Return | P&R
+17 | Return From Client | RfC
+
+### Trip Locations a.k.a. Trip Points
+
+![trip-locations-api]
+
+- [ ] To be further elaborated on
+
+#### Trip Location Types
+
+- TBD
+
+#### (Trip) Location Actions
+
+- [ ] See screenshot 2:35pm, these are the location lists (leg list)
+- [ ] Add to UI
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action or see [Actions.json](./JSON/Actions.json)
+
+id | Name
+--- | ---
+1 | Pick Empty
+2 | Pick Loaded
+3 | Drop Empty
+4 | Drop Loaded
+5 | Load
+6 | Unload
+7 | Chassis Swap
+8 | End of Day
+9 | Start Day
+
+**Important Notes:**
+
+- A Draying Trip Starts on location actions 1-6.  We'll call these "main actions".  This is how we determine what location to put on the trip card as the starting location.  
+- A Draying Trip does NOT start on location actions 7-9
+- Example:
+  - If the first location ("Location A" in the first leg) in the trip is "drop empty", the trip card starting location is "Location A".
+  - If the first location ("Location A" in the first leg) in the trip is "start day", the trip card starting location **is NOT** "Location A".  It is Location B, or whichever next location has a location action of 1-6.
+- After a main action (location actions 1-6) is started, the next location action should be the trip's endpoint, or destination.  *this point may need some clarity*
+
+#### Trip Action Locations
+
+- Not in UI (For dev use only)
+
+## Legs
+
+------
+
 ## Drivers
 
 ### Driver
@@ -140,24 +253,6 @@ Endpoints
 - PendingDrayingTripsCount
 
 ## Other
-
-### Delivery Locations
-
-Note: Related to container (not trip or leg)
-
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
-
-**Types**: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
-
-id | Variable (Name, Description)
---- | ---
-1 | Default
-2 | Client
-3 | Yard, Before Client
-4 | Depot
-5 | Port
-6 | Yard, After Client
-7 | Client Street Turn
 
 ### Vehicle
 

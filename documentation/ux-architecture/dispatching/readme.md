@@ -29,6 +29,37 @@ Route - all of a driver's trips in a single day
 - Example: Bob (driver) has two trips assigned for tomorrow.  Bob's route for tomorrow is Trip 1 + Trip 2.
 - Example: Jorge (driver) has one unfinished trip (Trip X) from two days ago (January 14th).  Jorge's route for January 14th is Trip X.
 
+### Dispatching Entities
+
+What belongs to what?
+
+#### Order
+
+- Delivery Order (DO) Status
+
+#### Container
+
+- *Container Stage*
+- *"Current Container Location"*
+- *Port Status*
+- Delivery Location
+- *Delivery Location Type*
+- Appointment
+- *Appointment Type*
+- Terminal
+- Return Terminal
+
+#### Trip
+
+- Legs
+- *Trip Status*
+- *Trip Action*
+
+#### Legs
+
+- Trip Points (a.k.a. Locations)
+- *Location Actions*
+
 ## Relationships
 
 The aim is to define what actions, types, statuses, stages and other attributes apply to what entities.  
