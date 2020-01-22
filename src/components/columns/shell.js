@@ -50,14 +50,12 @@ function Shell({ width, left, middle, right }) {
 
   useEffect(() => {
     if (width === 'xs') {
-      console.log('******--- Screen is XS ---******')
       setColumnState({variables: {
         hideLeft: false,
         hideMiddle: true,
         hideRight: true
       }})
     } else {
-      console.log('******--- Screen is NOT XS ---******')
       setColumnState({variables: {
         hideLeft: false,
         hideMiddle: false,
