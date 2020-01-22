@@ -42,7 +42,12 @@ export const SET_COLUMN_STATE = gql`
 export const SET_DISPATCH_STATE = gql`
   mutation setDispatchState($selectedDriver: ID) {
     setDispatchState(selectedDriver: $selectedDriver) @client {
-      selectedDriver
+      selectedDriver {
+        id
+        firstName
+        lastName
+        phone
+      }
     }
   }
 `
@@ -70,7 +75,12 @@ const DriverHeader = ( { driver, width } ) => {
   const initials = `${selectedDriver.firstName[0]}${selectedDriver.lastName[0]}`
 
   const handleClose = () => {
-    setDispatchState({variables: { selectedDriver: '' }})
+    setDispatchState({variables: { selectedDriver: {
+      id: '',
+      firstName: '',
+      lastName: '',
+      phone: ''
+    } }})
     if (width === 'xs') {
       setColumnState({variables: {
         hideLeft: false,
