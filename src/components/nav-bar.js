@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTruckMoving, faContainerStorage, faPersonDolly } from '@fortawesome/pro-light-svg-icons/'
+import { navigate } from 'gatsby'
 import DrawerMenu from './menus/drawer-menu'
 import UserMenu from './menus/user-menu'
 
@@ -34,7 +35,7 @@ export default function NavBar() {
       <Toolbar className={classes.toolbar}>
         <DrawerMenu />
         <Tabs value={tab} onChange={handleChange}>
-          <Tab label='DRIVERS' icon={<FontAwesomeIcon icon={faTruckMoving} />} />
+          <Tab label='DRIVERS' icon={<FontAwesomeIcon icon={faTruckMoving} onClick={() => navigate(`/app/drivers`)} />} />
           <Tab label='ORDERS' icon={<FontAwesomeIcon icon={faContainerStorage} />} />
           <Tab label='CLIENTS' icon={<FontAwesomeIcon icon={faPersonDolly} />} />
         </Tabs>

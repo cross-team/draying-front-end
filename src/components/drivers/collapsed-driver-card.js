@@ -1,18 +1,25 @@
 import React from 'react'
 import {
   makeStyles,
+  withWidth,
   Card,
   Avatar,
   Typography,
   Chip
 } from '@material-ui/core/'
-import { ChevronRight } from '@material-ui/icons/'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleRight } from '@fortawesome/pro-light-svg-icons/'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
+  },
+  selected: {
+    backgroundColor: '#ebf5ff'
   },
   dataContainer: {
     width: '100%',
@@ -38,11 +45,48 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CollapsedDriverCard = ({ driver }) => {
+export const SET_COLUMN_STATE = gql`
+  mutation setColumnState($hideLeft: Boolean, $hideMiddle: Boolean, $hideRight: Boolean) {
+    setColumnState(hideLeft: $hideLeft, hideMiddle: $hideMiddle, hideRight: $hideRight) @client {
+      leftHidden
+      middleHidden
+      rightHidden
+    }
+  }
+`
+
+export const SET_DISPATCH_STATE = gql`
+  mutation setDispatchState($selectedDriver: ID) {
+    setDispatchState(selectedDriver: $selectedDriver) @client {
+      selectedDriver
+    }
+  }
+`
+
+export const GET_DISPATCH_STATE = gql`
+  query getDispatchState {
+    dispatchState @client {
+      selectedDriver {
+        id
+      }
+    }
+  }
+`
+
+const CollapsedDriverCard = ({ driver, width }) => {
   const classes = useStyles()
+
+  const { data: { dispatchState: { selectedDriver } } } = useQuery(GET_DISPATCH_STATE)
+  const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
+  const [setColumnState] = useMutation(SET_COLUMN_STATE)
+
+  const isSelected = (selectedDriver.id === driver.id)
+
   const fullName = `${driver.firstName} ${driver.lastName}`
-  const initials = `${driver.firstName[0].toUpperCase()}${driver.lastName[0].toUpperCase()}`
-  const capacity = Math.round(100 - driver.capacity)
+  const initials = `${driver.firstName[0]}${driver.lastName[0]}`
+
+  const { capacityInfo } = driver
+  const capacity = Math.round(100 - capacityInfo.capacity)
   let capacityColor
   if (capacity >= 67) {
     capacityColor = classes.success
@@ -54,31 +98,46 @@ const CollapsedDriverCard = ({ driver }) => {
 
   let currentETA = 0
   let minutes = 0
-  if (driver.trip !== null) {
-    currentETA = new Date(driver.trip.currentDestination.estimatedScheduledCompletedAt)
+  if (capacityInfo.activeTripCapacity !== null) {
+    currentETA = new Date(capacityInfo.activeTripCapacity.currentDestination.estimatedScheduledCompletedAt)
     minutes = Math.round((currentETA.getTime() - Date.now())/60000)
   }
-  console.log(currentETA)
+
+  const handleClick = () => {
+    setDispatchState({variables: { selectedDriver: {
+      id: driver.id,
+      firstName: driver.firstName,
+      lastName: driver.lastName,
+      phone: driver.phone
+    } }})
+    if (width === 'xs') {
+      setColumnState({variables: {
+        hideLeft: true,
+        hideMiddle: false,
+        hideRight: true
+      }})
+    }
+  }
 
   return (
-    <Card className={classes.root}>
-      <Avatar className={classes.margin}>{initials}</Avatar>
+    <Card className={`${classes.root} ${isSelected && classes.selected}`} onClick={handleClick}>
+      <Avatar className={classes.margin}>{initials.toUpperCase()}</Avatar>
       <div className={classes.dataContainer}>
         <Typography>{fullName}</Typography>
         <div className={classes.chipContainer}>
           <Chip className={capacityColor} label={`${capacity}%`} />
           <div>
-            { driver.trip && <Chip label={`${minutes} min`} /> }
-            <Chip label={`${driver.pendingTripsCount} ${
-              driver.pendingTripsCount === 1 ?
+            { capacityInfo.activeTripCapacity && <Chip label={`${minutes} min`} /> }
+            <Chip label={`${capacityInfo.pendingTripsCount} ${
+              capacityInfo.pendingTripsCount === 1 ?
               'Trip' : 'Trips'
             }`} />
           </div>
         </div>
       </div>
-      <ChevronRight className={classes.margin} />
+      <FontAwesomeIcon icon={faAngleRight} className={classes.margin} />
     </Card>
   )
 }
 
-export default CollapsedDriverCard
+export default withWidth()(CollapsedDriverCard)

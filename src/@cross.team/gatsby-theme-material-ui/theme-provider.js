@@ -11,7 +11,7 @@ const theme = createMuiTheme({
     },
     danger: {
       main: '#dc3644',
-      light: '#ed9298',
+      light: '#fdecec',
       dark: '#981b25',
       contrastText: '#000'
     },

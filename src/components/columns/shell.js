@@ -32,7 +32,17 @@ export const SET_COLUMN_STATE = gql`
       rightHidden
     }
   }
-`;
+`
+
+export const GET_COLUMN_STATE = gql`
+  query getColumnState {
+    columnState @client {
+      leftHidden
+      middleHidden
+      rightHidden
+    }
+  }
+`
 
 function Shell({ width, left, middle, right }) {
   const classes = useStyles()
