@@ -26,6 +26,7 @@ export const GET_ROUTES = gql`
     routes: driverRoute(driverId: $driverId, fromDate: $fromDate, toDate: $toDate, pending: $pending) {
       scheduledStartDateTime
       trips {
+        id
         locations {
           estimatedScheduledCompletedAt
           nickName {
@@ -185,22 +186,22 @@ export default function DriverTrips() {
     case 1:
       if (todayRegex.test(data.routes[0].scheduledStartDateTime)) {
         tripsToday = data.routes[0].trips.map((trip) =>
-          <DriverTripCard trip={trip} />
+          <DriverTripCard trip={trip} key={trip.id} />
         )
         tripsTomorrow = <Typography>No trips for tomorrow.</Typography>
       } else {
         tripsToday = <Typography>No trips for today.</Typography>
         tripsTomorrow = data.routes[0].trips.map((trip) =>
-          <DriverTripCard trip={trip} />
+          <DriverTripCard trip={trip} key={trip.id} />
         )
       }
       break
     case 2:
       tripsToday = data.routes[0].trips.map((trip) =>
-        <DriverTripCard trip={trip} />
+        <DriverTripCard trip={trip} key={trip.id} />
       )
       tripsTomorrow = data.routes[1].trips.map((trip) =>
-        <DriverTripCard trip={trip} />
+        <DriverTripCard trip={trip} key={trip.id} />
       )
       break
   }

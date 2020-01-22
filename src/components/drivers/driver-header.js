@@ -116,7 +116,7 @@ const DriverHeader = ( { driver, width } ) => {
       </div>
       <div className={classes.container}>
         <Typography>ADD A TRIP</Typography>
-        <Fab className={classes.margin} ariaLabel='Add a trip' onClick={handleAddTrip}>
+        <Fab className={classes.margin} aria-label='Add a trip' onClick={handleAddTrip}>
           <FontAwesomeIcon icon={faPlus} />
         </Fab>
       </div>
