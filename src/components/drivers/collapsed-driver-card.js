@@ -66,7 +66,9 @@ export const SET_DISPATCH_STATE = gql`
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
     dispatchState @client {
-      selectedDriver
+      selectedDriver {
+        id
+      }
     }
   }
 `
@@ -78,7 +80,7 @@ const CollapsedDriverCard = ({ driver, width }) => {
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
 
-  const isSelected = (selectedDriver === driver.id)
+  const isSelected = (selectedDriver.id === driver.id)
 
   const fullName = `${driver.firstName} ${driver.lastName}`
   const initials = `${driver.firstName[0]}${driver.lastName[0]}`
@@ -102,7 +104,12 @@ const CollapsedDriverCard = ({ driver, width }) => {
   }
 
   const handleClick = () => {
-    setDispatchState({variables: { selectedDriver: driver.id }})
+    setDispatchState({variables: { selectedDriver: {
+      id: driver.id,
+      firstName: driver.firstName,
+      lastName: driver.lastName,
+      phone: driver.phone
+    } }})
     if (width === 'xs') {
       setColumnState({variables: {
         hideLeft: true,

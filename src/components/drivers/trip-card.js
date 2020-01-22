@@ -3,10 +3,7 @@ import {
   makeStyles,
   Typography,
   LinearProgress,
-  Avatar,
-  Stepper,
-  Step,
-  StepLabel
+  Avatar
 } from '@material-ui/core/'
 
 const useStyles = makeStyles(theme => ({
@@ -55,7 +52,7 @@ const TripCard = ({ trip }) => {
   for (const [index, location] of trip.locations.entries()) {
     console.log('Locations: ', trip.locations)
     console.log('Location: ', location)
-    if (location.locationAction.id >= 1 && location.locationAction.id <= 6) {
+    if (location.action.id >= 1 && location.action.id <= 6) {
       currentDestinationIndex = index + 1
       break
     }
@@ -78,9 +75,9 @@ const TripCard = ({ trip }) => {
         <Avatar className={classes.locationDots} >{''}</Avatar>
       </div>
       <div className={classes.progressContainer}>
-        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal.nickName}</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal && trip.draying.returnTerminal.nickName}</Typography>
         <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
-        <Typography variant='caption' className={classes.tripText}>{trip.draying.terminalLocation.nickName}</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.terminalLocation && trip.draying.terminalLocation.nickName}</Typography>
       </div>
     </div>
   )

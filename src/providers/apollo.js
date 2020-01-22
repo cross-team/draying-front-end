@@ -8,6 +8,7 @@ import { resolvers, typeDefs } from '../resolvers'
 import { getUser } from '../services/auth'
 
 const cache = new InMemoryCache()
+const today = new Date(2020, 0, 15)
 const hasToken = !!getUser().token
 const client = new ApolloClient({
   cache,
@@ -29,12 +30,18 @@ cache.writeData({
     isLoggedIn: !!getUser(),
     dispatchState: {
       __typename: 'DispatchState',
-      selectedDriver: '',
+      selectedDriver: {
+        __typename: 'SelectedDriver',
+        id: '',
+        firstName: '',
+        lastName: '',
+        phone: ''
+      },
       selectedDate: {
         __typename: 'Date',
-        day: 0,
-        month: 0,
-        year: 0,
+        day: today.getDate(),
+        month: today.getMonth() + 1,
+        year: today.getFullYear()
       },
     },
     columnState: {

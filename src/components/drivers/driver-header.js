@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimes} from '@fortawesome/pro-light-svg-icons/'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
@@ -47,13 +47,27 @@ export const SET_DISPATCH_STATE = gql`
   }
 `
 
+export const GET_DISPATCH_STATE = gql`
+  query getDispatchState {
+    dispatchState @client {
+      selectedDriver {
+        id
+        firstName
+        lastName
+        phone
+      }
+    }
+  }
+`
+
 const DriverHeader = ( { driver, width } ) => {
   const classes = useStyles()
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
+  const { data: { dispatchState: { selectedDriver } } } = useQuery(GET_DISPATCH_STATE)
 
-  const fullName = `${driver.firstName} ${driver.lastName}`
-  const initials = `${driver.firstName[0]}${driver.lastName[0]}`
+  const fullName = `${selectedDriver.firstName} ${selectedDriver.lastName}`
+  const initials = `${selectedDriver.firstName[0]}${selectedDriver.lastName[0]}`
 
   const handleClose = () => {
     setDispatchState({variables: { selectedDriver: '' }})
@@ -97,7 +111,7 @@ const DriverHeader = ( { driver, width } ) => {
         <Avatar className={classes.margin}>{initials.toUpperCase()}</Avatar>
         <div>
           <Typography>{fullName}</Typography>
-          <Typography variant='caption'>{driver.phone}</Typography>
+          <Typography variant='caption'>{selectedDriver.phone}</Typography>
         </div>
       </div>
       <div className={classes.container}>

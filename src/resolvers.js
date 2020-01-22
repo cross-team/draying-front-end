@@ -11,7 +11,7 @@ export const typeDefs = gql`
 
   extend type Mutation {
     setColumnState(hideLeft: Boolean, hideMiddle: Boolean, hideRight: Boolean): ColumnState!
-    setDispatchState(selectedDriver: ID): DispatchState!
+    setDispatchState(selectedDriver: SelectedDriver, selectedDate: Date): DispatchState!
   }
 
   type ColumnState {
@@ -21,8 +21,15 @@ export const typeDefs = gql`
   }
 
   type DispatchState {
-    selectedDriver: ID!
-    selectedDate: String!
+    selectedDriver: SelectedDriver!
+    selectedDate: Date!
+  }
+
+  type SelectedDriver {
+    id: String!
+    firstName: String!
+    lastName: String!
+    phone: String!
   }
 
   type Date {
@@ -60,7 +67,6 @@ export const resolvers = {
       const { dispatchState } = cache.readQuery({
         query: GET_DISPATCH_STATE
       })
-      debugger
       let data = dispatchState
       if (selectedDate) {
         const { day, month, year } = selectedDate
@@ -71,11 +77,16 @@ export const resolvers = {
           year
         }
       }
-      debugger
       if (selectedDriver) {
-        data.selectedDriver = selectedDriver
+        const { id, firstName, lastName, phone } = selectedDriver
+        data.selectedDriver = {
+          __typename: 'SelectedDriver',
+          id,
+          firstName,
+          lastName,
+          phone
+        }
       }
-      debugger
       cache.writeData({ data: {
         dispatchState: {
           __typename: 'DispatchState',
