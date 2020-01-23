@@ -4,16 +4,14 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    height: '100%'
-  },
   item: {
-    overflow: 'scroll',
+    height: '100%',
+    overflow: 'auto',
   },
   column: {
     height: '100%',
     borderRight: '1px solid #d6d6d6',
-    borderLeft: '1px solid #d6d6d6'
+    borderLeft: '1px solid #d6d6d6',
   }
 }))
 
