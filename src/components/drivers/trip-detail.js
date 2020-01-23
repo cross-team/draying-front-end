@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
   makeStyles,
@@ -54,8 +54,41 @@ const useStyles = makeStyles(theme => ({
 
 const TripDetail = ({ width }) => {
   const classes = useStyles()
+  const client = useApolloClient()
   const { data: { dispatchState: { selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
-
+  debugger
+  const trip = client.readFragment({
+    id: selectedTrip.id,
+    fragment: gql`
+      fragment currentTrip on trip {
+        id
+        draying {
+          id
+          container
+          deliveryLocation {
+            nickName
+          }
+          containerSize {
+            name
+          }
+          containerType {
+            name
+          }
+          shippingLine {
+            name
+          }
+          terminalLocation {
+            nickName
+          }
+          returnTerminal {
+            nickName
+          }
+        }
+      }
+    `,
+  });
+  console.log(trip)
+  debugger
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
   
