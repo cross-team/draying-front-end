@@ -9,7 +9,7 @@ import {
   IconButton
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faTimes} from '@fortawesome/pro-light-svg-icons/'
+import { faPlus, faTimes } from '@fortawesome/pro-light-svg-icons/'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
@@ -40,9 +40,10 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedDriver: ID) {
-    setDispatchState(selectedDriver: $selectedDriver) @client {
+  mutation setDispatchState($selectedDriver: SelectedDriver, $selectedTrip: SelectedTrip) {
+    setDispatchState(selectedDriver: $selectedDriver, selectedTrip: $selectedTrip) @client {
       selectedDriver
+      selectedTrip
     }
   }
 `
@@ -60,7 +61,7 @@ export const GET_DISPATCH_STATE = gql`
   }
 `
 
-const DriverHeader = ( { driver, width } ) => {
+const DriverHeader = ( { width } ) => {
   const classes = useStyles()
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
@@ -70,7 +71,12 @@ const DriverHeader = ( { driver, width } ) => {
   const initials = `${selectedDriver.firstName[0]}${selectedDriver.lastName[0]}`
 
   const handleClose = () => {
-    setDispatchState({variables: { selectedDriver: '' }})
+    setDispatchState({variables: { selectedDriver: {
+      id: '',
+      firstName: '',
+      lastName: '',
+      phone: ''
+    }, selectedTrip: { id: '' }}})
     if (width === 'xs') {
       setColumnState({variables: {
         hideLeft: false,

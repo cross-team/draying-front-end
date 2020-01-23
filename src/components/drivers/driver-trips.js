@@ -26,6 +26,7 @@ export const GET_ROUTES = gql`
     routes: driverRoute(driverId: $driverId, fromDate: $fromDate, toDate: $toDate, pending: $pending) {
       scheduledStartDateTime
       trips {
+        id
         locations {
           estimatedScheduledCompletedAt
           nickName {

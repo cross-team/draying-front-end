@@ -30,6 +30,10 @@ cache.writeData({
     isLoggedIn: !!getUser(),
     dispatchState: {
       __typename: 'DispatchState',
+      selectedTrip: {
+        __typename: 'SelectedTrip',
+        id: '',
+      },
       selectedDriver: {
         __typename: 'SelectedDriver',
         id: '',
