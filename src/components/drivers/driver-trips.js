@@ -24,49 +24,64 @@ export const GET_DISPATCH_STATE = gql`
 export const GET_ROUTES = gql`
   query allDriverRoutes($driverId: String, $fromDate: String, $toDate: String, $pending: Boolean) {
     routes: driverRoute(driverId: $driverId, fromDate: $fromDate, toDate: $toDate, pending: $pending) {
+      __typename
       scheduledStartDateTime
       trips {
         id
+        __typename
         locations {
+          __typename
           estimatedScheduledCompletedAt
           nickName {
             name
+            __typename
           }
           action {
             id
             name
+            __typename
           }
         }
         driver {
+          __typename
           firstName
           lastName
         }
         action {
+          __typename
           name
         }
         status {
+          __typename
           name
           status
         }
         draying {
+          __typename
           id
           container
           deliveryLocation {
+            __typename
             nickName
           }
           containerSize {
+            __typename
             name
           }
           containerType {
+            __typename
             name
           }
           shippingLine {
+            __typename
             name
           }
           terminalLocation {
+            __typename
             nickName
           }
           returnTerminal {
+            __typename
             nickName
           }
         }
@@ -135,7 +150,7 @@ export default function DriverTrips() {
     const today = { ...selectedDate }
     return `${today.year}-${addZero(today.month)}-${addZero(today.day)}`
   }
-  
+
   const getTomorrow = () => {
     const today = { ...selectedDate }
     let tomorrow = today
@@ -150,15 +165,16 @@ export default function DriverTrips() {
     } else {
       tomorrow.day = today.day + 1
     }
-  
+
     return `${tomorrow.year}-${addZero(tomorrow.month)}-${addZero(tomorrow.day)}`
   }
   const todayStr = getToday() + 'T00:00:00-05:00'
   const tomorrowStr = getTomorrow() + 'T23:59:59-05:00'
 
-  const { loading, error, data } = useQuery(GET_ROUTES, { variables: { driverId: selectedDriver.id, pending: false, fromDate: todayStr, toDate: tomorrowStr } })
+  const { loading, error, data } = useQuery(GET_ROUTES, { variables: { driverId: selectedDriver.id, pending: false, fromDate: todayStr, toDate: tomorrowStr },
+    fetchPolicy: 'cache-and-network' })
 
-  if ( loading ) {
+  if ( loading && !data) {
     return <Loading />
   }
 
