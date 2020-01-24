@@ -6,5 +6,5 @@ import { MockedProvider } from "@apollo/react-testing"
 describe( 'driver-trips', () => {
   it('renders the correct data', async () => {
 
-  }
-}
+  })
+})

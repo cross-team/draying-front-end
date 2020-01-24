@@ -1,0 +1,24 @@
+State Management
+  Test that mutations modify the cache as intended (unit)
+  Test that queries read the cache as intended (unit)
+
+UI State Management Integration
+  Test that UI updates when button is clicked (integration)
+    Collapsed Driver Card: Opens column 2 driver trips view
+    Trip Card: Opens column 3 trip detail view
+    Driver Header Close: Close column 2 on mobile and clear the selectedDriver and selectedTrip in the cache
+    Trip Detail Close: Close column 3 and clear the selectedTrip in the cache
+
+Login/Logout
+  Test that functions fire on button click (unit)
+  Test that you are being redirected correctly on logout/login (integration)
+
+Component UI Data Integration
+  Drivers
+    Collapsed Driver Card
+  Driver Trips
+    Driver Trip Card
+    Driver Header
+  Trip Details
+
+Resposiveness
