@@ -8,7 +8,10 @@ Note: it is important to distinguish between a data type and a data point.  Exam
 
 See [Dispatching Entities](.../ux-architecture/dispatching/readme.md#dispatching-entities) for a breakdown of 'what is related to what'.
 
-## Document To-Do
+## Document To-Do & Questions
+
+- [x] TripActionLocation
+- [ ] How does tripCapacity relate to trip card and driver's capacity
 
 ## Orders
 
@@ -267,7 +270,7 @@ id | Name
 
 #### Trip Action Locations
 
-- Not in UI (For dev use only)
+- [ ] **Ask Sergio**
 
 ## Legs
 
