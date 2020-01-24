@@ -32,6 +32,50 @@ INVOICED | 11 | Invoiced
 PARTIAL_PAID | 12 |
 PAID | 12 |
 
+### Client Order Templates
+
+API:
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientOrderTemplates
+
+ClientOrderTemplateId | Name
+--- | --- | ---
+1 | Capacity Only
+2 | Capacity with fixed price
+3 | Capacity with dinamic price
+
+### Delivery Order
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryOrder
+
+### Delivery Place
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryPlace
+
+### Shipping Lines
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/shippinglines
+
+### Action Location
+
+- [ActionLocation]() - needs further research; see https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation
+
+### Related APIs
+
+These are APIs that are in the order creation process, but may not be 'order' APIs.  Most are the in the [other](#other) section below.
+
+- [contacttypes](#contact-types)
+- [phonetypes](#phone-types)
+- [ClientTypes](#client-types)
+- [Terms](#terms)
+- [ClientPriority](#client-priorities)
+- [deliverytypes](#delivery-types)
+- [loadtypes](#load-types)
+
+Also, reference [Quickbooks](#quickbooks) APIs below.
+
+- [customersavailablesbyclient](#customers-available-by-client)
+
 ## Containers
 
 ### Draying
@@ -324,6 +368,71 @@ Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/phonetypes
 
 - Mobile
 - Landline
+
+### Client Types
+
+API:
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientTypes
+
+- Customer
+- Broker
+
+### Terms
+
+API: 
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/Terms
+
+TermId | Name | Days
+--- | --- | ---
+1 | Due on receip | 0
+2 | Net 7 | 7
+3 | Net 15 | 15
+4 | Net 30 | 30
+5 | Net 45 | 45
+
+### Client Priorities
+
+API:
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientPriorities
+
+ClientPriorityId | Name
+--- | --- | ---
+1 | Min
+2 | Low
+3 | Medium
+4 | Mid-High
+5 | High
+6 | Very High
+7 | Max
+
+### Delivery Types
+
+API:
+
+Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverytypes
+
+- Business
+- Residential
+
+### Load Types
+
+API: 
+
+Types:https://dev-mercuriotransport.azurewebsites.net/api/v1/LoadTypes
+
+- Import
+- Export
+
+### Quickbooks
+
+- [ ] Needs to be explored further
+
+#### Customers Available by Client
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/QuickBooks/customersavailablesbyclient
 
 <!--- Image Links Reference -->
 
