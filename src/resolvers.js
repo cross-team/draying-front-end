@@ -21,8 +21,13 @@ export const typeDefs = gql`
   }
 
   type DispatchState {
+    selectedTrip: SelectedTrip!
     selectedDriver: SelectedDriver!
     selectedDate: Date!
+  }
+
+  type SelectedTrip {
+    id: String!
   }
 
   type SelectedDriver {
@@ -63,11 +68,12 @@ export const resolvers = {
 
       return null;
     },
-    setDispatchState: (_root, { selectedDriver, selectedDate }, { cache }) => {
+    setDispatchState: (_root, { selectedTrip, selectedDriver, selectedDate }, { cache }) => {
       const { dispatchState } = cache.readQuery({
         query: GET_DISPATCH_STATE
       })
       let data = dispatchState
+
       if (selectedDate) {
         const { day, month, year } = selectedDate
         data.selectedDate = {
@@ -85,6 +91,13 @@ export const resolvers = {
           firstName,
           lastName,
           phone
+        }
+      }
+      if (selectedTrip) {
+        const { id } = selectedTrip
+        data.selectedTrip = {
+          __typename: 'SelectedTrip',
+          id,
         }
       }
       cache.writeData({ data: {

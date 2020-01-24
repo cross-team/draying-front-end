@@ -13,9 +13,6 @@ import DrawerMenu from './menus/drawer-menu'
 import UserMenu from './menus/user-menu'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    position: 'sticky'
-  },
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -31,7 +28,7 @@ export default function NavBar() {
   }
 
   return (
-    <AppBar className={classes.root}>
+    <AppBar position='sticky'>
       <Toolbar className={classes.toolbar}>
         <DrawerMenu />
         <Tabs value={tab} onChange={handleChange}>

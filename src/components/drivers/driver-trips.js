@@ -26,6 +26,7 @@ export const GET_ROUTES = gql`
     routes: driverRoute(driverId: $driverId, fromDate: $fromDate, toDate: $toDate, pending: $pending) {
       scheduledStartDateTime
       trips {
+        id
         locations {
           estimatedScheduledCompletedAt
           nickName {
@@ -50,8 +51,19 @@ export const GET_ROUTES = gql`
         draying {
           id
           container
+          priority
+          cutOffDate
           deliveryLocation {
             nickName
+            locationType {
+              name
+            }
+          }
+          portStatus {
+            name
+          }
+          loadType {
+            name
           }
           containerSize {
             name

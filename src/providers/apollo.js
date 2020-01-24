@@ -7,7 +7,9 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { resolvers, typeDefs } from '../resolvers'
 import { getUser } from '../services/auth'
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  dataIdFromObject: object => object.id,
+})
 const today = new Date(2020, 0, 15)
 const hasToken = !!getUser().token
 const client = new ApolloClient({
@@ -30,6 +32,10 @@ cache.writeData({
     isLoggedIn: !!getUser(),
     dispatchState: {
       __typename: 'DispatchState',
+      selectedTrip: {
+        __typename: 'SelectedTrip',
+        id: '',
+      },
       selectedDriver: {
         __typename: 'SelectedDriver',
         id: '',

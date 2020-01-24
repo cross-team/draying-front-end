@@ -1,10 +1,13 @@
 import React from 'react'
 import {
   makeStyles,
+  withWidth,
   Card,
   Typography,
 } from '@material-ui/core/'
 import TripCard from './trip-card'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,11 +47,50 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const DriverTripCard = ({ trip }) => {
+export const SET_COLUMN_STATE = gql`
+  mutation setColumnState($hideLeft: Boolean, $hideMiddle: Boolean, $hideRight: Boolean) {
+    setColumnState(hideLeft: $hideLeft, hideMiddle: $hideMiddle, hideRight: $hideRight) @client {
+      leftHidden
+      middleHidden
+      rightHidden
+    }
+  }
+`
+
+export const SET_DISPATCH_STATE = gql`
+  mutation setDispatchState($selectedTrip: SelectedTrip) {
+    setDispatchState(selectedTrip: $selectedTrip) @client {
+      selectedTrip
+    }
+  }
+`
+
+const DriverTripCard = ({ trip, width }) => {
   const classes = useStyles()
+  const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
+  const [setColumnState] = useMutation(SET_COLUMN_STATE)
+
+  const handleClick = () => {
+    setDispatchState({variables: { selectedTrip: {
+      id: trip.id,
+    } }})
+    if (width === 'xs') {
+      setColumnState({variables: {
+        hideLeft: true,
+        hideMiddle: true,
+        hideRight: false
+      }})
+    } else {
+      setColumnState({variables: {
+        hideLeft: false,
+        hideMiddle: false,
+        hideRight: false
+      }})
+    }
+  }
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={handleClick}>
       <div className={classes.container}>
         <div>
           <Typography>{`${trip.driver.firstName} ${trip.driver.lastName}`}</Typography>
@@ -70,4 +112,4 @@ const DriverTripCard = ({ trip }) => {
   )
 }
 
-export default DriverTripCard
+export default withWidth()(DriverTripCard)

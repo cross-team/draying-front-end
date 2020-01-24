@@ -56,7 +56,7 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedDriver: ID) {
+  mutation setDispatchState($selectedDriver: SelectedDriver) {
     setDispatchState(selectedDriver: $selectedDriver) @client {
       selectedDriver
     }
@@ -109,10 +109,16 @@ const CollapsedDriverCard = ({ driver, width }) => {
       firstName: driver.firstName,
       lastName: driver.lastName,
       phone: driver.phone
-    } }})
+    }, selectedTrip: { id: '' }}})
     if (width === 'xs') {
       setColumnState({variables: {
         hideLeft: true,
+        hideMiddle: false,
+        hideRight: true
+      }})
+    } else {
+      setColumnState({variables: {
+        hideLeft: false,
         hideMiddle: false,
         hideRight: true
       }})
