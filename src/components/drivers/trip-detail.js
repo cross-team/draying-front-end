@@ -60,7 +60,7 @@ const TripDetail = ({ width }) => {
   const trip = client.readFragment({
     id: selectedTrip.id,
     fragment: gql`
-      fragment currentTrip on trip {
+      fragment currentTrip on Trip {
         id
         draying {
           id
@@ -91,7 +91,7 @@ const TripDetail = ({ width }) => {
   debugger
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
-  
+
   const handleClose = () => {
     setDispatchState({variables: { selectedTrip: { id: '' } }})
     if (width === 'xs') {
@@ -126,14 +126,14 @@ const TripDetail = ({ width }) => {
     </ExpansionPanel>
   )
 
-  const order = expansionPanel( 'Order', 
+  const order = expansionPanel( 'Order',
     <div>
       <Typography>#Order Num</Typography>
       <Typography>Delivery Order Status</Typography>
     </div>
   )
 
-  const container = expansionPanel( 'Container', 
+  const container = expansionPanel( 'Container',
     <div>
       <Typography>Current Trip Action ></Typography>
       <Card>
@@ -156,7 +156,7 @@ const TripDetail = ({ width }) => {
     </div>
   )
 
-  const currentTrip = expansionPanel( 'Trip (current trip)', 
+  const currentTrip = expansionPanel( 'Trip (current trip)',
     <div>
       <Typography>Available Trip Actions ></Typography>
       <Typography>[Trip Card]</Typography>
