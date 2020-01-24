@@ -71,7 +71,6 @@ const DriverTripCard = ({ trip, width }) => {
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
 
   const handleClick = () => {
-    console.log(trip)
     setDispatchState({variables: { selectedTrip: {
       id: trip.id,
     } }})

@@ -16,6 +16,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
 import Loading from '../loading'
+import DriverTripCard from './driver-trip-card'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -56,17 +57,49 @@ const TripDetail = ({ width }) => {
   const classes = useStyles()
   const client = useApolloClient()
   const { data: { dispatchState: { selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
-  debugger
+
   const trip = client.readFragment({
     id: selectedTrip.id,
     fragment: gql`
       fragment currentTrip on Trip {
         id
+        locations {
+          estimatedScheduledCompletedAt
+          nickName {
+            name
+          }
+          action {
+            id
+            name
+          }
+        }
+        driver {
+          firstName
+          lastName
+        }
+        action {
+          name
+        }
+        status {
+          name
+          status
+        }
         draying {
           id
           container
+          priority
+          cutOffDate
           deliveryLocation {
             nickName
+            locationType {
+              name
+            }
+          }
+          portStatus {
+            name
+          }
+          loadType {
+            name
           }
           containerSize {
             name
@@ -86,9 +119,8 @@ const TripDetail = ({ width }) => {
         }
       }
     `,
-  });
+  })
   console.log(trip)
-  debugger
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
 
@@ -137,13 +169,13 @@ const TripDetail = ({ width }) => {
     <div>
       <Typography>Current Trip Action ></Typography>
       <Card>
-        <Typography>Container Num</Typography>
-        <Typography>Size, Type</Typography>
-        <Typography>Priority</Typography>
-        <Typography>Delivery Location Type</Typography>
-        <Typography>EXP/IMP</Typography>
-        <Typography>Cutoff Date</Typography>
-        <Typography>Port Status</Typography>
+        <Typography>{trip.draying.container}</Typography>
+        <Typography>{`${trip.draying.containerSize.name}, ${trip.draying.containerType.name}`}</Typography>
+        <Typography>{trip.draying.priority}</Typography>
+        <Typography>{trip.draying.deliveryLocation.locationType.name}</Typography>
+        <Typography>{trip.draying.loadType.name}</Typography>
+        <Typography>{trip.draying.cutOffDate}</Typography>
+        <Typography>{trip.draying.portStatus.name}</Typography>
       </Card>
       <div>
         <Typography>Shipping Line/Terminal</Typography>
@@ -159,7 +191,7 @@ const TripDetail = ({ width }) => {
   const currentTrip = expansionPanel( 'Trip (current trip)',
     <div>
       <Typography>Available Trip Actions ></Typography>
-      <Typography>[Trip Card]</Typography>
+      <DriverTripCard trip={trip} />
     </div>
   )
 

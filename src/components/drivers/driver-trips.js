@@ -51,8 +51,19 @@ export const GET_ROUTES = gql`
         draying {
           id
           container
+          priority
+          cutOffDate
           deliveryLocation {
             nickName
+            locationType {
+              name
+            }
+          }
+          portStatus {
+            name
+          }
+          loadType {
+            name
           }
           containerSize {
             name
