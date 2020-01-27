@@ -8,15 +8,13 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Card
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
-import Loading from '../loading'
-import DriverTripCard from './driver-trip-card'
+import Loading from '../../loading'
+import OrderPanel from './order-panel'
+import ContainerPanel from './container-panel'
+import TripPanel from './trip-panel'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -50,7 +48,14 @@ const useStyles = makeStyles(theme => ({
   summary: {
     display: 'flex',
     alignItems: 'center',
+    width: '100%'
   },
+  summaryPanel: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  summaryText: {
+    color: theme.palette.primary.contrastText
+  }
 }))
 
 const TripDetail = ({ width }) => {
@@ -141,60 +146,6 @@ const TripDetail = ({ width }) => {
     }
   }
 
-  const expansionPanel = ( title, details ) => (
-    <ExpansionPanel defaultExpanded={true}>
-      <ExpansionPanelSummary>
-        <div className={classes.summary}>
-          <Typography>{title}</Typography>
-          <IconButton
-            onClick={event => event.stopPropagation()}
-            onFocus={event => event.stopPropagation()}
-          >
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </IconButton>
-        </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>{details}</ExpansionPanelDetails>
-    </ExpansionPanel>
-  )
-
-  const order = expansionPanel( 'Order',
-    <div>
-      <Typography>#Order Num</Typography>
-      <Typography>Delivery Order Status</Typography>
-    </div>
-  )
-
-  const container = expansionPanel( 'Container',
-    <div>
-      <Typography>Current Trip Action ></Typography>
-      <Card>
-        <Typography>{trip.draying.container}</Typography>
-        <Typography>{`${trip.draying.containerSize.name}, ${trip.draying.containerType.name}`}</Typography>
-        <Typography>{trip.draying.priority}</Typography>
-        <Typography>{trip.draying.deliveryLocation.locationType.name}</Typography>
-        <Typography>{trip.draying.loadType.name}</Typography>
-        <Typography>{trip.draying.cutOffDate}</Typography>
-        <Typography>{trip.draying.portStatus.name}</Typography>
-      </Card>
-      <div>
-        <Typography>Shipping Line/Terminal</Typography>
-        <Typography>1st Stop</Typography>
-        <Typography>2nd Stop</Typography>
-        <Typography>Return Terminal</Typography>
-      </div>
-      <Typography>Appointments</Typography>
-      <Typography>Container Location History</Typography>
-    </div>
-  )
-
-  const currentTrip = expansionPanel( 'Trip (current trip)',
-    <div>
-      <Typography>Available Trip Actions ></Typography>
-      <DriverTripCard trip={trip} />
-    </div>
-  )
-
   return (
     <>
       <AppBar position='sticky'>
@@ -205,9 +156,9 @@ const TripDetail = ({ width }) => {
           <Typography>{`Trip ${selectedTrip.id} Details`}</Typography>
         </Toolbar>
       </AppBar>
-      {order}
-      {container}
-      {currentTrip}
+      <OrderPanel />
+      <ContainerPanel draying={trip.draying} />
+      <TripPanel trip={trip} />
     </>
   )
 }
