@@ -10,30 +10,29 @@ See [Dispatching Entities](.../ux-architecture/dispatching/readme.md#dispatching
 
 ## Document To-Do & Questions
 
-- [x] TripActionLocation
-- [ ] How does tripCapacity relate to trip card and driver's capacity
-
 ## Orders
 
-### [STAGE/STATUS] Delivery Order "DO" Status Based on Container Stage
+### [STATUS] Delivery Order "DO" Status Based on Container Stage
 
-- [ ] Need to update Container Stage list
+API: Data -> Drayings -> Draying "0" -> ContainerStage -> ContainerStageId "6"
 
-Container Stage | id | Delivery Order Status
+Example of API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/dispatching?ContainerStages=6&ContainerTypes=&CurrentLocationTypes=&InMovement=true&Sort=false&PageSize=0&PageNumber=1&Count=17&_=1580154399315
+
+ContainerStage | Id | Delivery Order Status
 --- | --- | ---
 CANCELED | 1 |
-INCOMPLETED | 2 | On the Sea
-PENDING | 3 | On the Sea
+PENDING | 2 | On the Sea
+CONFIGURED | 3 | On the Sea
 PLANNED | 4 | To Dispatch
-PRE_SCHEDULED | 5 | To Dispatch
+TO DISPATCH | 5 | To Dispatch
 DISPATCHED | 6 | Dispatched
-DELIVERED | 7 | *not used*
+STARTED/DELIVERED | 7 | *not used*
 OPEN | 8 | *not used*
 COMPLETED | 9 | Completed
 REVIEWED | 10 | Reviewed
 INVOICED | 11 | Invoiced
 PARTIAL_PAID | 12 |
-PAID | 12 |
+PAID | 13 |
 
 ### Client Order Templates
 
@@ -81,6 +80,54 @@ Also, reference [Quickbooks](#quickbooks) APIs below.
 
 ## Containers
 
+### Container Stages
+
+`ContainerStageId` a.k.a. `StageId`
+
+Previously known as 'master stage', a number of other stages and statuses are determined by the ContainerStageId.
+
+API: Data > Route "0" -> DrayingTrips -> Trip "0" -> DeliveryOrderDraying().StageId()
+
+Reference: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages or [containerstages.json](../api-reference/JSON/containerstages.json)
+
+ContainerStage | Id
+--- | ---
+CANCELED | 1 |
+PENDING | 2 |
+CONFIGURED | 3 |
+PLANNED | 4 |
+TO DISPATCH | 5 |
+DISPATCHED | 6 |
+STARTED/DELIVERED | 7 |
+OPEN | 8 |
+COMPLETED | 9 |
+REVIEWED | 10 |
+INVOICED | 11 |
+PARTIAL_PAID | 12 |
+PAID | 13 |
+
+### Delivery Locations
+
+`LocationTypeId` a.k.a. `CurrentLocationId`
+
+Note: Related to container (not trip or leg)
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
+
+API: Data > Route "0" -> DrayingTrips -> Trip "0" -> DeliveryOrderDraying().CurrentLocationId()
+
+Types: reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
+
+id | LocationType
+--- | ---
+1 | Default
+2 | Client
+3 | Yard, Before Client
+4 | Depot
+5 | Port
+6 | Yard, After Client
+7 | Client Street Turn
+
 ### Draying
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/draying/ or see [Draying.json](./JSON/Draying.json)
@@ -109,34 +156,65 @@ id | Name | ShortName
 6 | Street Turn | ST
 7 | Returned | RT
 
-### [STAGE/STATUS] Container Current Location (Based on Container Stage & Location Type)
+### [STATUS] Container Current Location (Based on Container Stage & Location Type)
 
-Reference [Delivery Location Types](../api-reference/readme.md#delivery-location-types).
+#### API
 
-Container Stage | id | Container Current Location
---- | --- | ---
-CANCELED | 1 |
-INCOMPLETED | 2 |
-PENDING | 3 |
-PLANNED | 4 |
-PRE_SCHEDULED | 5 | To Dispatch
-DISPATCHED | 6 | Yard Before
-DISPATCHED | 6 | Client
-DISPATCHED | 6 | Yard After
-DELIVERED | 7 |
-OPEN | 8 |
-COMPLETED | 9 | Completed
-REVIEWED | 10 |
-INVOICED | 11 |
-PARTIAL_PAID | 12 |
-PAID | 12 |
+The API is in the Route API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Route
 
-The master stage is indexed with the location type to determine the container stage.
+but...
+
+We need to see the route of a specific driver.  For example: https://dev-mercuriotransport.azurewebsites.net/api/v1/Route?DriverId=49&FromDate=2020-01-27T00:00:00-05:00&ToDate=2020-01-27T23:59:59-05:00&ShowPending=true&OrderBy=date&_=1580136143642
+
+#### How to determine the container current location
+
+These are the stages for the trip/container card in the existing design.  They are:
+
+- To Dispatch
+- Yard Before
+- Client
+- Yard After
+- Completed
+
+If ContainerStageId < 6, Container Current Location is To Dispatch
+
+If ContainerStageId = 6, reference the LocationTypeId per the table below to determine the Container Current Location
+
+If ContainerStageId > 6, Container Current Location is Completed
 
 For example:
 
-- If master stage id = 6 (dispatched) and LocationTypeId = 3 (Yard Before), then Container Stage = Yard Before
-- If master stage id = 5 (pre-scheduled) then container stage = To dispatch
+- If ContainerStageId = 6 (dispatched) and LocationTypeId = 3 (Yard Before), then container current location = Yard Before
+- If ContainerStageId = 5 (pre-scheduled) then container current location = To dispatch
+
+#### Index
+
+ContainerStage | ContainerStageId | LocationType | LocationTypeId | Container Current Location
+--- | --- | --- | --- | ---
+CANCELED | 1 |
+PENDING | 2 | | | To Dispatch? |
+CONFIGURED | 3 | | | To Dispatch? |
+PLANNED | 4 | | | To Dispatch? |
+TO DISPATCH | 5 | | | To Dispatch |
+DISPATCHED | 6 | Depot | 4 | To Dispatch |
+DISPATCHED | 6 | Port | 5 | To Dispatch |
+DISPATCHED | 6 | Yard, Before Client | 3 | Yard Before |
+DISPATCHED | 6 | Client | 2 | Client |
+DISPATCHED | 6 | Yard, After Client | 6 | Yard After |
+STARTED/DELIVERED | 7 |
+OPEN | 8 |
+COMPLETED | 9 | | | Completed |
+REVIEWED | 10 | | | Completed |
+INVOICED | 11 | | | Completed? |
+PARTIAL_PAID | 12 | | | Completed? |
+PAID | 13 | | | Completed? |
+
+LocationTypes not used in the index above
+
+id | LocationType
+--- | ---
+1 | Default
+7 | Client Street Turn
 
 ### Appointment Locations
 
@@ -164,26 +242,6 @@ id | Type Name | Short Name
 --- | --- | ---
 1 | Delivery | DL
 2 | Pickup | PU
-
-### Delivery Locations
-
-Note: Related to container (not trip or leg)
-
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
-
-#### Delivery Location Types
-
-Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
-
-id | Variable (Name, Description)
---- | ---
-1 | Default
-2 | Client
-3 | Yard, Before Client
-4 | Depot
-5 | Port
-6 | Yard, After Client
-7 | Client Street Turn
 
 ## Trips
 
