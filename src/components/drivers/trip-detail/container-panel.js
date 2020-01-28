@@ -1,35 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   makeStyles,
   Typography,
   IconButton,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  AppBar,
+  Toolbar,
   Card,
   Menu,
   MenuItem,
   Chip
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faArrowRight, faPencil, faCircle } from '@fortawesome/pro-light-svg-icons/'
-import { faCircleFull } from '@fortawesome/pro-solid-svg-icons/faCircle'
+import { faCheck, faArrowRight, faTimes, faCircle, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
+import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
 
 const useStyles = makeStyles(theme => ({
-  summary: {
+  header: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
   },
-  summaryPanel: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  summaryText: {
+  headerText: {
     color: theme.palette.primary.contrastText
   },
   details: {
-    width: '100%'
+    margin: theme.spacing(1)
   },
   card: {
     padding: theme.spacing(1),
@@ -57,42 +52,56 @@ const useStyles = makeStyles(theme => ({
   },
   margin: {
     margin: theme.spacing(1),
+  },
+  locationStatus: {
+    display: 'flex',
+    alignItems: 'center',
   }
 }))
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [edit, setEdit] = useState(false)
+  
   const handleClick = event => {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
   const handleClose = event => {
-    event.stopPropagation()
     setAnchorEl(null)
   }
 
-  console.log(draying.appointments)
+  const handleEdit = event => {
+    setEdit(true)
+    handleClose()
+  }
+
+  const handleCancel = event => {
+    setEdit(false)
+  }
 
   return (
-    <ExpansionPanel defaultExpanded={true}>
-      <ExpansionPanelSummary className={classes.summaryPanel}> 
-        <div className={classes.summary}>
-          <Typography className={classes.summaryText}>Container</Typography>
+    <>
+      <AppBar position='static'>
+        <Toolbar className={classes.header}>
+          <Typography className={classes.headerText}>Container</Typography>
           <div>
-            <IconButton
-              onClick={handleClick}
-              onFocus={event => event.stopPropagation()}
-            >
-              <FontAwesomeIcon className={classes.summaryText} icon={faPlus} />
-            </IconButton>
-            <IconButton
-              onClick={handleClick}
-              onFocus={event => event.stopPropagation()}
-            >
-              <FontAwesomeIcon className={classes.summaryText} icon={faPencil} />
+            { edit && 
+              <>
+                <IconButton >
+                  <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
+                </IconButton>
+                <IconButton
+                  onClick={handleCancel}
+                >
+                  <FontAwesomeIcon className={classes.headerText} icon={faTimes} />
+                </IconButton>
+              </>
+            }
+            <IconButton onClick={handleClick}>
+              <FontAwesomeIcon className={classes.headerText} icon={faEllipsisV} />
             </IconButton>
           </div>
           <Menu
@@ -100,19 +109,19 @@ const ContainerPanel = ({ draying }) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={handleClose}>Add Appointment</MenuItem>
             <MenuItem onClick={handleClose}>Add Stop</MenuItem>
             <MenuItem onClick={handleClose}>Add Alert</MenuItem>
             <MenuItem onClick={handleClose}>Add Cost</MenuItem>
           </Menu>
-        </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+        </Toolbar>
+      </AppBar>
         <div className={classes.details}>
           <Card className={classes.card}>
             <div className={classes.cardRow}>
               <div>
-                <Typography>{draying.container}</Typography>
+                <Typography>{draying.loadType.name === 'Export' ? `${draying.container} | ${draying.booking}` : draying.container}</Typography>
                 <Typography variant='caption'>{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
               </div>
               <div>
@@ -154,24 +163,34 @@ const ContainerPanel = ({ draying }) => {
             </div>
           )) && <Typography variant='caption'>No Appointments</Typography>}
           <Typography>Container Location History</Typography>
-          <div>
+          <div className={classes.locationStatus}>
+            {(parseInt(draying.containerStage.id) <= 5 || parseInt(draying.deliveryLocation.locationType.id) === 4 || parseInt(draying.deliveryLocation.locationType.id) === 5) ?
+              <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
+              <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
             <Typography>To Dispatch</Typography>
           </div>
-          <div>
+          <div className={classes.locationStatus}>
+            {parseInt(draying.deliveryLocation.locationType.id) === 3 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
+              <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
             <Typography>Yard Before</Typography>
           </div>
-          <div>
+          <div className={classes.locationStatus}>
+            {parseInt(draying.deliveryLocation.locationType.id) === 2 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
+              <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
             <Typography>Client</Typography>
           </div>
-          <div>
+          <div className={classes.locationStatus}>
+            {parseInt(draying.deliveryLocation.locationType.id) === 6 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
+              <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
             <Typography>Yard After</Typography>
           </div>
-          <div>
+          <div className={classes.locationStatus}>
+            {parseInt(draying.containerStage.id) >= 9 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
+              <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
             <Typography>Completed</Typography>
           </div>
         </div>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    </>
   )
 }
 

@@ -1,39 +1,61 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   makeStyles,
   Typography,
   IconButton,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-  Button
+  AppBar,
+  Toolbar,
+  Menu,
+  MenuItem,
+  TextField
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil } from '@fortawesome/pro-light-svg-icons/'
+import { faEllipsisV, faTimes, faCheck } from '@fortawesome/pro-light-svg-icons/'
 
 const useStyles = makeStyles(theme => ({
-  summary: {
+  header: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
   },
-  summaryPanel: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  summaryText: {
+  headerText: {
     color: theme.palette.primary.contrastText
   },
   details: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%'
+    margin: theme.spacing(1)
   }
 }))
 
 const OrderPanel = ({ draying }) => {
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [edit, setEdit] = useState(false)
+  const [booking, setBooking] = useState('')
+
+  const handleClick = event => {
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = event => {
+    setAnchorEl(null)
+  }
+
+  const handleChange = event => {
+    setBooking(event.target.value)
+  }
+
+  const handleEdit = event => {
+    setEdit(true)
+    handleClose()
+  }
+
+  const handleCancel = event => {
+    setEdit(false)
+  }
+  
 
   let doStatus = ''
   if (draying.containerStage.id === '2' || draying.containerStage.id === '3') {
@@ -51,31 +73,47 @@ const OrderPanel = ({ draying }) => {
   }
 
   return (
-    <ExpansionPanel defaultExpanded={true}>
-      <ExpansionPanelSummary className={classes.summaryPanel}> 
-        <div className={classes.summary}>
-          <Typography className={classes.summaryText}>Order</Typography>
-          <IconButton
-            onClick={event => event.stopPropagation()}
-            onFocus={event => event.stopPropagation()}
+    <>
+      <AppBar position='static'>
+        <Toolbar className={classes.header}>
+          <Typography className={classes.headerText}>Order</Typography>
+          <div>
+            { edit && 
+              <>
+                <IconButton >
+                  <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
+                </IconButton>
+                <IconButton
+                  onClick={handleCancel}
+                >
+                  <FontAwesomeIcon className={classes.headerText} icon={faTimes} />
+                </IconButton>
+              </>
+            }
+            <IconButton onClick={handleClick}>
+              <FontAwesomeIcon className={classes.headerText} icon={faEllipsisV} />
+            </IconButton>
+          </div>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
           >
-            <FontAwesomeIcon className={classes.summaryText} icon={faPencil} />
-          </IconButton>
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <div className={classes.details}>
+        <div>
+          <Typography>{draying.order ? `#${draying.order.id}` : 'No order number was found for this trip.'}</Typography>
+          { edit ? <TextField label='Booking' value={booking} onChange={handleChange} /> : <Typography>{`#${draying.booking}`}</Typography>}
         </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <div className={classes.details}>
-          <div>
-            <Typography>{draying.order ? `#${draying.order.id}` : 'No order number was found for this trip.'}</Typography>
-            <Typography>{`#${draying.booking}`}</Typography>
-          </div>
-          <div>
-            <Typography>{doStatus}</Typography>
-            <Typography>{draying.client.companyName}</Typography>
-          </div>
+        <div>
+          <Typography>{doStatus}</Typography>
+          <Typography>{draying.client.companyName}</Typography>
         </div>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </div>
+    </>
   )
 }
 

@@ -71,7 +71,7 @@ const TripDetail = ({ width }) => {
         }
         status {
           name
-          status
+          id
         }
         draying {
           id
@@ -94,6 +94,7 @@ const TripDetail = ({ width }) => {
           deliveryLocation {
             nickName
             locationType {
+              id
               name
             }
           }

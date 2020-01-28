@@ -46,7 +46,7 @@ export const GET_ROUTES = gql`
         }
         status {
           name
-          status
+          id
         }
         draying {
           id
@@ -69,6 +69,7 @@ export const GET_ROUTES = gql`
           deliveryLocation {
             nickName
             locationType {
+              id
               name
             }
           }
