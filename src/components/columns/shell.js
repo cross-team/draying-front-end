@@ -49,7 +49,7 @@ function Shell({ width, left, middle, right }) {
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
 
   useEffect(() => {
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: false,
         hideMiddle: true,

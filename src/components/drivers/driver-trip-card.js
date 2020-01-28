@@ -74,7 +74,7 @@ const DriverTripCard = ({ trip, width }) => {
     setDispatchState({variables: { selectedTrip: {
       id: trip.id,
     } }})
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: true,

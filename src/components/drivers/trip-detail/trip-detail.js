@@ -2,7 +2,6 @@ import React from 'react'
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
-  makeStyles,
   withWidth,
   Typography,
   AppBar,
@@ -44,22 +43,7 @@ export const SET_DISPATCH_STATE = gql`
   }
 `
 
-const useStyles = makeStyles(theme => ({
-  summary: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%'
-  },
-  summaryPanel: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  summaryText: {
-    color: theme.palette.primary.contrastText
-  }
-}))
-
 const TripDetail = ({ width }) => {
-  const classes = useStyles()
   const client = useApolloClient()
   const { data: { dispatchState: { selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
 
@@ -94,6 +78,19 @@ const TripDetail = ({ width }) => {
           container
           priority
           cutOffDate
+          booking
+          appointments {
+            appointmentDate
+            appointmentTime
+            type {
+              name
+            }
+          }
+          extraStops {
+            deliveryLocation {
+              nickName
+            }
+          }
           deliveryLocation {
             nickName
             locationType {
@@ -121,6 +118,15 @@ const TripDetail = ({ width }) => {
           returnTerminal {
             nickName
           }
+          order {
+            id
+          }
+          client {
+            companyName
+          }
+          containerStage {
+            id
+          }
         }
       }
     `,
@@ -131,7 +137,7 @@ const TripDetail = ({ width }) => {
 
   const handleClose = () => {
     setDispatchState({variables: { selectedTrip: { id: '' } }})
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: false,
@@ -156,7 +162,7 @@ const TripDetail = ({ width }) => {
           <Typography>{`Trip ${selectedTrip.id} Details`}</Typography>
         </Toolbar>
       </AppBar>
-      <OrderPanel />
+      <OrderPanel draying={trip.draying} />
       <ContainerPanel draying={trip.draying} />
       <TripPanel trip={trip} />
     </>

@@ -53,6 +53,19 @@ export const GET_ROUTES = gql`
           container
           priority
           cutOffDate
+          booking
+          appointments {
+            appointmentDate
+            appointmentTime
+            type {
+              name
+            }
+          }
+          extraStops {
+            deliveryLocation {
+              nickName
+            }
+          }
           deliveryLocation {
             nickName
             locationType {
@@ -79,6 +92,15 @@ export const GET_ROUTES = gql`
           }
           returnTerminal {
             nickName
+          }
+          order {
+            id
+          }
+          client {
+            companyName
+          }
+          containerStage {
+            id
           }
         }
       }
