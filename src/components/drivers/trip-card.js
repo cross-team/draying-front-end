@@ -50,8 +50,6 @@ const TripCard = ({ trip }) => {
   let currentDestinationIndex
 
   for (const [index, location] of trip.locations.entries()) {
-    console.log('Locations: ', trip.locations)
-    console.log('Location: ', location)
     if (location.action.id >= 1 && location.action.id <= 6) {
       currentDestinationIndex = index + 1
       break
@@ -75,9 +73,9 @@ const TripCard = ({ trip }) => {
         <Avatar className={classes.locationDots} >{''}</Avatar>
       </div>
       <div className={classes.progressContainer}>
-        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal && trip.draying.returnTerminal.nickName}</Typography>
-        <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
         <Typography variant='caption' className={classes.tripText}>{trip.draying.terminalLocation && trip.draying.terminalLocation.nickName}</Typography>
+        <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal && trip.draying.returnTerminal.nickName}</Typography>
       </div>
     </div>
   )

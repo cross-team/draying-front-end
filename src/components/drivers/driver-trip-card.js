@@ -11,7 +11,6 @@ import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(3),
     padding: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column'
@@ -71,11 +70,10 @@ const DriverTripCard = ({ trip, width }) => {
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
 
   const handleClick = () => {
-    console.log(trip)
     setDispatchState({variables: { selectedTrip: {
       id: trip.id,
     } }})
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: true,

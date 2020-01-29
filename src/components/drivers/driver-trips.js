@@ -54,15 +54,40 @@ export const GET_ROUTES = gql`
         status {
           __typename
           name
-          status
+          id
         }
         draying {
           __typename
           id
           container
+          priority
+          cutOffDate
+          booking
+          appointments {
+            appointmentDate
+            appointmentTime
+            type {
+              name
+            }
+          }
+          extraStops {
+            deliveryLocation {
+              nickName
+            }
+          }
           deliveryLocation {
             __typename
             nickName
+            locationType {
+              id
+              name
+            }
+          }
+          portStatus {
+            name
+          }
+          loadType {
+            name
           }
           containerSize {
             __typename
@@ -83,6 +108,15 @@ export const GET_ROUTES = gql`
           returnTerminal {
             __typename
             nickName
+          }
+          order {
+            id
+          }
+          client {
+            companyName
+          }
+          containerStage {
+            id
           }
         }
       }

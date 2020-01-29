@@ -27,7 +27,7 @@ const RightColumn = ({ children }) => {
   const classes = useStyles()
   const { data: { columnState: { rightHidden } } } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid item xs={12} sm={4} hidden={rightHidden} className={classes.item}>
+    <Grid item xs={12} md={4} hidden={rightHidden} className={classes.item}>
       <Paper className={classes.column}>
         {children}
       </Paper>
