@@ -9,8 +9,7 @@ import {
   IconButton,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
-import Loading from '../../loading'
+import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'

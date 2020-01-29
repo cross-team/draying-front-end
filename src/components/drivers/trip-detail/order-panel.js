@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   makeStyles,
   Typography,
@@ -11,6 +11,18 @@ import {
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisV, faTimes, faCheck } from '@fortawesome/pro-light-svg-icons/'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
+export const UPDATE_DRAYING = gql`
+  mutation updateDraying($drayingId: Int, $field: String, $value: String) {
+    updateDraying(drayingId: $drayingId, field: $field, value: $value) {
+      success
+      message
+      updatedId
+    }
+  }
+`
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -33,13 +45,17 @@ const OrderPanel = ({ draying }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [booking, setBooking] = useState('')
+  debugger
+  const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
+
+  useEffect(() => setBooking(draying.booking), [draying.booking])
 
   const handleClick = event => {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = event => {
+  const handleClose = () => {
     setAnchorEl(null)
   }
 
@@ -47,15 +63,23 @@ const OrderPanel = ({ draying }) => {
     setBooking(event.target.value)
   }
 
-  const handleEdit = event => {
+  const handleEdit = () => {
     setEdit(true)
     handleClose()
   }
 
-  const handleCancel = event => {
+  const handleCancel = () => {
     setEdit(false)
+    setBooking(draying.booking)
   }
   
+  const handleSave = () => {
+    updateDraying({ variables: {
+      drayingId: parseInt(draying.id),
+      field: 'Booking',
+      value: booking
+    }})
+  }
 
   let doStatus = ''
   if (draying.containerStage.id === '2' || draying.containerStage.id === '3') {
@@ -72,6 +96,8 @@ const OrderPanel = ({ draying }) => {
     doStatus = 'Invoiced'
   }
 
+  console.log(data)
+
   return (
     <>
       <AppBar position='static'>
@@ -80,7 +106,7 @@ const OrderPanel = ({ draying }) => {
           <div>
             { edit && 
               <>
-                <IconButton >
+                <IconButton onClick={handleSave}>
                   <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
                 </IconButton>
                 <IconButton
@@ -99,7 +125,7 @@ const OrderPanel = ({ draying }) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleEdit}>Edit Order</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
