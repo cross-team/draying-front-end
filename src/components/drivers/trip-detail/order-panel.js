@@ -7,11 +7,13 @@ import {
   Toolbar,
   Menu,
   MenuItem,
-  TextField
+  TextField,
+  Alert,
+  CircularProgress
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisV, faTimes, faCheck } from '@fortawesome/pro-light-svg-icons/'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 export const UPDATE_DRAYING = gql`
@@ -33,6 +35,10 @@ const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText
   },
+  headerIcons: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   details: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -42,13 +48,24 @@ const useStyles = makeStyles(theme => ({
 
 const OrderPanel = ({ draying }) => {
   const classes = useStyles()
+  const client = useApolloClient()
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [booking, setBooking] = useState('')
-  debugger
+  const [saving, setSaving] = useState(false)
   const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
+  debugger
 
-  useEffect(() => setBooking(draying.booking), [draying.booking])
+  useEffect(() => {
+    setBooking(draying.booking)
+    debugger
+    if (edit) {
+      setSaving(false)
+      setEdit(false)
+    }
+  }, [draying.booking])
+
+  useEffect(() => writeToCache(data), [data])
 
   const handleClick = event => {
     event.stopPropagation()
@@ -74,11 +91,29 @@ const OrderPanel = ({ draying }) => {
   }
   
   const handleSave = () => {
+    setSaving(true)
     updateDraying({ variables: {
       drayingId: parseInt(draying.id),
       field: 'Booking',
       value: booking
     }})
+  }
+
+  const writeToCache = (data) => {
+    if (data && data.updateDraying.success) {
+      debugger
+      client.writeFragment({
+        id: draying.id,
+        fragment: gql`
+          fragment currentDraying on Draying {
+            booking
+          }
+        `,
+        data: {
+          booking: booking,
+        },
+      })
+    }
   }
 
   let doStatus = ''
@@ -103,7 +138,8 @@ const OrderPanel = ({ draying }) => {
       <AppBar position='static'>
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Order</Typography>
-          <div>
+          <div className={classes.headerIcons}>
+            { saving &&  <CircularProgress color="secondary" /> }
             { edit && 
               <>
                 <IconButton onClick={handleSave}>
@@ -139,6 +175,7 @@ const OrderPanel = ({ draying }) => {
           <Typography>{draying.client.companyName}</Typography>
         </div>
       </div>
+      { (data && !data.updateDraying.success) && <Alert severity="error">{data.updateDraying.message}</Alert> }
     </>
   )
 }
