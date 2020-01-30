@@ -38,7 +38,7 @@ PAID | 13 |
 
 API:
 
-Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientOrderTemplates
+Types: [https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientOrderTemplates](https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientOrderTemplates) or see [ClientOrderTemplates.json](./JSON/ClientOrderTemplates.json).
 
 ClientOrderTemplateId | Name
 --- | --- | ---
@@ -48,19 +48,37 @@ ClientOrderTemplateId | Name
 
 ### Delivery Order
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryOrder
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryOrder](https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryOrder)
+
+This is the main API for delivery orders.
 
 ### Delivery Place
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryPlace
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryPlace](https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryPlace) or see [DeliveryPlace.json](./JSON/DeliveryPlace.json).
+
+This is a list of delivery places.
 
 ### Shipping Lines
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/shippinglines
+This is a list of shipping lines.
+
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/shippinglines](https://dev-mercuriotransport.azurewebsites.net/api/v1/shippinglines) or see [shippinglines.json](./JSON/shippinglines.json).
+
+Endpoints
+
+- ShippingLineId
+- Name
+- ShortName
+- Url
+- Active
 
 ### Action Location
 
-- [ActionLocation]() - needs further research; see https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation
+- [ ] Needs further defining.
+
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation](https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation) or see [ActionLocation.json](./JSON/ActionLocation.json).
+
+Types: ?
 
 ### Related APIs
 
@@ -88,7 +106,7 @@ Previously known as 'master stage', a number of other stages and statuses are de
 
 API: Data > Route "0" -> DrayingTrips -> Trip "0" -> DeliveryOrderDraying().StageId()
 
-Reference: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages or [containerstages.json](../api-reference/JSON/containerstages.json)
+Reference: [https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages](https://dev-mercuriotransport.azurewebsites.net/api/v1/containerstages) or [containerstages.json](../api-reference/JSON/containerstages.json)
 
 ContainerStage | Id
 --- | ---
@@ -112,11 +130,11 @@ PAID | 13 |
 
 Note: Related to container (not trip or leg)
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/ also in DrayingTripLocation
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/](https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverylocation/) also in DrayingTripLocation.  Reference [DeliveryLocation.json](./JSON/DeliveryLocation.json).
 
 API: Data > Route "0" -> DrayingTrips -> Trip "0" -> DeliveryOrderDraying().CurrentLocationId()
 
-Types: reference https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes or see [locationtypes.json](./JSON/locationtypes.json).
+Types: Reference [https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes](https://dev-mercuriotransport.azurewebsites.net/api/v1/locationtypes) or see [locationtypes.json](./JSON/locationtypes.json).
 
 id | LocationType
 --- | ---
@@ -127,6 +145,36 @@ id | LocationType
 5 | Port
 6 | Yard, After Client
 7 | Client Street Turn
+
+### Container Types
+
+API:
+
+Types: [https://dev-mercuriotransport.azurewebsites.net/api/v1/containertypes](https://dev-mercuriotransport.azurewebsites.net/api/v1/containertypes) or see [containertypes.json](./JSON/containertypes.json)
+
+ContainerTypeId | Name | Short Name
+--- | --- | ---
+1 | Standard | ST
+2 | High Cube | HC
+3 | Reefer | RF
+4 | Tank | TNK
+5 | Flatrack | FLAT
+6 | Open Top | OPEN
+7 | FlatBed | FLB
+8 | Non-Operating Reefers | NOR
+
+### Container Sizes
+
+API:
+
+Types: [https://dev-mercuriotransport.azurewebsites.net/api/v1/containersizes](https://dev-mercuriotransport.azurewebsites.net/api/v1/containersizes) or see [containersizes.json](./JSON/containersizes.json)
+
+ContainerSizeId | Name
+--- | ---
+1 | 20'
+2 | 40'
+3 | 45'
+4 | 53'
 
 ### Draying
 
@@ -140,9 +188,9 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocati
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching or see [Dispatching.json](./JSON/Dispatching.json)
 
-### [STATUS] (Container) Port Status
+### [STATUS] Port Status (Container)
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/containerportstatuses
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/containerportstatuses](https://dev-mercuriotransport.azurewebsites.net/api/v1/containerportstatuses)
 
 Reference [containerportstatus.json](../api-reference/JSON/containerportstatuses.json)
 
@@ -222,9 +270,9 @@ id | LocationType
 
 #### Appointment Location Types
 
-API: 
+API:
 
-Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmentlocationtypes or [appointmentlocationtypes.json](./JSON/appointmentlocationtypes.json)
+Types: Reference [https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmentlocationtypes](https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmentlocationtypes) or [appointmentlocationtypes.json](./JSON/appointmentlocationtypes.json)
 
 id | Type Name | Short Name
 --- | --- | ---
@@ -234,9 +282,9 @@ id | Type Name | Short Name
 
 #### Appointment Types
 
-API: 
+API:
 
-Types: Reference https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmenttypes or [appointmenttypes.json](./JSON/appointmenttypes.json)
+Types: Reference [https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmenttypes](https://dev-mercuriotransport.azurewebsites.net/api/v1/appointmenttypes) or [appointmenttypes.json](./JSON/appointmenttypes.json)
 
 id | Type Name | Short Name
 --- | --- | ---
@@ -247,12 +295,11 @@ id | Type Name | Short Name
 
 ### [STATUS] Trip Status
 
-- [ ] Include in UI
 - Note: This is the "leg status" column in https://dev-mercuriotransport.azurewebsites.net/Dashboard/DriverPayment 
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses
+API:
 
-Reference [tripstatuses.json](../api-reference/JSON/tripstatuses.json)
+Types: [https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses](https://dev-mercuriotransport.azurewebsites.net/api/v1/tripstatuses) or see  [tripstatuses.json](../api-reference/JSON/tripstatuses.json)
 
 id | Name
 --- | ---
@@ -266,7 +313,7 @@ id | Name
 
 ### Trip Actions
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions or see [tripactions.json](./JSON/tripactions.json)
+API: [https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions](https://dev-mercuriotransport.azurewebsites.net/api/v1/tripactions) or see [tripactions.json](./JSON/tripactions.json)
 
 id | Type Name | Short Name
 --- | --- | ---
@@ -292,30 +339,31 @@ id | Type Name | Short Name
 
 ![trip-locations-api]
 
+API:
+
 - [ ] To be further elaborated on
 
-#### Trip Location Types
+Types:
 
-- TBD
+- [ ] To be further elaborated on
 
 #### (Trip) Location Actions
 
-- [ ] See screenshot 2:35pm, these are the location lists (leg list)
-- [ ] Add to UI
+API:
 
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action or see [Actions.json](./JSON/Actions.json)
+Types: [https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action](https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Action) or see [Action.json](./JSON/Action.json)
 
-id | Name
---- | ---
-1 | Pick Empty
-2 | Pick Loaded
-3 | Drop Empty
-4 | Drop Loaded
-5 | Load
-6 | Unload
-7 | Chassis Swap
-8 | End of Day
-9 | Start Day
+DrayingActionId | Name | Time
+--- | --- | ---
+1 | Pick Empty | 15
+2 | Pick Loaded | 15
+3 | Drop Empty | 20
+4 | Drop Loaded | 20
+5 | Load | 90
+6 | Unload | 90
+7 | Chassis Swap | 15
+8 | End of Day | 15
+9 | Start Day | 15
 
 **Important Notes:**
 
@@ -342,6 +390,8 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/driver/
 
 ### Driver/Capacity
 
+- [ ] To be further elaborated on
+
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/driver/capacity
 
 Endpoints
@@ -367,21 +417,9 @@ API Example: https://dev-mercuriotransport.azurewebsites.net/api/v1/Vehicle?_=15
 
 Endpoints: TBD
 
-### Shipping Lines
-
-API: https://dev-mercuriotransport.azurewebsites.net/api/v1/shippinglines
-
-Endpoints
-
-- ShippingLineId
-- Name
-- ShortName
-- Url
-- Active
-
 ### Cost Reasons
 
-API: 
+API:
 
 Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostReasons
 
@@ -400,7 +438,7 @@ Other Costs |
 
 ### Cost Types
 
-API: 
+API:
 
 Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/CostTypes
 
@@ -413,7 +451,7 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Company/me
 
 ### Contact Types
 
-API: 
+API:
 
 Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/contacttypes
 
@@ -423,7 +461,7 @@ Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/contacttypes
 
 ### Phone Types
 
-API: 
+API:
 
 Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/phonetypes
 
@@ -441,7 +479,7 @@ Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/ClientTypes
 
 ### Terms
 
-API: 
+API:
 
 Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/Terms
 
@@ -480,7 +518,7 @@ Types: https://dev-mercuriotransport.azurewebsites.net/api/v1/deliverytypes
 
 ### Load Types
 
-API: 
+API:
 
 Types:https://dev-mercuriotransport.azurewebsites.net/api/v1/LoadTypes
 
