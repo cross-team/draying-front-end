@@ -59,10 +59,10 @@ const OrderPanel = ({ draying }) => {
   useEffect(() => {
     setBooking(draying.booking)
     debugger
-    if (edit) {
-      setSaving(false)
-      setEdit(false)
-    }
+    // if (edit) {
+    //   setSaving(false)
+    //   setEdit(false)
+    // }
   }, [draying.booking])
 
   useEffect(() => writeToCache(data), [data])
@@ -89,7 +89,7 @@ const OrderPanel = ({ draying }) => {
     setEdit(false)
     setBooking(draying.booking)
   }
-  
+
   const handleSave = () => {
     setSaving(true)
     updateDraying({ variables: {
@@ -103,16 +103,20 @@ const OrderPanel = ({ draying }) => {
     if (data && data.updateDraying.success) {
       debugger
       client.writeFragment({
-        id: draying.id,
+        id: `${draying.id}`,
         fragment: gql`
           fragment currentDraying on Draying {
             booking
           }
         `,
         data: {
-          booking: booking,
+          booking,
+          __typename: 'Draying',
         },
       })
+      setSaving(false)
+      setEdit(false)
+
     }
   }
 
@@ -140,7 +144,7 @@ const OrderPanel = ({ draying }) => {
           <Typography className={classes.headerText}>Order</Typography>
           <div className={classes.headerIcons}>
             { saving &&  <CircularProgress color="secondary" /> }
-            { edit && 
+            { edit &&
               <>
                 <IconButton onClick={handleSave}>
                   <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
@@ -168,7 +172,7 @@ const OrderPanel = ({ draying }) => {
       <div className={classes.details}>
         <div>
           <Typography>{draying.order ? `#${draying.order.id}` : 'No order number was found for this trip.'}</Typography>
-          { edit ? <TextField label='Booking' value={booking} onChange={handleChange} /> : <Typography>{`#${draying.booking}`}</Typography>}
+          { edit ? <TextField label='Booking' value={booking} onChange={handleChange} /> : <Typography>{`#${booking}`}</Typography>}
         </div>
         <div>
           <Typography>{doStatus}</Typography>
