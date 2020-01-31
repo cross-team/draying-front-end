@@ -70,7 +70,7 @@ export default function UndoTripActionContent({
               color="textPrimary"
               gutterBottom
             >
-              Are you sure you want to undo the trip action?
+              Are you sure you want to undo the previous trip action?
             </Typography>
           </>
         ) : (
