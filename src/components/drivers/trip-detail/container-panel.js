@@ -137,7 +137,7 @@ const ContainerPanel = ({ draying }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [saving, setSaving] = useState(false)
-
+  console.log(draying.cutOffDate)
   const cutOffDateObject = draying.cutOffDate
     ? new Date(draying.cutOffDate)
     : new Date()
@@ -311,7 +311,7 @@ const ContainerPanel = ({ draying }) => {
           onChange={handleChange('booking')}
           className={classes.formControl}
         />
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} variant="outlined">
           <InputLabel>Size (Ft)</InputLabel>
           <Select value={fieldValues.size} onChange={handleChange('size')}>
             {!loading ? (
@@ -326,7 +326,7 @@ const ContainerPanel = ({ draying }) => {
             )}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} variant="outlined">
           <InputLabel>Type</InputLabel>
           <Select value={fieldValues.type} onChange={handleChange('type')}>
             {!loading ? (
@@ -343,9 +343,9 @@ const ContainerPanel = ({ draying }) => {
         </FormControl>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
-            disableToolbar
             variant="inline"
-            format="MM/dd/yyyy"
+            inputVariant="outlined"
+            format="dd/MM/yyyy"
             label="Cut Off Date"
             value={fieldValues.cutOffDate}
             InputLabelProps={{ shrink: true }}
