@@ -25,8 +25,16 @@ export const GET_DISPATCH_STATE = gql`
 `
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState($hideLeft: Boolean, $hideMiddle: Boolean, $hideRight: Boolean) {
-    setColumnState(hideLeft: $hideLeft, hideMiddle: $hideMiddle, hideRight: $hideRight) @client {
+  mutation setColumnState(
+    $hideLeft: Boolean
+    $hideMiddle: Boolean
+    $hideRight: Boolean
+  ) {
+    setColumnState(
+      hideLeft: $hideLeft
+      hideMiddle: $hideMiddle
+      hideRight: $hideRight
+    ) @client {
       leftHidden
       middleHidden
       rightHidden
@@ -44,7 +52,11 @@ export const SET_DISPATCH_STATE = gql`
 
 const TripDetail = ({ width }) => {
   const client = useApolloClient()
-  const { data: { dispatchState: { selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
+  const {
+    data: {
+      dispatchState: { selectedTrip },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
 
   const trip = client.readFragment({
     id: selectedTrip.id,
@@ -104,9 +116,11 @@ const TripDetail = ({ width }) => {
             name
           }
           containerSize {
+            id
             name
           }
           containerType {
+            id
             name
           }
           shippingLine {
@@ -136,25 +150,29 @@ const TripDetail = ({ width }) => {
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
 
   const handleClose = () => {
-    setDispatchState({variables: { selectedTrip: { id: '' } }})
+    setDispatchState({ variables: { selectedTrip: { id: '' } } })
     if (width === 'xs' || width === 'sm') {
-      setColumnState({variables: {
-        hideLeft: true,
-        hideMiddle: false,
-        hideRight: true
-      }})
+      setColumnState({
+        variables: {
+          hideLeft: true,
+          hideMiddle: false,
+          hideRight: true,
+        },
+      })
     } else {
-      setColumnState({variables: {
-        hideLeft: false,
-        hideMiddle: false,
-        hideRight: true
-      }})
+      setColumnState({
+        variables: {
+          hideLeft: false,
+          hideMiddle: false,
+          hideRight: true,
+        },
+      })
     }
   }
 
   return (
     <>
-      <AppBar position='sticky'>
+      <AppBar position="sticky">
         <Toolbar>
           <IconButton onClick={handleClose}>
             <FontAwesomeIcon icon={faTimes} />
