@@ -93,7 +93,7 @@ const DriverHeader = ( { width } ) => {
   }
 
   const handleAddTrip = () => {
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: true,

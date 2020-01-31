@@ -43,9 +43,9 @@ export const GET_DRIVERS = gql`
 export default function DriversCapacity() {
   const { data: { dispatchState: { selectedDate } } } = useQuery(GET_DISPATCH_STATE)
   const queryDate = `${selectedDate.month}/${selectedDate.day}/${selectedDate.year}`
-  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: queryDate } })
+  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: queryDate }, pollInterval: 30000, fetchPolicy: 'cache-and-network'  })
 
-  if ( loading ) {
+  if ( loading && !data ) {
     return <Loading />
   }
 

@@ -73,9 +73,9 @@ const TripCard = ({ trip }) => {
         <Avatar className={classes.locationDots} >{''}</Avatar>
       </div>
       <div className={classes.progressContainer}>
-        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal && trip.draying.returnTerminal.nickName}</Typography>
-        <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
         <Typography variant='caption' className={classes.tripText}>{trip.draying.terminalLocation && trip.draying.terminalLocation.nickName}</Typography>
+        <Typography variant='caption' className={classes.tripTextETA}>{`ETA ${minutes}min`}</Typography>
+        <Typography variant='caption' className={classes.tripText}>{trip.draying.returnTerminal && trip.draying.returnTerminal.nickName}</Typography>
       </div>
     </div>
   )

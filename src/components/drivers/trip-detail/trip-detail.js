@@ -2,21 +2,17 @@ import React from 'react'
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
-  makeStyles,
   withWidth,
   Typography,
   AppBar,
   Toolbar,
   IconButton,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Card
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
-import Loading from '../loading'
-import DriverTripCard from './driver-trip-card'
+import { faTimes } from '@fortawesome/pro-light-svg-icons/'
+import OrderPanel from './order-panel'
+import ContainerPanel from './container-panel'
+import TripPanel from './trip-panel'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -46,15 +42,7 @@ export const SET_DISPATCH_STATE = gql`
   }
 `
 
-const useStyles = makeStyles(theme => ({
-  summary: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-}))
-
 const TripDetail = ({ width }) => {
-  const classes = useStyles()
   const client = useApolloClient()
   const { data: { dispatchState: { selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
 
@@ -82,16 +70,30 @@ const TripDetail = ({ width }) => {
         }
         status {
           name
-          status
+          id
         }
         draying {
           id
           container
           priority
           cutOffDate
+          booking
+          appointments {
+            appointmentDate
+            appointmentTime
+            type {
+              name
+            }
+          }
+          extraStops {
+            deliveryLocation {
+              nickName
+            }
+          }
           deliveryLocation {
             nickName
             locationType {
+              id
               name
             }
           }
@@ -116,6 +118,15 @@ const TripDetail = ({ width }) => {
           returnTerminal {
             nickName
           }
+          order {
+            id
+          }
+          client {
+            companyName
+          }
+          containerStage {
+            id
+          }
         }
       }
     `,
@@ -126,7 +137,7 @@ const TripDetail = ({ width }) => {
 
   const handleClose = () => {
     setDispatchState({variables: { selectedTrip: { id: '' } }})
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: false,
@@ -141,60 +152,6 @@ const TripDetail = ({ width }) => {
     }
   }
 
-  const expansionPanel = ( title, details ) => (
-    <ExpansionPanel defaultExpanded={true}>
-      <ExpansionPanelSummary>
-        <div className={classes.summary}>
-          <Typography>{title}</Typography>
-          <IconButton
-            onClick={event => event.stopPropagation()}
-            onFocus={event => event.stopPropagation()}
-          >
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </IconButton>
-        </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>{details}</ExpansionPanelDetails>
-    </ExpansionPanel>
-  )
-
-  const order = expansionPanel( 'Order',
-    <div>
-      <Typography>#Order Num</Typography>
-      <Typography>Delivery Order Status</Typography>
-    </div>
-  )
-
-  const container = expansionPanel( 'Container',
-    <div>
-      <Typography>Current Trip Action ></Typography>
-      <Card>
-        <Typography>{trip.draying.container}</Typography>
-        <Typography>{`${trip.draying.containerSize.name}, ${trip.draying.containerType.name}`}</Typography>
-        <Typography>{trip.draying.priority}</Typography>
-        <Typography>{trip.draying.deliveryLocation.locationType.name}</Typography>
-        <Typography>{trip.draying.loadType.name}</Typography>
-        <Typography>{trip.draying.cutOffDate}</Typography>
-        <Typography>{trip.draying.portStatus.name}</Typography>
-      </Card>
-      <div>
-        <Typography>Shipping Line/Terminal</Typography>
-        <Typography>1st Stop</Typography>
-        <Typography>2nd Stop</Typography>
-        <Typography>Return Terminal</Typography>
-      </div>
-      <Typography>Appointments</Typography>
-      <Typography>Container Location History</Typography>
-    </div>
-  )
-
-  const currentTrip = expansionPanel( 'Trip (current trip)',
-    <div>
-      <Typography>Available Trip Actions ></Typography>
-      <DriverTripCard trip={trip} />
-    </div>
-  )
-
   return (
     <>
       <AppBar position='sticky'>
@@ -205,9 +162,9 @@ const TripDetail = ({ width }) => {
           <Typography>{`Trip ${selectedTrip.id} Details`}</Typography>
         </Toolbar>
       </AppBar>
-      {order}
-      {container}
-      {currentTrip}
+      <OrderPanel draying={trip.draying} />
+      <ContainerPanel draying={trip.draying} />
+      <TripPanel trip={trip} />
     </>
   )
 }

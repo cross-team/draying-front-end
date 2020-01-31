@@ -110,7 +110,7 @@ const CollapsedDriverCard = ({ driver, width }) => {
       lastName: driver.lastName,
       phone: driver.phone
     }, selectedTrip: { id: '' }}})
-    if (width === 'xs') {
+    if (width === 'xs' || width === 'sm') {
       setColumnState({variables: {
         hideLeft: true,
         hideMiddle: false,
