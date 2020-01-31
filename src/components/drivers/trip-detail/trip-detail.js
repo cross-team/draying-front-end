@@ -59,7 +59,7 @@ const TripDetail = ({ width }) => {
   } = useQuery(GET_DISPATCH_STATE)
 
   const trip = client.readFragment({
-    id: selectedTrip.id,
+    id: `Trip:${selectedTrip.id}`,
     fragment: gql`
       fragment currentTrip on Trip {
         id

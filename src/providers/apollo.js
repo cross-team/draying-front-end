@@ -8,7 +8,7 @@ import { resolvers, typeDefs } from '../resolvers'
 import { getUser } from '../services/auth'
 
 const cache = new InMemoryCache({
-  dataIdFromObject: () => undefined,
+  dataIdFromObject: object => `${object.__typename}:${object.id}`,
 })
 const today = new Date(2020, 0, 15)
 const hasToken = !!getUser().token
