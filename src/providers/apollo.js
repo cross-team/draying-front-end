@@ -10,7 +10,7 @@ import { getUser } from '../services/auth'
 const cache = new InMemoryCache({
   dataIdFromObject: object => `${object.__typename}:${object.id}`,
 })
-const today = new Date(2020, 0, 15)
+const today = new Date()
 const hasToken = !!getUser().token
 const client = new ApolloClient({
   cache,

@@ -8,9 +8,7 @@ import UndoTripActionContent from './undo-trip-action-content'
 
 const CAN_UNDO_TRIP_QUERY = gql`
   query CanUndo($drayingId: Int) {
-    drayingCanUndoTripAction(drayingId: $drayingId) {
-      canUndo
-      message
+    drayingGetUndoTripActionMessage(drayingId: $drayingId) {
       driverId
       tripStatusId
       drayingId
@@ -39,19 +37,22 @@ export default function UndoTripActionPopUp({ OpenPopUpButton, drayingId }) {
     console.log(error)
     return <Typography color="error">Error</Typography>
   }
-  if (data.drayingCanUndoTripAction && !data.drayingCanUndoTripAction.canUndo) {
+  if (
+    data.drayingGetUndoTripActionMessage &&
+    !data.drayingGetUndoTripActionMessage.tripMessages
+  ) {
     return null
   }
   return (
     <>
-      {data.drayingCanUndoTripAction && (
+      {data.drayingGetUndoTripActionMessage && (
         <PopUp ActionButton={OpenPopUpButton}>
           {handleClose => {
             return (
               <UndoTripActionContent
                 handleClose={handleClose}
                 drayingId={drayingId}
-                canUndo={data.drayingCanUndoTripAction.canUndo}
+                tripMessages={data.drayingGetUndoTripActionMessage.tripMessages}
               />
             )
           }}

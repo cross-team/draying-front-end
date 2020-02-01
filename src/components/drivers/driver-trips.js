@@ -226,7 +226,7 @@ export default function DriverTrips() {
   const { loading, error, data } = useQuery(GET_ROUTES, {
     variables: {
       driverId: selectedDriver.id,
-      pending: false,
+      pending: true,
       fromDate: todayStr,
       toDate: tomorrowStr,
     },

@@ -7,8 +7,6 @@ import Loading from '../loading'
 import Button from '@material-ui/core/Button'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
-import { GET_DRIVERS } from '../drivers/drivers-capacity'
-import {} from '../drivers/trip-detail/trip-detail'
 
 const useStyles = makeStyles({
   title: {
@@ -29,7 +27,7 @@ const UNDO_TRIP_MUTATION = gql`
 export default function UndoTripActionContent({
   handleClose,
   drayingId,
-  canUndo,
+  tripMessages,
 }) {
   const classes = useStyles()
 
@@ -38,7 +36,7 @@ export default function UndoTripActionContent({
     { data: undoResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
     variables: { drayingId },
-    refetchQueries: [GET_DRIVERS],
+    refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
     // onCompleted: () => closeOrDisplayError(),
   })
 
@@ -66,27 +64,24 @@ export default function UndoTripActionContent({
   return (
     <>
       <CardContent>
-        {canUndo ? (
-          <>
-            <Typography
-              className={classes.title}
-              color="textPrimary"
-              gutterBottom
-            >
-              Are you sure you want to undo the previous trip action?
-            </Typography>
-          </>
-        ) : (
-          <Typography
-            className={classes.title}
-            color="textPrimary"
-            gutterBottom
-          >
-            You can not undo this trip action.
-          </Typography>
-        )}
+        <Typography className={classes.title} color="textPrimary" gutterBottom>
+          Are you sure you want to undo the previous trip action?
+        </Typography>
+        {tripMessages.length > 0
+          ? tripMessages.map(message => (
+              <>
+                <Typography
+                  className={classes.title}
+                  color="textPrimary"
+                  gutterBottom
+                >
+                  Body : ${message.body}
+                </Typography>
+              </>
+            ))
+          : null}
         <CardActions>
-          {!saving && canUndo && !undoResponse ? (
+          {!saving && !undoResponse ? (
             <Button size="small" onClick={handleUndoTripAction}>
               Yes
             </Button>
