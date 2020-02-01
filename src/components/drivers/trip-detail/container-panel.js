@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   makeStyles,
   Typography,
@@ -13,17 +13,30 @@ import {
   FormControl,
   InputLabel,
   Select,
+  CircularProgress,
 } from '@material-ui/core/'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faArrowRight, faTimes, faCircle, faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
+import {
+  faCheck,
+  faArrowRight,
+  faTimes,
+  faCircle,
+  faEllipsisV,
+} from '@fortawesome/pro-light-svg-icons/'
 import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
-import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 export const UPDATE_DRAYING_FIELDS = gql`
-  mutation updateDrayingFields($drayingId: Int, $drayingFields: [DrayingFieldsInput]) {
+  mutation updateDrayingFields(
+    $drayingId: Int
+    $drayingFields: [DrayingFieldsInput]
+  ) {
     updateDrayingFields(drayingId: $drayingId, drayingFields: $drayingFields) {
       success
       errors {
@@ -38,10 +51,12 @@ export const UPDATE_DRAYING_FIELDS = gql`
 export const GET_DROPDOWN_OPTIONS = gql`
   query allDropdowns {
     containerSizes {
+      id
       name
       size
     }
     containerTypes {
+      id
       name
       shortName
     }
@@ -51,10 +66,10 @@ export const GET_DROPDOWN_OPTIONS = gql`
   }
 `
 
-const addZero = ( value ) => {
+const addZero = value => {
   let newValue = value.toString()
   if (newValue.length === 1) {
-    newValue = "0" + newValue
+    newValue = '0' + newValue
   }
   return newValue
 }
@@ -66,10 +81,10 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
   },
   headerText: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
   },
   details: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   card: {
     padding: theme.spacing(1),
@@ -79,14 +94,14 @@ const useStyles = makeStyles(theme => ({
   cardRow: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   stopContainer: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
-  stop: {
+  headerIcons: {
     display: 'flex',
     alignItems: 'center',
   },
@@ -104,34 +119,43 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     width: '100%',
-  }
+    margin: theme.spacing(1),
+  },
+  editContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }))
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
-  const client = useApolloClient()
-  const [updateDrayingFields, { data }] = useMutation(UPDATE_DRAYING_FIELDS)
-  const { loading, error, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
-
+  // const client = useApolloClient()
+  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS)
+  const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
+  dropdownData && console.log(dropdownData)
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [saving, setSaving] = useState(false)
-
-  const cutOffDateObject = draying.cutOffDate ? new Date(draying.cutOffDate) : new Date()
-  const cutOffDateString = `${addZero(cutOffDateObject.getMonth() + 1)}/${addZero(cutOffDateObject.getMonth())}/${cutOffDateObject.getFullYear()}`
+  console.log(draying.cutOffDate)
+  const cutOffDateObject = draying.cutOffDate
+    ? new Date(draying.cutOffDate)
+    : new Date()
+  const cutOffDateString = `${addZero(
+    cutOffDateObject.getMonth() + 1,
+  )}/${addZero(cutOffDateObject.getMonth())}/${cutOffDateObject.getFullYear()}`
 
   const fieldReducer = (state, { type, field, value }) => {
-    debugger
     switch (type) {
       case 'update':
         return {
           ...state,
-          [field]: value
+          [field]: value,
         }
       case 'cancel':
         return {
           booking: draying.booking,
-          count: draying.container,
+          containerNum: draying.container,
           cutOffDate: cutOffDateString,
           size: draying.containerSize.name,
           type: draying.containerType.name,
@@ -145,21 +169,82 @@ const ContainerPanel = ({ draying }) => {
     booking: draying.booking,
     containerNum: draying.container,
     cutOffDate: cutOffDateString,
-    size: draying.containerSize.name,
-    type: draying.containerType.name,
+    size: draying.containerSize.id,
+    type: draying.containerType.id,
   })
-  const update = (field, value) => dispatch({ type: 'update', field, value})
+  const update = (field, value) => dispatch({ type: 'update', field, value })
   const cancel = () => dispatch({ type: 'cancel' })
 
+  useEffect(() => {
+    update('booking', draying.booking)
+    update('containerNum', draying.container)
+    update('cutOffDate', cutOffDateString)
+    update('size', draying.containerSize.name)
+    update('type', draying.containerType.name)
+  }, [draying, cutOffDateString])
+
+  /*
+  const writeToCache = data => {
+    if (data && data.updateDrayingFields.success) {
+      client.writeFragment({
+        id: `${draying.id}`,
+        fragment: gql`
+          fragment currentDraying on Draying {
+            booking
+            container
+            containerSize {
+              id
+              name
+            }
+            containerType {
+              id
+              name
+            }
+          }
+        `,
+        data: {
+          booking: fieldValues.booking,
+          container: fieldValues.containerNum,
+          containerSize: {
+            id: fieldValues.size,
+            name: dropdownData.containerSizes[fieldValues.size - 1].name,
+            __typename: 'ContainerSize',
+          },
+          containerType: {
+            id: fieldValues.type,
+            name: dropdownData.containerTypes[fieldValues.type - 1].name,
+            __typename: 'ContainerType',
+          },
+          __typename: 'Draying',
+        },
+      })
+      setSaving(false)
+      setEdit(false)
+    }
+  }
+
+  useEffect(() => writeToCache(data), [data, writeToCache])
+  */
+
+  const handleSave = () => {
+    setSaving(true)
+    updateDrayingFields({
+      variables: {
+        drayingId: parseInt(draying.id),
+        drayingFields: [
+          { field: 'booking', value: fieldValues.booking },
+          { field: 'container', value: fieldValues.containerNum },
+          { field: 'containerSize', value: fieldValues.size },
+          { field: 'containerType', value: fieldValues.type },
+        ],
+      },
+    })
+  }
+
   const handleChange = field => event => {
-    debugger
     update(field, event.target.value)
   }
 
-  const handleDateChange = date => {
-    setSelectedDate(date);
-  };
-  
   const handleClick = event => {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
@@ -184,17 +269,25 @@ const ContainerPanel = ({ draying }) => {
       <Card className={classes.card}>
         <div className={classes.cardRow}>
           <div>
-            <Typography>{draying.loadType.name === 'Export' ? `${draying.container} | ${draying.booking}` : draying.container}</Typography>
-            <Typography variant='caption'>{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
+            <Typography>
+              {draying.loadType.name === 'Export'
+                ? `${draying.container} | ${draying.booking}`
+                : draying.container}
+            </Typography>
+            <Typography variant="caption">{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
           </div>
           <div>
             <Typography>{draying.priority}</Typography>
-            <Typography>{draying.deliveryLocation.locationType.name}</Typography>
+            <Typography>
+              {draying.deliveryLocation.locationType.name}
+            </Typography>
           </div>
         </div>
         <div className={classes.cardRow}>
           <Typography>{draying.loadType.name}</Typography>
-          <Typography>{draying.cutOffDate && draying.cutOffDate.slice(0, 10)}</Typography>
+          <Typography>
+            {draying.cutOffDate && draying.cutOffDate.slice(0, 10)}
+          </Typography>
           <Typography>{draying.portStatus.name}</Typography>
         </div>
       </Card>
@@ -203,71 +296,94 @@ const ContainerPanel = ({ draying }) => {
 
   const contentEdit = (
     <>
-      <Card className={classes.card}>
-        <div className={classes.cardRow}>
-          <TextField label='Container #' variant="outlined" value={fieldValues.containerNum} onChange={handleChange('containerNum')} />
-          <Typography>{draying.priority}</Typography>
-        </div>
-        <TextField label="Container's Booking #" variant="outlined" value={fieldValues.booking} onChange={handleChange('booking')} />
-        <div className={classes.cardRow}>
-          <FormControl className={classes.formControl}>
-            <InputLabel>Size (Ft)</InputLabel>
-            <Select value={fieldValues.size} onChange={handleChange('size')}>
-              {!loading ? (dropdownData && dropdownData.containerSizes.map((size) =>
-                <MenuItem key={size.name} value={size.name}>{size.name}</MenuItem>            
-              )) : <Typography>Loading...</Typography>}
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel>Type</InputLabel>
-            <Select value={fieldValues.type} onChange={handleChange('type')}>
-              {!loading ? (dropdownData && dropdownData.containerTypes.map((type) =>
-                <MenuItem key={type.name}value={type.name}>{type.name}</MenuItem>            
-              )) : <Typography>Loading...</Typography>}
-            </Select>
-          </FormControl>
-        </div>
-        <div className={classes.cardRow}>
-          <Typography>{draying.loadType.name}</Typography>
-          <Typography>{draying.portStatus.name}</Typography>
-        </div>
-        <div className={classes.cardRow}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="mm/dd/yyyy"
-              label="Cut Off Date"
-              value={fieldValues.cutOffDate}
-              InputLabelProps={{ shrink: true }}
-            />
-          </MuiPickersUtilsProvider>
-          <Typography>{draying.deliveryLocation.locationType.name}</Typography>
-        </div>
-      </Card>
+      <div className={classes.editContainer}>
+        <TextField
+          label="Container #"
+          variant="outlined"
+          value={fieldValues.containerNum}
+          onChange={handleChange('containerNum')}
+          className={classes.formControl}
+        />
+        <TextField
+          label="Container's Booking #"
+          variant="outlined"
+          value={fieldValues.booking}
+          onChange={handleChange('booking')}
+          className={classes.formControl}
+        />
+        <FormControl className={classes.formControl} variant="outlined">
+          <InputLabel>Size (Ft)</InputLabel>
+          <Select value={fieldValues.size} onChange={handleChange('size')}>
+            {!loading ? (
+              dropdownData &&
+              dropdownData.containerSizes.map(size => (
+                <MenuItem key={size.id} value={size.id}>
+                  {size.name}
+                </MenuItem>
+              ))
+            ) : (
+              <Typography>Loading...</Typography>
+            )}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl} variant="outlined">
+          <InputLabel>Type</InputLabel>
+          <Select value={fieldValues.type} onChange={handleChange('type')}>
+            {!loading ? (
+              dropdownData &&
+              dropdownData.containerTypes.map(type => (
+                <MenuItem key={type.id} value={type.id}>
+                  {type.name}
+                </MenuItem>
+              ))
+            ) : (
+              <Typography>Loading...</Typography>
+            )}
+          </Select>
+        </FormControl>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            variant="inline"
+            inputVariant="outlined"
+            format="dd/MM/yyyy"
+            label="Cut Off Date"
+            value={fieldValues.cutOffDate}
+            InputLabelProps={{ shrink: true }}
+            className={classes.formControl}
+          />
+        </MuiPickersUtilsProvider>
+      </div>
     </>
   )
 
   return (
     <>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Container</Typography>
-          <div>
-            { edit && 
+          <div className={classes.headerIcons}>
+            {saving && <CircularProgress color="secondary" />}
+            {edit && !saving && (
               <>
-                <IconButton >
-                  <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
+                <IconButton onClick={handleSave}>
+                  <FontAwesomeIcon
+                    className={classes.headerText}
+                    icon={faCheck}
+                  />
                 </IconButton>
-                <IconButton
-                  onClick={handleCancel}
-                >
-                  <FontAwesomeIcon className={classes.headerText} icon={faTimes} />
+                <IconButton onClick={handleCancel}>
+                  <FontAwesomeIcon
+                    className={classes.headerText}
+                    icon={faTimes}
+                  />
                 </IconButton>
               </>
-            }
+            )}
             <IconButton onClick={handleClick}>
-              <FontAwesomeIcon className={classes.headerText} icon={faEllipsisV} />
+              <FontAwesomeIcon
+                className={classes.headerText}
+                icon={faEllipsisV}
+              />
             </IconButton>
           </div>
           <Menu
@@ -284,59 +400,82 @@ const ContainerPanel = ({ draying }) => {
         </Toolbar>
       </AppBar>
       <div className={classes.details}>
-        { edit ? contentEdit : content }
+        {edit ? contentEdit : content}
         <div className={classes.stopContainer}>
-          <Typography>{draying.terminalLocation && draying.terminalLocation.nickName}</Typography>
+          <Typography>
+            {draying.terminalLocation && draying.terminalLocation.nickName}
+          </Typography>
           <div>
             <div className={classes.stop}>
               <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
               <Typography>{draying.deliveryLocation.nickName}</Typography>
             </div>
-            {draying.extraStops.map((stop) => (
+            {draying.extraStops.map(stop => (
               <div className={classes.stop}>
-                <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className={classes.margin}
+                />
                 <Typography>{stop.deliveryLocation.nickName}</Typography>
               </div>
             ))}
             <div className={classes.stop}>
               <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>{draying.returnTerminal && draying.returnTerminal.nickName}</Typography>
+              <Typography>
+                {draying.returnTerminal && draying.returnTerminal.nickName}
+              </Typography>
             </div>
           </div>
         </div>
         <Typography>Appointments</Typography>
-        {draying.appointments.map((appointment) => (
+        {draying.appointments.map(appointment => (
           <div className={classes.appointment}>
             <Chip label={appointment.type.name} />
             <Typography>{appointment.appointmentDate.slice(0, 10)}</Typography>
             <Typography>{appointment.appointmentTime}</Typography>
           </div>
-        )) && <Typography variant='caption'>No Appointments</Typography>}
+        )) && <Typography variant="caption">No Appointments</Typography>}
         <Typography>Container Location History</Typography>
         <div className={classes.locationStatus}>
-          {(parseInt(draying.containerStage.id) <= 5 || parseInt(draying.deliveryLocation.locationType.id) === 4 || parseInt(draying.deliveryLocation.locationType.id) === 5) ?
-            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
-            <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
+          {parseInt(draying.containerStage.id) <= 5 ||
+          parseInt(draying.deliveryLocation.locationType.id) === 4 ||
+          parseInt(draying.deliveryLocation.locationType.id) === 5 ? (
+            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} />
+          ) : (
+            <FontAwesomeIcon icon={faCircle} className={classes.margin} />
+          )}
           <Typography>To Dispatch</Typography>
         </div>
         <div className={classes.locationStatus}>
-          {parseInt(draying.deliveryLocation.locationType.id) === 3 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
-            <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
+          {parseInt(draying.deliveryLocation.locationType.id) === 3 ? (
+            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} />
+          ) : (
+            <FontAwesomeIcon icon={faCircle} className={classes.margin} />
+          )}
           <Typography>Yard Before</Typography>
         </div>
         <div className={classes.locationStatus}>
-          {parseInt(draying.deliveryLocation.locationType.id) === 2 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
-            <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
+          {parseInt(draying.deliveryLocation.locationType.id) === 2 ? (
+            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} />
+          ) : (
+            <FontAwesomeIcon icon={faCircle} className={classes.margin} />
+          )}
           <Typography>Client</Typography>
         </div>
         <div className={classes.locationStatus}>
-          {parseInt(draying.deliveryLocation.locationType.id) === 6 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
-            <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
+          {parseInt(draying.deliveryLocation.locationType.id) === 6 ? (
+            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} />
+          ) : (
+            <FontAwesomeIcon icon={faCircle} className={classes.margin} />
+          )}
           <Typography>Yard After</Typography>
         </div>
         <div className={classes.locationStatus}>
-          {parseInt(draying.containerStage.id) >= 9 ? <FontAwesomeIcon icon={faCircleFull} className={classes.margin} /> :
-            <FontAwesomeIcon icon={faCircle} className={classes.margin} />}
+          {parseInt(draying.containerStage.id) >= 9 ? (
+            <FontAwesomeIcon icon={faCircleFull} className={classes.margin} />
+          ) : (
+            <FontAwesomeIcon icon={faCircle} className={classes.margin} />
+          )}
           <Typography>Completed</Typography>
         </div>
       </div>

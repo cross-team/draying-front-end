@@ -10,8 +10,15 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    setColumnState(hideLeft: Boolean, hideMiddle: Boolean, hideRight: Boolean): ColumnState!
-    setDispatchState(selectedDriver: SelectedDriver, selectedDate: Date): DispatchState!
+    setColumnState(
+      hideLeft: Boolean
+      hideMiddle: Boolean
+      hideRight: Boolean
+    ): ColumnState!
+    setDispatchState(
+      selectedDriver: SelectedDriver
+      selectedDate: Date
+    ): DispatchState!
   }
 
   type ColumnState {
@@ -42,37 +49,41 @@ export const typeDefs = gql`
     month: Int!
     year: Int!
   }
-
 `
 
 export const resolvers = {
   Mutation: {
     setColumnState: (_root, { hideLeft, hideMiddle, hideRight }, { cache }) => {
       const { columnState } = cache.readQuery({
-        query: GET_COLUMN_STATE
-      });
+        query: GET_COLUMN_STATE,
+      })
 
       let data = columnState
-      if (hideLeft != undefined) data = { ...data, leftHidden: hideLeft }
-      if (hideMiddle != undefined) data = { ...data, middleHidden: hideMiddle }
-      if (hideRight != undefined) data = { ...data, rightHidden: hideRight }
+      if (hideLeft !== undefined) data = { ...data, leftHidden: hideLeft }
+      if (hideMiddle !== undefined) data = { ...data, middleHidden: hideMiddle }
+      if (hideRight !== undefined) data = { ...data, rightHidden: hideRight }
 
       // cache.writeData({data: { columnState: {...data, __typename: 'ColumnState'} } });
-      cache.writeData({ data: {
-        columnState: {
-          __typename: 'ColumnState',
-          ...data,
-        }
-      }})
-      
-
-      return null;
-    },
-    setDispatchState: (_root, { selectedTrip, selectedDriver, selectedDate }, { cache }) => {
-      const { dispatchState } = cache.readQuery({
-        query: GET_DISPATCH_STATE
+      cache.writeData({
+        data: {
+          columnState: {
+            __typename: 'ColumnState',
+            ...data,
+          },
+        },
       })
-      let data = dispatchState
+
+      return null
+    },
+    setDispatchState: (
+      _root,
+      { selectedTrip, selectedDriver, selectedDate },
+      { cache },
+    ) => {
+      const { dispatchState } = cache.readQuery({
+        query: GET_DISPATCH_STATE,
+      })
+      const data = dispatchState
 
       if (selectedDate) {
         const { day, month, year } = selectedDate
@@ -80,7 +91,7 @@ export const resolvers = {
           __typename: 'Date',
           day,
           month,
-          year
+          year,
         }
       }
       if (selectedDriver) {
@@ -90,7 +101,7 @@ export const resolvers = {
           id,
           firstName,
           lastName,
-          phone
+          phone,
         }
       }
       if (selectedTrip) {
@@ -100,13 +111,15 @@ export const resolvers = {
           id,
         }
       }
-      cache.writeData({ data: {
-        dispatchState: {
-          __typename: 'DispatchState',
-          ...data,
-        }
-      }})
-      return null;
+      cache.writeData({
+        data: {
+          dispatchState: {
+            __typename: 'DispatchState',
+            ...data,
+          },
+        },
+      })
+      return null
     },
   },
 }

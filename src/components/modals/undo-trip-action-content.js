@@ -7,6 +7,8 @@ import Loading from '../loading'
 import Button from '@material-ui/core/Button'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
+import { GET_DRIVERS } from '../drivers/drivers-capacity'
+import {} from '../drivers/trip-detail/trip-detail'
 
 const useStyles = makeStyles({
   title: {
@@ -36,6 +38,7 @@ export default function UndoTripActionContent({
     { data: undoResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
     variables: { drayingId },
+    refetchQueries: [GET_DRIVERS],
     // onCompleted: () => closeOrDisplayError(),
   })
 

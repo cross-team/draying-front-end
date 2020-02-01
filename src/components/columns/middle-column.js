@@ -12,13 +12,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     borderRight: '1px solid #d6d6d6',
     borderLeft: '1px solid #d6d6d6',
-  }
+  },
 }))
 
 export const GET_COLUMN_STATE = gql`
   query getColumnState {
     columnState @client {
-      middleHidden,
+      middleHidden
       rightHidden
     }
   }
@@ -26,12 +26,20 @@ export const GET_COLUMN_STATE = gql`
 
 const MiddleColumn = ({ children }) => {
   const classes = useStyles()
-  const { data: { columnState: { middleHidden, rightHidden } } } = useQuery(GET_COLUMN_STATE)
+  const {
+    data: {
+      columnState: { middleHidden, rightHidden },
+    },
+  } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid item xs={12} md={ rightHidden ? 8 : 4 } hidden={middleHidden} className={classes.item}>
-      <Paper className={classes.column}>
-        {children}
-      </Paper>
+    <Grid
+      item
+      xs={12}
+      md={rightHidden ? 8 : 4}
+      hidden={middleHidden}
+      className={classes.item}
+    >
+      <Paper className={classes.column}>{children}</Paper>
     </Grid>
   )
 }

@@ -6,7 +6,7 @@ import {
   InputLabel,
   MenuItem,
   IconButton,
-  TextField
+  TextField,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/pro-light-svg-icons/'
@@ -20,22 +20,22 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     width: '100%',
     marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 }))
 
-const FindAndSort = ( { driver } ) => {
+const FindAndSort = ({ driver }) => {
   const classes = useStyles()
   const [order, setOrder] = useState('capacity')
   const [findMode, setFindMode] = useState(false)
   const [find, setFind] = useState('')
 
   const handleOrderChange = event => {
-    setOrder(event.target.value);
+    setOrder(event.target.value)
   }
 
   const handleFindChange = event => {
-    setFind(event.target.value);
+    setFind(event.target.value)
   }
 
   const handleClick = () => {
@@ -44,10 +44,10 @@ const FindAndSort = ( { driver } ) => {
 
   return (
     <div className={classes.root}>
-      { findMode ? (
+      {findMode ? (
         <TextField
           className={classes.formControl}
-          label='Find Driver'
+          label="Find Driver"
           value={find}
           onChange={handleFindChange}
         />

@@ -20,9 +20,17 @@ export const GET_DISPATCH_STATE = gql`
 `
 
 export default function Drivers() {
-  const { data: { dispatchState: { selectedDriver, selectedTrip } } } = useQuery(GET_DISPATCH_STATE)
+  const {
+    data: {
+      dispatchState: { selectedDriver, selectedTrip },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
 
   return (
-    <Shell left={<DriversCapacity />} middle={ selectedDriver.id && <DriverTrips /> } right={ selectedTrip.id && <TripDetail /> } />
+    <Shell
+      left={<DriversCapacity />}
+      middle={selectedDriver.id && <DriverTrips />}
+      right={selectedTrip.id && <TripDetail />}
+    />
   )
 }

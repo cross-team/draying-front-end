@@ -9,10 +9,14 @@ import {
   MenuItem,
   TextField,
   Alert,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisV, faTimes, faCheck } from '@fortawesome/pro-light-svg-icons/'
+import {
+  faEllipsisV,
+  faTimes,
+  faCheck,
+} from '@fortawesome/pro-light-svg-icons/'
 import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
@@ -33,17 +37,17 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
   },
   headerText: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
   },
   headerIcons: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   details: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: theme.spacing(1)
-  }
+    margin: theme.spacing(1),
+  },
 }))
 
 const OrderPanel = ({ draying }) => {
@@ -55,9 +59,27 @@ const OrderPanel = ({ draying }) => {
   const [saving, setSaving] = useState(false)
   const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
 
+  const writeToCache = data => {
+    if (data && data.updateDraying.success) {
+      client.writeFragment({
+        id: `${draying.id}`,
+        fragment: gql`
+          fragment currentDraying on Draying {
+            booking
+          }
+        `,
+        data: {
+          booking,
+          __typename: 'Draying',
+        },
+      })
+      setSaving(false)
+      setEdit(false)
+    }
+  }
   useEffect(() => setBooking(draying.booking), [draying.booking])
 
-  useEffect(() => writeToCache(data), [data])
+  useEffect(() => writeToCache(data), [data, writeToCache])
 
   const handleClick = event => {
     event.stopPropagation()
@@ -84,37 +106,22 @@ const OrderPanel = ({ draying }) => {
 
   const handleSave = () => {
     setSaving(true)
-    updateDraying({ variables: {
-      drayingId: parseInt(draying.id),
-      field: 'Booking',
-      value: booking
-    }})
-  }
-
-  const writeToCache = (data) => {
-    if (data && data.updateDraying.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-          }
-        `,
-        data: {
-          booking,
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-
-    }
+    updateDraying({
+      variables: {
+        drayingId: parseInt(draying.id),
+        field: 'Booking',
+        value: booking,
+      },
+    })
   }
 
   let doStatus = ''
   if (draying.containerStage.id === '2' || draying.containerStage.id === '3') {
     doStatus = 'On the Sea'
-  } else if (draying.containerStage.id === '4' || draying.containerStage.id === '5') {
+  } else if (
+    draying.containerStage.id === '4' ||
+    draying.containerStage.id === '5'
+  ) {
     doStatus = 'To Dispatch'
   } else if (draying.containerStage.id === '6') {
     doStatus = 'Dispatched'
@@ -130,25 +137,32 @@ const OrderPanel = ({ draying }) => {
 
   return (
     <>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Order</Typography>
           <div className={classes.headerIcons}>
-            { saving &&  <CircularProgress color="secondary" /> }
-            { (edit && !saving) &&
+            {saving && <CircularProgress color="secondary" />}
+            {edit && !saving && (
               <>
                 <IconButton onClick={handleSave}>
-                  <FontAwesomeIcon className={classes.headerText} icon={faCheck} />
+                  <FontAwesomeIcon
+                    className={classes.headerText}
+                    icon={faCheck}
+                  />
                 </IconButton>
-                <IconButton
-                  onClick={handleCancel}
-                >
-                  <FontAwesomeIcon className={classes.headerText} icon={faTimes} />
+                <IconButton onClick={handleCancel}>
+                  <FontAwesomeIcon
+                    className={classes.headerText}
+                    icon={faTimes}
+                  />
                 </IconButton>
               </>
-            }
+            )}
             <IconButton onClick={handleClick}>
-              <FontAwesomeIcon className={classes.headerText} icon={faEllipsisV} />
+              <FontAwesomeIcon
+                className={classes.headerText}
+                icon={faEllipsisV}
+              />
             </IconButton>
           </div>
           <Menu
@@ -162,15 +176,30 @@ const OrderPanel = ({ draying }) => {
       </AppBar>
       <div className={classes.details}>
         <div>
-          <Typography>{draying.order ? `#${draying.order.id}` : 'No order number was found for this trip.'}</Typography>
-          { edit ? <TextField label='Booking' value={booking} onChange={handleChange} variant="outlined" /> : <Typography>{`#${booking}`}</Typography>}
+          <Typography>
+            {draying.order
+              ? `#${draying.order.id}`
+              : 'No order number was found for this trip.'}
+          </Typography>
+          {edit ? (
+            <TextField
+              label="Booking"
+              value={booking}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          ) : (
+            <Typography>{`#${booking}`}</Typography>
+          )}
         </div>
         <div>
           <Typography>{doStatus}</Typography>
           <Typography>{draying.client.companyName}</Typography>
         </div>
       </div>
-      { (data && !data.updateDraying.success) && <Alert severity="error">{data.updateDraying.message}</Alert> }
+      {data && !data.updateDraying.success && (
+        <Alert severity="error">{data.updateDraying.message}</Alert>
+      )}
     </>
   )
 }

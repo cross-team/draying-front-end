@@ -6,8 +6,8 @@ import Drivers from '../components/drivers/drivers'
 
 const App = () => (
   <Router>
-     <PrivateRoute path="/app/drivers" component={Drivers} />
-     <Login path="/app/login" />
+    <PrivateRoute path="/app/drivers" component={Drivers} />
+    <Login path="/app/login" />
   </Router>
 )
 export default App

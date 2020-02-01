@@ -8,14 +8,16 @@ import { resolvers, typeDefs } from '../resolvers'
 import { getUser } from '../services/auth'
 
 const cache = new InMemoryCache({
-  dataIdFromObject: object => object.id,
+  dataIdFromObject: object => `${object.__typename}:${object.id}`,
 })
 const today = new Date(2020, 0, 15)
 const hasToken = !!getUser().token
 const client = new ApolloClient({
   cache,
   link: new HttpLink({
-    uri: process.env.MIDDLE_END_URL || 'https://dev-draying-graphql.azurewebsites.net',
+    uri:
+      process.env.MIDDLE_END_URL ||
+      'https://dev-draying-graphql.azurewebsites.net',
     headers: {
       authorization: hasToken ? `Bearer ${getUser().token}` : '',
       'client-name': 'Draying.io [web]',
@@ -41,21 +43,21 @@ cache.writeData({
         id: '',
         firstName: '',
         lastName: '',
-        phone: ''
+        phone: '',
       },
       selectedDate: {
         __typename: 'Date',
         day: today.getDate(),
         month: today.getMonth() + 1,
-        year: today.getFullYear()
+        year: today.getFullYear(),
       },
     },
     columnState: {
       __typename: 'ColumnState',
       leftHidden: false,
       middleHidden: false,
-      rightHidden: true
-    }
+      rightHidden: true,
+    },
   },
 })
 

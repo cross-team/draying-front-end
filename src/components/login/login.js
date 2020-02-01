@@ -3,7 +3,7 @@ import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { setUser, isLoggedIn } from '../../services/auth'
 import { navigate } from 'gatsby'
-import { LoginForm, Loading } from '..'
+import { LoginForm } from '..'
 
 export const LOGIN_USER = gql`
   mutation login($user: LoginInput) {

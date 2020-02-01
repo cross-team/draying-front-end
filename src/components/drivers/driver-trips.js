@@ -22,8 +22,18 @@ export const GET_DISPATCH_STATE = gql`
 `
 
 export const GET_ROUTES = gql`
-  query allDriverRoutes($driverId: String, $fromDate: String, $toDate: String, $pending: Boolean) {
-    routes: driverRoute(driverId: $driverId, fromDate: $fromDate, toDate: $toDate, pending: $pending) {
+  query allDriverRoutes(
+    $driverId: String
+    $fromDate: String
+    $toDate: String
+    $pending: Boolean
+  ) {
+    routes: driverRoute(
+      driverId: $driverId
+      fromDate: $fromDate
+      toDate: $toDate
+      pending: $pending
+    ) {
       __typename
       scheduledStartDateTime
       trips {
@@ -91,10 +101,12 @@ export const GET_ROUTES = gql`
           }
           containerSize {
             __typename
+            id
             name
           }
           containerType {
             __typename
+            id
             name
           }
           shippingLine {
@@ -124,10 +136,10 @@ export const GET_ROUTES = gql`
   }
 `
 
-const addZero = ( value ) => {
+const addZero = value => {
   let newValue = value.toString()
   if (newValue.length === 1) {
-    newValue = "0" + newValue
+    newValue = '0' + newValue
   }
 
   return newValue
@@ -163,7 +175,7 @@ const getMonthLength = (month, year) => {
     case 12:
       return 31
     default:
-      break;
+      break
   }
 }
 
@@ -173,12 +185,16 @@ const useStyles = makeStyles(theme => ({
   },
   dayText: {
     marginTop: theme.spacing(3),
-  }
+  },
 }))
 
 export default function DriverTrips() {
   const classes = useStyles()
-  const { data: { dispatchState: { selectedDriver, selectedDate } } } = useQuery(GET_DISPATCH_STATE)
+  const {
+    data: {
+      dispatchState: { selectedDriver, selectedDate },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
 
   const getToday = () => {
     const today = { ...selectedDate }
@@ -187,7 +203,7 @@ export default function DriverTrips() {
 
   const getTomorrow = () => {
     const today = { ...selectedDate }
-    let tomorrow = today
+    const tomorrow = today
     if (today.day === getMonthLength(today.month, today.year)) {
       tomorrow.day = 1
       if (today.month === 12) {
@@ -200,32 +216,37 @@ export default function DriverTrips() {
       tomorrow.day = today.day + 1
     }
 
-    return `${tomorrow.year}-${addZero(tomorrow.month)}-${addZero(tomorrow.day)}`
+    return `${tomorrow.year}-${addZero(tomorrow.month)}-${addZero(
+      tomorrow.day,
+    )}`
   }
   const todayStr = getToday() + 'T00:00:00-05:00'
   const tomorrowStr = getTomorrow() + 'T23:59:59-05:00'
 
-  const { loading, error, data } = useQuery(GET_ROUTES, { variables: { driverId: selectedDriver.id, pending: false, fromDate: todayStr, toDate: tomorrowStr },
-    fetchPolicy: 'cache-and-network' })
+  const { loading, error, data } = useQuery(GET_ROUTES, {
+    variables: {
+      driverId: selectedDriver.id,
+      pending: false,
+      fromDate: todayStr,
+      toDate: tomorrowStr,
+    },
+    fetchPolicy: 'cache-and-network',
+  })
 
-  if ( loading && !data) {
+  if (loading && !data) {
     return <Loading />
   }
 
-  if ( error ) {
+  if (error) {
     console.log(error)
-    return (
-      <Typography color='danger'>
-        Error
-      </Typography>
-    )
+    return <Typography color="danger">Error</Typography>
   }
 
   console.log('Routes: ', data.routes)
 
   const todayRegex = new RegExp(getToday())
   let tripsToday
-  const tomorrowRegex = new RegExp(getTomorrow())
+  // const tomorrowRegex = new RegExp(getTomorrow())
   let tripsTomorrow
 
   switch (data.routes.length) {
@@ -235,33 +256,39 @@ export default function DriverTrips() {
       break
     case 1:
       if (todayRegex.test(data.routes[0].scheduledStartDateTime)) {
-        tripsToday = data.routes[0].trips.map((trip) =>
+        tripsToday = data.routes[0].trips.map(trip => (
           <DriverTripCard trip={trip} />
-        )
+        ))
         tripsTomorrow = <Typography>No trips for tomorrow.</Typography>
       } else {
         tripsToday = <Typography>No trips for today.</Typography>
-        tripsTomorrow = data.routes[0].trips.map((trip) =>
+        tripsTomorrow = data.routes[0].trips.map(trip => (
           <DriverTripCard trip={trip} />
-        )
+        ))
       }
       break
     case 2:
-      tripsToday = data.routes[0].trips.map((trip) =>
+      tripsToday = data.routes[0].trips.map(trip => (
         <DriverTripCard trip={trip} />
-      )
-      tripsTomorrow = data.routes[1].trips.map((trip) =>
+      ))
+      tripsTomorrow = data.routes[1].trips.map(trip => (
         <DriverTripCard trip={trip} />
-      )
+      ))
+      break
+    default:
       break
   }
 
   return (
     <div className={classes.root}>
       <DriverHeader />
-      <Typography variant='h5' className={classes.dayText}>Today</Typography>
-      {tripsToday &&  tripsToday}
-      <Typography variant='h5' className={classes.dayText}>Tomorrow</Typography>
+      <Typography variant="h5" className={classes.dayText}>
+        Today
+      </Typography>
+      {tripsToday && tripsToday}
+      <Typography variant="h5" className={classes.dayText}>
+        Tomorrow
+      </Typography>
       {tripsTomorrow && tripsTomorrow}
     </div>
   )
