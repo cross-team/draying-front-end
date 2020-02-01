@@ -41,26 +41,30 @@ export const GET_DRIVERS = gql`
 `
 
 export default function DriversCapacity() {
-  const { data: { dispatchState: { selectedDate } } } = useQuery(GET_DISPATCH_STATE)
+  const {
+    data: {
+      dispatchState: { selectedDate },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
   const queryDate = `${selectedDate.month}/${selectedDate.day}/${selectedDate.year}`
-  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25, date: queryDate }, pollInterval: 30000, fetchPolicy: 'cache-and-network'  })
+  const { loading, error, data } = useQuery(GET_DRIVERS, {
+    variables: { first: 25, date: queryDate },
+    pollInterval: 30000,
+    fetchPolicy: 'cache-and-network',
+  })
 
-  if ( loading && !data ) {
+  if (loading && !data) {
     return <Loading />
   }
 
-  if ( error ) {
+  if (error) {
     console.log(error)
-    return (
-      <Typography color='danger'>
-        Error
-      </Typography>
-    )
+    return <Typography color="danger">Error</Typography>
   }
 
-  const driverCards = data.drivers.nodes.map((driver) =>
+  const driverCards = data.drivers.nodes.map(driver => (
     <CollapsedDriverCard driver={driver} />
-  )
+  ))
 
   return (
     <>

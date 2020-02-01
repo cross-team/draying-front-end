@@ -5,7 +5,7 @@ import {
   Card,
   Avatar,
   Typography,
-  Chip
+  Chip,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight } from '@fortawesome/pro-light-svg-icons/'
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   selected: {
-    backgroundColor: '#ebf5ff'
+    backgroundColor: '#ebf5ff',
   },
   dataContainer: {
     width: '100%',
@@ -29,25 +29,33 @@ const useStyles = makeStyles(theme => ({
   },
   chipContainer: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   margin: {
     margin: theme.spacing(1),
   },
   success: {
-    backgroundColor: theme.palette.success
+    backgroundColor: theme.palette.success,
   },
   warning: {
-    backgroundColor: theme.palette.warning
+    backgroundColor: theme.palette.warning,
   },
   danger: {
-    backgroundColor: theme.palette.danger
-  }
+    backgroundColor: theme.palette.danger,
+  },
 }))
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState($hideLeft: Boolean, $hideMiddle: Boolean, $hideRight: Boolean) {
-    setColumnState(hideLeft: $hideLeft, hideMiddle: $hideMiddle, hideRight: $hideRight) @client {
+  mutation setColumnState(
+    $hideLeft: Boolean
+    $hideMiddle: Boolean
+    $hideRight: Boolean
+  ) {
+    setColumnState(
+      hideLeft: $hideLeft
+      hideMiddle: $hideMiddle
+      hideRight: $hideRight
+    ) @client {
       leftHidden
       middleHidden
       rightHidden
@@ -76,11 +84,15 @@ export const GET_DISPATCH_STATE = gql`
 const CollapsedDriverCard = ({ driver, width }) => {
   const classes = useStyles()
 
-  const { data: { dispatchState: { selectedDriver } } } = useQuery(GET_DISPATCH_STATE)
+  const {
+    data: {
+      dispatchState: { selectedDriver },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
 
-  const isSelected = (selectedDriver.id === driver.id)
+  const isSelected = selectedDriver.id === driver.id
 
   const fullName = `${driver.firstName} ${driver.lastName}`
   const initials = `${driver.firstName[0]}${driver.lastName[0]}`
@@ -99,45 +111,62 @@ const CollapsedDriverCard = ({ driver, width }) => {
   let currentETA = 0
   let minutes = 0
   if (capacityInfo.activeTripCapacity !== null) {
-    currentETA = new Date(capacityInfo.activeTripCapacity.currentDestination.estimatedScheduledCompletedAt)
-    minutes = Math.round((currentETA.getTime() - Date.now())/60000)
+    currentETA = new Date(
+      capacityInfo.activeTripCapacity.currentDestination.estimatedScheduledCompletedAt,
+    )
+    minutes = Math.round((currentETA.getTime() - Date.now()) / 60000)
   }
 
   const handleClick = () => {
-    setDispatchState({variables: { selectedDriver: {
-      id: driver.id,
-      firstName: driver.firstName,
-      lastName: driver.lastName,
-      phone: driver.phone
-    }, selectedTrip: { id: '' }}})
+    setDispatchState({
+      variables: {
+        selectedDriver: {
+          id: driver.id,
+          firstName: driver.firstName,
+          lastName: driver.lastName,
+          phone: driver.phone,
+        },
+        selectedTrip: { id: '' },
+      },
+    })
     if (width === 'xs' || width === 'sm') {
-      setColumnState({variables: {
-        hideLeft: true,
-        hideMiddle: false,
-        hideRight: true
-      }})
+      setColumnState({
+        variables: {
+          hideLeft: true,
+          hideMiddle: false,
+          hideRight: true,
+        },
+      })
     } else {
-      setColumnState({variables: {
-        hideLeft: false,
-        hideMiddle: false,
-        hideRight: true
-      }})
+      setColumnState({
+        variables: {
+          hideLeft: false,
+          hideMiddle: false,
+          hideRight: true,
+        },
+      })
     }
   }
 
   return (
-    <Card className={`${classes.root} ${isSelected && classes.selected}`} onClick={handleClick}>
+    <Card
+      className={`${classes.root} ${isSelected && classes.selected}`}
+      onClick={handleClick}
+    >
       <Avatar className={classes.margin}>{initials.toUpperCase()}</Avatar>
       <div className={classes.dataContainer}>
         <Typography>{fullName}</Typography>
         <div className={classes.chipContainer}>
           <Chip className={capacityColor} label={`${capacity}%`} />
           <div>
-            { capacityInfo.activeTripCapacity && <Chip label={`${minutes} min`} /> }
-            <Chip label={`${capacityInfo.pendingTripsCount} ${
-              capacityInfo.pendingTripsCount === 1 ?
-              'Trip' : 'Trips'
-            }`} />
+            {capacityInfo.activeTripCapacity && (
+              <Chip label={`${minutes} min`} />
+            )}
+            <Chip
+              label={`${capacityInfo.pendingTripsCount} ${
+                capacityInfo.pendingTripsCount === 1 ? 'Trip' : 'Trips'
+              }`}
+            />
           </div>
         </div>
       </div>

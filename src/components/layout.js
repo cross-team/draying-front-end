@@ -8,8 +8,8 @@ const useStyles = makeStyles(theme => ({
   container: {
     padding: 0,
     margin: 0,
-    height: '100vh'
-  }
+    height: '100vh',
+  },
 }))
 
 const Layout = ({ children }) => {

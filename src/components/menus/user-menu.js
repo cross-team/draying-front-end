@@ -22,16 +22,11 @@ export default function NavBar() {
   return (
     <>
       <Avatar onClick={handleClick}>AB</Avatar>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem disabled>user@email.com</MenuItem>
         <MenuItem onClick={handleClose}>Change Password</MenuItem>
         <MenuItem onClick={onLogout}>Logout</MenuItem>
       </Menu>
     </>
-    
   )
 }

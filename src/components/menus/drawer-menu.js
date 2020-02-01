@@ -6,12 +6,16 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Collapse
+  Collapse,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faAngleUp, faAngleDown } from '@fortawesome/pro-light-svg-icons/'
-import LessIcon from '@material-ui/icons/ExpandLess';
-import MoreIcon from '@material-ui/icons/ExpandMore';
+import {
+  faBars,
+  faAngleUp,
+  faAngleDown,
+} from '@fortawesome/pro-light-svg-icons/'
+import LessIcon from '@material-ui/icons/ExpandLess'
+import MoreIcon from '@material-ui/icons/ExpandMore'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,23 +27,26 @@ const useStyles = makeStyles(theme => ({
   iconButton: {
     color: theme.palette.primary.contrastText,
   },
-}));
+}))
 
 export default function DrawerMenu(props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
-  const [dispatching, setDispatching] = React.useState(false);
-  const [drivers, setDrivers] = React.useState(false);
-  const [orders, setOrders] = React.useState(false);
-  const [clients, setClients] = React.useState(false);
-  const [preferences, setPreferences] = React.useState(false);
+  const [dispatching, setDispatching] = React.useState(false)
+  const [drivers, setDrivers] = React.useState(false)
+  const [orders, setOrders] = React.useState(false)
+  const [clients, setClients] = React.useState(false)
+  const [preferences, setPreferences] = React.useState(false)
 
-  const toggleDrawer = (open) => event => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+  const toggleDrawer = open => event => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
       return
     }
 
-    setOpen(open);
+    setOpen(open)
   }
 
   const handleDispatching = () => {
@@ -64,14 +71,22 @@ export default function DrawerMenu(props) {
 
   return (
     <>
-      <IconButton onClick={toggleDrawer(true)} className={classes.iconButton} aria-label='Menu Button'>
+      <IconButton
+        onClick={toggleDrawer(true)}
+        className={classes.iconButton}
+        aria-label="Menu Button"
+      >
         <FontAwesomeIcon icon={faBars} />
       </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         <List className={classes.root}>
           <ListItem button onClick={handleDispatching}>
             <ListItemText primary="Dispatching" />
-            {dispatching ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+            {dispatching ? (
+              <FontAwesomeIcon icon={faAngleUp} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleDown} />
+            )}
           </ListItem>
           <Collapse in={dispatching} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
@@ -85,7 +100,11 @@ export default function DrawerMenu(props) {
           </Collapse>
           <ListItem button onClick={handleDrivers}>
             <ListItemText primary="Drivers" />
-            {drivers ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+            {drivers ? (
+              <FontAwesomeIcon icon={faAngleUp} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleDown} />
+            )}
           </ListItem>
           <Collapse in={drivers} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
@@ -105,7 +124,11 @@ export default function DrawerMenu(props) {
           </Collapse>
           <ListItem button onClick={handleOrders}>
             <ListItemText primary="Orders" />
-            {orders ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+            {orders ? (
+              <FontAwesomeIcon icon={faAngleUp} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleDown} />
+            )}
           </ListItem>
           <Collapse in={orders} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
@@ -122,7 +145,11 @@ export default function DrawerMenu(props) {
           </Collapse>
           <ListItem button onClick={handleClients}>
             <ListItemText primary="Clients" />
-            {clients ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+            {clients ? (
+              <FontAwesomeIcon icon={faAngleUp} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleDown} />
+            )}
           </ListItem>
           <Collapse in={clients} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
@@ -142,7 +169,11 @@ export default function DrawerMenu(props) {
           </Collapse>
           <ListItem button onClick={handlePreferences}>
             <ListItemText primary="Preferences" />
-            {preferences ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+            {preferences ? (
+              <FontAwesomeIcon icon={faAngleUp} />
+            ) : (
+              <FontAwesomeIcon icon={faAngleDown} />
+            )}
           </ListItem>
           <Collapse in={preferences} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>

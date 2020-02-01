@@ -8,7 +8,9 @@ import Checkbox from '@material-ui/core/Checkbox'
 import { globalHistory as history } from '@reach/router'
 
 function Login({ login }) {
-  const { location: { hostname } } = history
+  const {
+    location: { hostname },
+  } = history
   const [state, setState] = useState({
     formLogin: {
       email: '',
@@ -44,7 +46,7 @@ function Login({ login }) {
         user: {
           email: state.formLogin.email,
           password: state.formLogin.password,
-          host: hostname
+          host: hostname,
         },
       },
     })
