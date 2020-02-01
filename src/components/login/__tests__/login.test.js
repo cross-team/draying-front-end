@@ -30,7 +30,7 @@ describe('login', () => {
       },
     })
     const pwordInput = await findByPlaceholderText(/Password/i)
-    fireEvent.change(emailInput, {
+    fireEvent.change(pwordInput, {
       target: {
         value: 'password',
       },

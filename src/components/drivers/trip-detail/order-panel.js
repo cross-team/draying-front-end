@@ -59,6 +59,24 @@ const OrderPanel = ({ draying }) => {
   const [saving, setSaving] = useState(false)
   const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
 
+  const writeToCache = data => {
+    if (data && data.updateDraying.success) {
+      client.writeFragment({
+        id: `${draying.id}`,
+        fragment: gql`
+          fragment currentDraying on Draying {
+            booking
+          }
+        `,
+        data: {
+          booking,
+          __typename: 'Draying',
+        },
+      })
+      setSaving(false)
+      setEdit(false)
+    }
+  }
   useEffect(() => setBooking(draying.booking), [draying.booking])
 
   useEffect(() => writeToCache(data), [data, writeToCache])
@@ -95,25 +113,6 @@ const OrderPanel = ({ draying }) => {
         value: booking,
       },
     })
-  }
-
-  const writeToCache = data => {
-    if (data && data.updateDraying.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-          }
-        `,
-        data: {
-          booking,
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-    }
   }
 
   let doStatus = ''

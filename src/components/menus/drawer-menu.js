@@ -14,8 +14,8 @@ import {
   faAngleUp,
   faAngleDown,
 } from '@fortawesome/pro-light-svg-icons/'
-import LessIcon from '@material-ui/icons/ExpandLess'
-import MoreIcon from '@material-ui/icons/ExpandMore'
+// import LessIcon from '@material-ui/icons/ExpandLess'
+// import MoreIcon from '@material-ui/icons/ExpandMore'
 
 const useStyles = makeStyles(theme => ({
   root: {

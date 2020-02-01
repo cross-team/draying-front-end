@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles, withWidth, Card, Typography } from '@material-ui/core/'
 import TripCard from './trip-card'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({

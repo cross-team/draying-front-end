@@ -246,7 +246,7 @@ export default function DriverTrips() {
 
   const todayRegex = new RegExp(getToday())
   let tripsToday
-  const tomorrowRegex = new RegExp(getTomorrow())
+  // const tomorrowRegex = new RegExp(getTomorrow())
   let tripsTomorrow
 
   switch (data.routes.length) {
@@ -274,6 +274,8 @@ export default function DriverTrips() {
       tripsTomorrow = data.routes[1].trips.map(trip => (
         <DriverTripCard trip={trip} />
       ))
+      break
+    default:
       break
   }
 

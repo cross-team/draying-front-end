@@ -59,9 +59,9 @@ export const resolvers = {
       })
 
       let data = columnState
-      if (hideLeft != undefined) data = { ...data, leftHidden: hideLeft }
-      if (hideMiddle != undefined) data = { ...data, middleHidden: hideMiddle }
-      if (hideRight != undefined) data = { ...data, rightHidden: hideRight }
+      if (hideLeft !== undefined) data = { ...data, leftHidden: hideLeft }
+      if (hideMiddle !== undefined) data = { ...data, middleHidden: hideMiddle }
+      if (hideRight !== undefined) data = { ...data, rightHidden: hideRight }
 
       // cache.writeData({data: { columnState: {...data, __typename: 'ColumnState'} } });
       cache.writeData({

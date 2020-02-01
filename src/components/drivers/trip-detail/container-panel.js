@@ -29,7 +29,7 @@ import {
   faEllipsisV,
 } from '@fortawesome/pro-light-svg-icons/'
 import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
-import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 export const UPDATE_DRAYING_FIELDS = gql`
@@ -130,9 +130,9 @@ const useStyles = makeStyles(theme => ({
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
-  const client = useApolloClient()
-  const [updateDrayingFields, { data }] = useMutation(UPDATE_DRAYING_FIELDS)
-  const { loading, error, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
+  // const client = useApolloClient()
+  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS)
+  const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
   dropdownData && console.log(dropdownData)
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
