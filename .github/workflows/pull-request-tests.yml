@@ -19,6 +19,6 @@ jobs:
     - name: 'run yarn'
       run: |
         yarn install
-        yarn run lint --if-present
-        yarn run build --if-present
-        yarn run test --if-present
+        yarn run lint
+        yarn run build
+        yarn run test
