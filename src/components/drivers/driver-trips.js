@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { makeStyles, Typography } from '@material-ui/core/'
-import Loading from '../loading'
 import DriverHeader from './driver-header'
 import DriverTripCard from './driver-trip-card'
 import differenceInDays from 'date-fns/differenceInDays'
@@ -13,6 +12,7 @@ import Grid from '@material-ui/core/Grid'
 import AddTripButton from './add-trip-button'
 import addDays from 'date-fns/addDays'
 import formatISO from 'date-fns/formatISO'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -163,7 +163,9 @@ export default function DriverTrips() {
     data: {
       dispatchState: { selectedDriver, selectedDate },
     },
-  } = useQuery(GET_DISPATCH_STATE)
+  } = useQuery(GET_DISPATCH_STATE, {
+    pollInterval: 30000,
+  })
 
   const getToday = () => {
     const today = { ...selectedDate }
@@ -178,7 +180,7 @@ export default function DriverTrips() {
   const todayStr = formatISO(getToday())
   const tomorrowStr = formatISO(getTomorrow())
 
-  const { loading, error, data } = useQuery(GET_ROUTES, {
+  const { loading, error, data: getRoutesData } = useQuery(GET_ROUTES, {
     variables: {
       driverId: selectedDriver.id,
       pending: true,
@@ -187,10 +189,18 @@ export default function DriverTrips() {
     },
     fetchPolicy: 'cache-and-network',
   })
+  const [currentData, setCurrentData] = useState(null)
+  useEffect(() => {
+    setCurrentData(null)
+  }, [selectedDriver.id])
 
-  if (loading && !data) {
-    return <Loading />
-  }
+  useEffect(() => {
+    if (getRoutesData) {
+      setCurrentData(getRoutesData)
+    }
+  }, [getRoutesData])
+
+  const data = currentData
 
   if (error) {
     return <Typography color="danger">Error</Typography>
@@ -277,6 +287,21 @@ export default function DriverTrips() {
   const todaysRoute = routes => filterRoutesByDaysDiff(routes, 0)
   const tomorrowsRoute = routes => filterRoutesByDaysDiff(routes, 1)
 
+  const loadingRouteSkeleton = (
+    <Grid
+      container
+      justify="space-between"
+      spacing={2}
+      className={classes.routeHeader}
+    >
+      <Grid item>
+        <Typography variant="h5" className={classes.dayText}>
+          <Skeleton variant="text" width={180} />
+        </Typography>
+      </Grid>
+      <Skeleton variant="circle" width={40} height={40} />
+    </Grid>
+  )
   return (
     <div className={classes.root}>
       {data && data.routes ? (
@@ -299,7 +324,18 @@ export default function DriverTrips() {
             </Card>
           </Grid>
         </Grid>
-      ) : null}
+      ) : (
+        loading &&
+        !data && (
+          <Grid container spacing={2} direction="column">
+            <Grid item>
+              <DriverHeader />
+            </Grid>
+            <Grid item>{loadingRouteSkeleton}</Grid>
+            <Grid item>{loadingRouteSkeleton}</Grid>
+          </Grid>
+        )
+      )}
     </div>
   )
 }
