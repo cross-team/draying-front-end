@@ -1,10 +1,13 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { Typography } from '@material-ui/core/'
-import Loading from '../loading'
+import Typography from '@material-ui/core/Typography'
+import makeStyles from '@material-ui/styles/makeStyles'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
 import CollapsedDriverCard from './collapsed-driver-card'
 import FindAndSort from './find-and-sort'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -40,7 +43,15 @@ export const GET_DRIVERS = gql`
   }
 `
 
+const useStyles = makeStyles(theme => ({
+  card: {
+    padding: theme.spacing(2),
+    width: '275px',
+  },
+}))
+
 export default function DriversCapacity() {
+  const classes = useStyles()
   const {
     data: {
       dispatchState: { selectedDate },
@@ -54,7 +65,20 @@ export default function DriversCapacity() {
   })
 
   if (loading && !data) {
-    return <Loading />
+    const driversSkeletonIds = [1, 2, 3, 4, 5, 6]
+    return driversSkeletonIds.map(key => (
+      <Card key={key}>
+        <Grid container spacing={1} className={classes.card}>
+          <Grid item>
+            <Skeleton variant="circle" width={40} height={40} />
+          </Grid>
+          <Grid item>
+            <Skeleton variant="text" width={180} />
+            <Skeleton variant="text" width={90} />
+          </Grid>
+        </Grid>
+      </Card>
+    ))
   }
 
   if (error) {
