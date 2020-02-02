@@ -43,6 +43,7 @@ export const GET_ROUTES = gql`
       pending: $pending
     ) {
       __typename
+      id
       scheduledStartDateTime
       trips {
         id
@@ -192,7 +193,6 @@ export default function DriverTrips() {
   }
 
   if (error) {
-    console.log(error)
     return <Typography color="danger">Error</Typography>
   }
 
@@ -234,7 +234,7 @@ export default function DriverTrips() {
     }
     return routes.map(route => {
       return (
-        <>
+        <div key={route.id}>
           <Grid
             container
             justify="space-between"
@@ -248,10 +248,14 @@ export default function DriverTrips() {
             </Grid>
             <AddTripButton />
           </Grid>
-          {route.trips.map(trip => (
-            <DriverTripCard trip={trip} />
-          ))}
-        </>
+          <Grid container spacing={1} direction="column">
+            {route.trips.map(trip => (
+              <Grid key={trip.id} item>
+                <DriverTripCard trip={trip} />
+              </Grid>
+            ))}
+          </Grid>
+        </div>
       )
     })
   }

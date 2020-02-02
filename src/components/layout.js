@@ -9,6 +9,8 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     margin: 0,
     height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
   },
 }))
 

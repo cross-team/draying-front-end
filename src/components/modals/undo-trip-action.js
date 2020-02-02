@@ -34,7 +34,6 @@ export default function UndoTripActionPopUp({ OpenPopUpButton, drayingId }) {
   }
 
   if (error) {
-    console.log(error)
     return <Typography color="error">Error</Typography>
   }
   if (

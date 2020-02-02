@@ -133,11 +133,11 @@ const ContainerPanel = ({ draying }) => {
   // const client = useApolloClient()
   const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS)
   const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
-  dropdownData && console.log(dropdownData)
+
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [saving, setSaving] = useState(false)
-  console.log(draying.cutOffDate)
+
   const cutOffDateObject = draying.cutOffDate
     ? new Date(draying.cutOffDate)
     : new Date()
