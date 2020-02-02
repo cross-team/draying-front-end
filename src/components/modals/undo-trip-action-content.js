@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Loading from '../loading'
 import Button from '@material-ui/core/Button'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Collapse from '@material-ui/core/Collapse'
 
 const useStyles = makeStyles({
   title: {
@@ -15,8 +20,16 @@ const useStyles = makeStyles({
 })
 
 const UNDO_TRIP_MUTATION = gql`
-  mutation undoTripActionMutation($drayingId: Int) {
-    undoDrayingTripAction(drayingId: $drayingId) {
+  mutation undoTripActionMutation(
+    $drayingId: Int
+    $sendMessage: Boolean
+    $body: String
+  ) {
+    undoDrayingTripAction(
+      drayingId: $drayingId
+      sendMessage: $sendMessage
+      body: $body
+    ) {
       success
       message
       updatedId
@@ -30,20 +43,26 @@ export default function UndoTripActionContent({
   tripMessages,
 }) {
   const classes = useStyles()
-
+  const [body, setBody] = useState('')
+  const [sendMessage, setSendMessage] = useState(true)
+  useEffect(() => {
+    if (tripMessages) {
+      setBody(tripMessages[0].body)
+    }
+  }, [tripMessages])
   const [
     callUndoTripAction,
     { data: undoResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
     variables: { drayingId },
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
-    // onCompleted: () => closeOrDisplayError(),
+    onCompleted: () => handleClose(),
   })
 
   if (saving && !undoResponse) {
     return (
       <CardContent>
-        <Loading />
+        <CircularProgress />
       </CardContent>
     )
   }
@@ -57,7 +76,12 @@ export default function UndoTripActionContent({
   }
 
   const handleUndoTripAction = () => {
-    callUndoTripAction()
+    callUndoTripAction({
+      variables: {
+        sendMessage,
+        body,
+      },
+    })
   }
 
   return (
@@ -74,8 +98,34 @@ export default function UndoTripActionContent({
                   color="textPrimary"
                   gutterBottom
                 >
-                  Body : ${message.body}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={sendMessage}
+                        onChange={e => setSendMessage(e.target.checked)}
+                        value="sendMessage"
+                        color="primary"
+                      />
+                    }
+                    label="Send Message?"
+                  />
                 </Typography>
+                <Collapse in={sendMessage} timeout="auto" unmountOnExit>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <Typography>Message:</Typography>
+                    </Grid>
+                    <Grid item>
+                      <TextareaAutosize
+                        aria-label="Send message text."
+                        rowsMin={3}
+                        placeholder={message.body}
+                        onChange={e => setBody(e.target.value)}
+                        value={body}
+                      />
+                    </Grid>
+                  </Grid>
+                </Collapse>
               </>
             ))
           : null}
@@ -85,7 +135,13 @@ export default function UndoTripActionContent({
               Yes
             </Button>
           ) : (
-            'Trip Action Undone!'
+            <Typography
+              className={classes.title}
+              color="textPrimary"
+              gutterBottom
+            >
+              Success!
+            </Typography>
           )}
           <Button size="small" color="secondary" onClick={handleClose}>
             {undoResponse ? 'Close' : 'Cancel'}
