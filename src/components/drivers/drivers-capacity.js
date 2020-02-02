@@ -58,12 +58,11 @@ export default function DriversCapacity() {
   }
 
   if (error) {
-    console.log(error)
     return <Typography color="danger">Error</Typography>
   }
 
   const driverCards = data.drivers.nodes.map(driver => (
-    <CollapsedDriverCard driver={driver} />
+    <CollapsedDriverCard key={driver.id} driver={driver} />
   ))
 
   return (

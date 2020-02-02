@@ -71,7 +71,6 @@ const TripPanel = ({ trip }) => {
   }
 
   if (error) {
-    console.log(error)
     return <Typography color="danger">{`Error: ${error}`}</Typography>
   }
 

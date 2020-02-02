@@ -8,9 +8,9 @@ import {
   Menu,
   MenuItem,
   TextField,
-  Alert,
   CircularProgress,
 } from '@material-ui/core/'
+import Alert from '@material-ui/lab/Alert'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEllipsisV,
@@ -132,8 +132,6 @@ const OrderPanel = ({ draying }) => {
   } else if (draying.containerStage.id === '11') {
     doStatus = 'Invoiced'
   }
-
-  console.log(data)
 
   return (
     <>

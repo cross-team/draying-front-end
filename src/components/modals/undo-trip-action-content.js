@@ -49,7 +49,6 @@ export default function UndoTripActionContent({
   }
 
   if (errorSaving) {
-    console.log(errorSaving)
     return (
       <CardContent>
         <Typography color="danger">Error Saving</Typography>

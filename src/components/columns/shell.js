@@ -8,15 +8,8 @@ import RightColumn from './right-column'
 
 const useStyles = makeStyles(theme => ({
   container: {
-    height: '91.7%',
-  },
-  item: {
-    overflow: 'scroll',
-  },
-  column: {
-    height: '100%',
-    borderRight: '1px solid #d6d6d6',
-    borderLeft: '1px solid #d6d6d6',
+    overflow: 'hidden',
+    flex: 1,
   },
 }))
 

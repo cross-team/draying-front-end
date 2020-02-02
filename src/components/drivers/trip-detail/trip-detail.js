@@ -145,7 +145,6 @@ const TripDetail = ({ width }) => {
       }
     `,
   })
-  console.log(trip)
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
 

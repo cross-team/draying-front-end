@@ -58,7 +58,7 @@ const AddTripButton = () => {
         </Grid>
 
         <Grid item>
-          <Fab ariaLabel="Add a trip" onClick={handleAddTrip}>
+          <Fab aria-label="Add a trip" onClick={handleAddTrip}>
             <FontAwesomeIcon icon={faPlus} />
           </Fab>
         </Grid>
