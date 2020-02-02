@@ -8,7 +8,10 @@ const useStyles = makeStyles(theme => ({
   container: {
     padding: 0,
     margin: 0,
-  }
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }))
 
 const Layout = ({ children }) => {
@@ -16,8 +19,10 @@ const Layout = ({ children }) => {
   return (
     <div>
       <SEO />
-      <NavBar />
-      <Container maxWidth="lg" className={classes.container}>{children}</Container>
+      <Container maxWidth={false} className={classes.container}>
+        <NavBar />
+        {children}
+      </Container>
     </div>
   )
 }
