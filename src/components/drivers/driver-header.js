@@ -5,11 +5,10 @@ import {
   Card,
   Avatar,
   Typography,
-  Fab,
   IconButton,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faTimes } from '@fortawesome/pro-light-svg-icons/'
+import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
@@ -119,26 +118,6 @@ const DriverHeader = ({ width }) => {
     }
   }
 
-  const handleAddTrip = () => {
-    if (width === 'xs' || width === 'sm') {
-      setColumnState({
-        variables: {
-          hideLeft: true,
-          hideMiddle: true,
-          hideRight: false,
-        },
-      })
-    } else {
-      setColumnState({
-        variables: {
-          hideLeft: false,
-          hideMiddle: false,
-          hideRight: false,
-        },
-      })
-    }
-  }
-
   return (
     <Card className={classes.root}>
       <div className={classes.container}>
@@ -150,16 +129,6 @@ const DriverHeader = ({ width }) => {
           <Typography>{fullName}</Typography>
           <Typography variant="caption">{selectedDriver.phone}</Typography>
         </div>
-      </div>
-      <div className={classes.container}>
-        <Typography>ADD A TRIP</Typography>
-        <Fab
-          className={classes.margin}
-          ariaLabel="Add a trip"
-          onClick={handleAddTrip}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-        </Fab>
       </div>
     </Card>
   )

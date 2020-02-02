@@ -5,6 +5,14 @@ import { makeStyles, Typography } from '@material-ui/core/'
 import Loading from '../loading'
 import DriverHeader from './driver-header'
 import DriverTripCard from './driver-trip-card'
+import differenceInDays from 'date-fns/differenceInDays'
+import parseISO from 'date-fns/parseISO'
+import format from 'date-fns/format'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import AddTripButton from './add-trip-button'
+import addDays from 'date-fns/addDays'
+import formatISO from 'date-fns/formatISO'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -136,55 +144,15 @@ export const GET_ROUTES = gql`
   }
 `
 
-const addZero = value => {
-  let newValue = value.toString()
-  if (newValue.length === 1) {
-    newValue = '0' + newValue
-  }
-
-  return newValue
-}
-
-const getMonthLength = (month, year) => {
-  switch (month) {
-    case 1:
-      return 31
-    case 2:
-      if (year % 4 === 0) {
-        return 29
-      }
-      return 28
-    case 3:
-      return 31
-    case 4:
-      return 30
-    case 5:
-      return 31
-    case 6:
-      return 30
-    case 7:
-      return 31
-    case 8:
-      return 31
-    case 9:
-      return 30
-    case 10:
-      return 31
-    case 11:
-      return 30
-    case 12:
-      return 31
-    default:
-      break
-  }
-}
-
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3),
   },
   dayText: {
     marginTop: theme.spacing(3),
+  },
+  routeHeader: {
+    padding: theme.spacing(2),
   },
 }))
 
@@ -198,30 +166,16 @@ export default function DriverTrips() {
 
   const getToday = () => {
     const today = { ...selectedDate }
-    return `${today.year}-${addZero(today.month)}-${addZero(today.day)}`
+    return new Date(today.year, today.month - 1, today.day)
   }
 
   const getTomorrow = () => {
-    const today = { ...selectedDate }
-    const tomorrow = today
-    if (today.day === getMonthLength(today.month, today.year)) {
-      tomorrow.day = 1
-      if (today.month === 12) {
-        tomorrow.month = 1
-        tomorrow.year = today.year + 1
-      } else {
-        tomorrow.month = today.month + 1
-      }
-    } else {
-      tomorrow.day = today.day + 1
-    }
-
-    return `${tomorrow.year}-${addZero(tomorrow.month)}-${addZero(
-      tomorrow.day,
-    )}`
+    const tomorrow = addDays(getToday(), 1)
+    return tomorrow
   }
-  const todayStr = getToday() + 'T00:00:00-05:00'
-  const tomorrowStr = getTomorrow() + 'T23:59:59-05:00'
+
+  const todayStr = formatISO(getToday())
+  const tomorrowStr = formatISO(getTomorrow())
 
   const { loading, error, data } = useQuery(GET_ROUTES, {
     variables: {
@@ -242,54 +196,106 @@ export default function DriverTrips() {
     return <Typography color="danger">Error</Typography>
   }
 
-  console.log('Routes: ', data.routes)
-
-  const todayRegex = new RegExp(getToday())
-  let tripsToday
-  // const tomorrowRegex = new RegExp(getTomorrow())
-  let tripsTomorrow
-
-  switch (data.routes.length) {
-    case 0:
-      tripsToday = <Typography>No trips for today.</Typography>
-      tripsTomorrow = <Typography>No trips for tomorrow.</Typography>
-      break
-    case 1:
-      if (todayRegex.test(data.routes[0].scheduledStartDateTime)) {
-        tripsToday = data.routes[0].trips.map(trip => (
-          <DriverTripCard trip={trip} />
-        ))
-        tripsTomorrow = <Typography>No trips for tomorrow.</Typography>
-      } else {
-        tripsToday = <Typography>No trips for today.</Typography>
-        tripsTomorrow = data.routes[0].trips.map(trip => (
-          <DriverTripCard trip={trip} />
-        ))
-      }
-      break
-    case 2:
-      tripsToday = data.routes[0].trips.map(trip => (
-        <DriverTripCard trip={trip} />
-      ))
-      tripsTomorrow = data.routes[1].trips.map(trip => (
-        <DriverTripCard trip={trip} />
-      ))
-      break
-    default:
-      break
+  const dayLabel = date => {
+    const daysDifference = differenceInDays(parseISO(date), new Date())
+    switch (daysDifference) {
+      case -1:
+        return 'Yesterday'
+      case 0:
+        return 'Today'
+      case 1:
+        return 'Tomorrow'
+      default:
+        return format(parseISO(date), 'MM/dd/yyyy')
+    }
   }
+
+  const renderRoutesTrips = (routes, dayText) => {
+    const hasNoRoutesCanAddTrip =
+      routes.length === 0 && typeof dayText !== 'undefined'
+    if (hasNoRoutesCanAddTrip) {
+      return (
+        <>
+          <Grid
+            container
+            justify="space-between"
+            spacing={2}
+            className={classes.routeHeader}
+          >
+            <Grid item>
+              <Typography variant="h5" className={classes.dayText}>
+                {dayText}
+              </Typography>
+            </Grid>
+            <AddTripButton />
+          </Grid>
+        </>
+      )
+    }
+    return routes.map(route => {
+      return (
+        <>
+          <Grid
+            container
+            justify="space-between"
+            spacing={2}
+            className={classes.routeHeader}
+          >
+            <Grid item>
+              <Typography variant="h5" className={classes.dayText}>
+                {dayLabel(route.scheduledStartDateTime)}
+              </Typography>
+            </Grid>
+            <AddTripButton />
+          </Grid>
+          {route.trips.map(trip => (
+            <DriverTripCard trip={trip} />
+          ))}
+        </>
+      )
+    })
+  }
+
+  const filterRoutesByDaysDiff = (routes, diff) =>
+    routes.filter(
+      route =>
+        differenceInDays(parseISO(route.scheduledStartDateTime), new Date()) ===
+        diff,
+    )
+
+  const earlierRoutes = routes =>
+    routes.filter(
+      route =>
+        differenceInDays(parseISO(route.scheduledStartDateTime), new Date()) <
+        -1,
+    )
+  const yesterdaysRoute = routes => filterRoutesByDaysDiff(routes, -1)
+  const todaysRoute = routes => filterRoutesByDaysDiff(routes, 0)
+  const tomorrowsRoute = routes => filterRoutesByDaysDiff(routes, 1)
 
   return (
     <div className={classes.root}>
-      <DriverHeader />
-      <Typography variant="h5" className={classes.dayText}>
-        Today
-      </Typography>
-      {tripsToday && tripsToday}
-      <Typography variant="h5" className={classes.dayText}>
-        Tomorrow
-      </Typography>
-      {tripsTomorrow && tripsTomorrow}
+      {data && data.routes ? (
+        <Grid container spacing={2} direction="column">
+          <Grid item>
+            <DriverHeader />
+          </Grid>
+          <Grid item>
+            <Card>{renderRoutesTrips(earlierRoutes(data.routes))}</Card>
+          </Grid>
+          <Grid item>
+            <Card>{renderRoutesTrips(yesterdaysRoute(data.routes))}</Card>
+          </Grid>
+          <Grid item>
+            <Card>{renderRoutesTrips(todaysRoute(data.routes), 'Today')}</Card>
+          </Grid>
+          <Grid item>
+            <Card>
+              {renderRoutesTrips(tomorrowsRoute(data.routes), 'Tomorrow')}
+            </Card>
+          </Grid>
+        </Grid>
+      ) : null}
     </div>
   )
 }
