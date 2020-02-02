@@ -45,7 +45,7 @@ function Login({ login }) {
         user: {
           email: state.formLogin.email,
           password: state.formLogin.password,
-          host: location.hostname,
+          host: hostname || 'localhost',
         },
       },
     })
