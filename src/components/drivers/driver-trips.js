@@ -163,9 +163,7 @@ export default function DriverTrips() {
     data: {
       dispatchState: { selectedDriver, selectedDate },
     },
-  } = useQuery(GET_DISPATCH_STATE, {
-    pollInterval: 30000,
-  })
+  } = useQuery(GET_DISPATCH_STATE)
 
   const getToday = () => {
     const today = { ...selectedDate }
@@ -188,6 +186,7 @@ export default function DriverTrips() {
       toDate: tomorrowStr,
     },
     fetchPolicy: 'cache-and-network',
+    pollInterval: 30000,
   })
   const [currentData, setCurrentData] = useState(null)
   useEffect(() => {
