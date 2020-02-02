@@ -14,6 +14,7 @@ const CAN_UNDO_TRIP_QUERY = gql`
       drayingId
       tripMessages {
         id
+        body
       }
     }
   }
