@@ -180,6 +180,28 @@ ContainerSizeId | Name
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/draying/ or see [Draying.json](./JSON/Draying.json)
 
+#### Draying -> DrayingAlert
+
+API: Same as [Draying](#draying).
+
+API Path: data -> drayings -> # (draying record) -> DrayingAlerts -> # (DrayingAlert record)
+
+Example of a DrayingAlert record:
+
+```javascript
+{
+            "DrayingAlertId": 14,
+            "DeliveryOrderDrayingId": 36,
+            "DateFrom": "2020-02-03T11:16:41.487",
+            "Description": "This is a test created by Jason",
+            "Active": true,
+            "CreatedOn": "2020-02-03T16:16:52.033",
+            "CreatedBy": 25,
+            "ModifiedOn": "2020-02-03T16:16:52.033",
+            "ModifiedBy": 25
+          },
+```
+
 ### Draying/ActionLocation
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocation or see [ActionLocation.json](./JSON/ActionLocation.json)
@@ -187,6 +209,89 @@ API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/ActionLocati
 ### Draying/Dispatching
 
 API: https://dev-mercuriotransport.azurewebsites.net/api/v1/Draying/Dispatching or see [Dispatching.json](./JSON/Dispatching.json)
+
+### DeliveryOrderDraying
+
+API: https://dev-mercuriotransport.azurewebsites.net/api/v1/DeliveryOrderDraying
+
+#### DeliveryOrderDraying -> DrayingCost
+
+API: Same as [DeliveryOrderDraying](#DeliveryOrderDraying)
+
+API path:
+
+Example of DrayingCost
+
+```js
+ "DrayingCosts": [
+
+          {
+
+            "DrayingCostId": 1231,
+
+            "DeliveryOrderDrayingId": 36,
+
+            "DrayingTripId": 853,
+
+            "CostReasonId": 2,
+
+            "ShipperCharges": 0.0,
+
+            "ShipperChargesSuggested": null,
+
+            "DriverPayment": null,
+
+            "DriverPaymentSuggested": 35.0,
+
+            "CompanyCost": 0.0,
+
+            "CompanyCostSuggested": null,
+
+            "InvoiceDescription": null,
+
+            "InternalDescription": null,
+
+            "CreatedOn": "2020-01-24T18:42:14.117",
+
+            "CreatedBy": 5,
+
+            "ModifiedOn": "2020-02-03T16:54:09.87",
+
+            "ModifiedBy": 25,
+
+            "Reviewed": false,
+
+            "DeliveryOrderDraying": null,
+
+            "DrayingTrip": null,
+
+            "CostReason": {
+
+              "CostReasonId": 2,
+
+              "CostTypeId": 1,
+
+              "Name": "Driver",
+
+              "Active": false,
+
+              "Orden": 1,
+
+              "CostType": {
+
+                "CostTypeId": 1,
+
+                "Name": "Trip",
+
+                "Active": true
+
+              }
+
+            }
+
+          },
+
+```
 
 ### [STATUS] Port Status (Container)
 
