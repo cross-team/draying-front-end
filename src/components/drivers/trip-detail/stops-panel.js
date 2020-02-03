@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React /* useState */ from 'react'
 import {
   makeStyles,
   Typography,
@@ -6,13 +6,10 @@ import {
   AppBar,
   Toolbar,
   TextField,
-  Alert,
-  CircularProgress,
   InputAdornment,
 } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimes } from '@fortawesome/pro-light-svg-icons/'
-import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 export const UPDATE_DRAYING = gql`
@@ -47,36 +44,12 @@ const useStyles = makeStyles(theme => ({
 
 const StopsPanel = ({ draying }) => {
   const classes = useStyles()
-  const client = useApolloClient()
-  const [edit, setEdit] = useState(false)
-  const [booking, setBooking] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
-
-  const writeToCache = data => {
-    if (data && data.updateDraying.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-          }
-        `,
-        data: {
-          booking,
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-    }
-  }
-  useEffect(() => setBooking(draying.booking), [draying])
-
-  useEffect(() => writeToCache(data), [data, writeToCache])
+  // const [edit, setEdit] = useState(false)
+  // const [saving, setSaving] = useState(false)
 
   const handleClick = event => {}
 
+  /*
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -97,8 +70,7 @@ const StopsPanel = ({ draying }) => {
       },
     })
   }
-
-  console.log(data)
+  */
 
   return (
     <>
@@ -106,7 +78,7 @@ const StopsPanel = ({ draying }) => {
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Stops</Typography>
           <div className={classes.headerIcons}>
-            {saving && <CircularProgress color="secondary" />}
+            {/* {saving && <CircularProgress color="secondary" />} */}
             <IconButton onClick={handleClick}>
               <FontAwesomeIcon className={classes.headerText} icon={faPlus} />
             </IconButton>
@@ -131,9 +103,9 @@ const StopsPanel = ({ draying }) => {
           }
         />
       </div>
-      {data && !data.updateDraying.success && (
+      {/* data && !data.updateDraying.success && (
         <Alert severity="error">{data.updateDraying.message}</Alert>
-      )}
+      ) */}
     </>
   )
 }
