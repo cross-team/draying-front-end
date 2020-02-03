@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import {
-  makeStyles,
-  Typography,
-  IconButton,
-  AppBar,
-  Toolbar,
-  Card,
-  Menu,
-  MenuItem,
-  Chip,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  CircularProgress,
-} from '@material-ui/core/'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import Card from '@material-ui/core/Card'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -23,15 +21,14 @@ import DateFnsUtils from '@date-io/date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCheck,
-  faArrowRight,
   faTimes,
-  faCircle,
   faEllipsisV,
 } from '@fortawesome/pro-light-svg-icons/'
-import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
+// import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { format, formatISO } from 'date-fns'
+import format from 'date-fns/format'
+import formatISO from 'date-fns/formatISO'
 
 export const UPDATE_DRAYING_FIELDS = gql`
   mutation updateDrayingFields(
@@ -68,11 +65,6 @@ export const GET_DROPDOWN_OPTIONS = gql`
 `
 
 const useStyles = makeStyles(theme => ({
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   headerText: {
     color: theme.palette.primary.contrastText,
   },
@@ -84,40 +76,12 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  cardRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  stopContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  headerIcons: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  appointment: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   margin: {
     margin: theme.spacing(1),
-  },
-  locationStatus: {
-    display: 'flex',
-    alignItems: 'center',
   },
   formControl: {
     width: '100%',
     margin: theme.spacing(1),
-  },
-  editContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
   },
   rightContainer: {
     width: '36%',
@@ -125,15 +89,11 @@ const useStyles = makeStyles(theme => ({
   priorityContainer: {
     width: '100%',
     backgroundColor: theme.palette.danger.light,
-    display: 'flex',
-    justifyContent: 'flex-end',
     marginBottom: theme.spacing(1),
   },
   locationTypeContainer: {
     width: '100%',
     backgroundColor: '#f0f0f0',
-    display: 'flex',
-    justifyContent: 'flex-end',
   },
   tabText: {
     color: '#979797',
@@ -241,7 +201,7 @@ const ContainerPanel = ({ draying }) => {
   const content = (
     <>
       <Card className={classes.card}>
-        <div className={classes.cardRow}>
+        <Grid container justify="space-between" alignItems="center">
           <div>
             <Typography>
               {draying.loadType.name === 'Export'
@@ -250,33 +210,41 @@ const ContainerPanel = ({ draying }) => {
             </Typography>
             <Typography variant="caption">{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
           </div>
-          <div className={classes.rightContainer}>
-            <div className={classes.priorityContainer}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              className={classes.priorityContainer}
+              justify="flex-end"
+            >
               <Typography className={classes.tabText}>
                 {draying.priority}
               </Typography>
-            </div>
-            <div className={classes.locationTypeContainer}>
+            </Grid>
+            <Grid
+              container
+              className={classes.locationTypeContainer}
+              justify="flex-end"
+            >
               <Typography className={classes.tabText}>
                 {draying.deliveryLocation.locationType.name}
               </Typography>
-            </div>
-          </div>
-        </div>
-        <div className={classes.cardRow}>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container justify="space-between" alignItems="center">
           <Typography>{draying.loadType.name}</Typography>
           <Typography>
             {cutOffDateObject && format(cutOffDateObject, 'MM/dd/yyyy')}
           </Typography>
           <Typography>{draying.portStatus.name}</Typography>
-        </div>
+        </Grid>
       </Card>
     </>
   )
 
   const contentEdit = (
     <>
-      <div className={classes.editContainer}>
+      <Grid container alignItems="center" direction="column">
         <TextField
           label="Container #"
           variant="outlined"
@@ -334,7 +302,7 @@ const ContainerPanel = ({ draying }) => {
             className={classes.formControl}
           />
         </MuiPickersUtilsProvider>
-      </div>
+      </Grid>
     </>
   )
 
@@ -342,43 +310,45 @@ const ContainerPanel = ({ draying }) => {
     <>
       <AppBar position="static">
         <Toolbar className={classes.header}>
-          <Typography className={classes.headerText}>Container</Typography>
-          <div className={classes.headerIcons}>
-            {saving && <CircularProgress color="secondary" />}
-            {edit && !saving && (
-              <>
-                <IconButton onClick={handleSave}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faCheck}
-                  />
-                </IconButton>
-                <IconButton onClick={handleCancel}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faTimes}
-                  />
-                </IconButton>
-              </>
-            )}
-            <IconButton onClick={handleClick}>
-              <FontAwesomeIcon
-                className={classes.headerText}
-                icon={faEllipsisV}
-              />
-            </IconButton>
-          </div>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleClose}>Add Appointment</MenuItem>
-            <MenuItem onClick={handleClose}>Add Stop</MenuItem>
-            <MenuItem onClick={handleClose}>Add Alert</MenuItem>
-            <MenuItem onClick={handleClose}>Add Cost</MenuItem>
-          </Menu>
+          <Grid container alignItems="center" justify="space-between">
+            <Typography className={classes.headerText}>Container</Typography>
+            <div>
+              {saving && <CircularProgress color="secondary" />}
+              {edit && !saving && (
+                <>
+                  <IconButton onClick={handleSave}>
+                    <FontAwesomeIcon
+                      className={classes.headerText}
+                      icon={faCheck}
+                    />
+                  </IconButton>
+                  <IconButton onClick={handleCancel}>
+                    <FontAwesomeIcon
+                      className={classes.headerText}
+                      icon={faTimes}
+                    />
+                  </IconButton>
+                </>
+              )}
+              <IconButton onClick={handleClick}>
+                <FontAwesomeIcon
+                  className={classes.headerText}
+                  icon={faEllipsisV}
+                />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                <MenuItem onClick={handleClose}>Add Appointment</MenuItem>
+                <MenuItem onClick={handleClose}>Add Stop</MenuItem>
+                <MenuItem onClick={handleClose}>Add Alert</MenuItem>
+                <MenuItem onClick={handleClose}>Add Cost</MenuItem>
+              </Menu>
+            </div>
+          </Grid>
         </Toolbar>
       </AppBar>
       <div className={classes.details}>
