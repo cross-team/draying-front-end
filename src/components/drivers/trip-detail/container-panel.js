@@ -119,6 +119,26 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  rightContainer: {
+    width: '36%',
+  },
+  priorityContainer: {
+    width: '100%',
+    backgroundColor: theme.palette.danger.light,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: theme.spacing(1),
+  },
+  locationTypeContainer: {
+    width: '100%',
+    backgroundColor: '#f0f0f0',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  tabText: {
+    color: '#979797',
+    marginRight: theme.spacing(1),
+  },
 }))
 
 const ContainerPanel = ({ draying }) => {
@@ -230,11 +250,17 @@ const ContainerPanel = ({ draying }) => {
             </Typography>
             <Typography variant="caption">{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
           </div>
-          <div>
-            <Typography>{draying.priority}</Typography>
-            <Typography>
-              {draying.deliveryLocation.locationType.name}
-            </Typography>
+          <div className={classes.rightContainer}>
+            <div className={classes.priorityContainer}>
+              <Typography className={classes.tabText}>
+                {draying.priority}
+              </Typography>
+            </div>
+            <div className={classes.locationTypeContainer}>
+              <Typography className={classes.tabText}>
+                {draying.deliveryLocation.locationType.name}
+              </Typography>
+            </div>
           </div>
         </div>
         <div className={classes.cardRow}>
