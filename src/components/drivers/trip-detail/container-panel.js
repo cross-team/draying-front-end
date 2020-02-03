@@ -31,6 +31,7 @@ import {
 import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import { format, formatISO } from 'date-fns'
 
 export const UPDATE_DRAYING_FIELDS = gql`
   mutation updateDrayingFields(
@@ -65,14 +66,6 @@ export const GET_DROPDOWN_OPTIONS = gql`
     }
   }
 `
-
-const addZero = value => {
-  let newValue = value.toString()
-  if (newValue.length === 1) {
-    newValue = '0' + newValue
-  }
-  return newValue
-}
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -146,9 +139,6 @@ const ContainerPanel = ({ draying }) => {
   const cutOffDateObject = draying.cutOffDate
     ? new Date(draying.cutOffDate)
     : new Date()
-  const cutOffDateString = `${addZero(
-    cutOffDateObject.getMonth() + 1,
-  )}/${addZero(cutOffDateObject.getMonth())}/${cutOffDateObject.getFullYear()}`
 
   const fieldReducer = (state, { type, field, value }) => {
     switch (type) {
@@ -161,9 +151,9 @@ const ContainerPanel = ({ draying }) => {
         return {
           booking: draying.booking,
           containerNum: draying.container,
-          cutOffDate: cutOffDateString,
-          size: draying.containerSize.name,
-          type: draying.containerType.name,
+          cutOffDate: format(cutOffDateObject, 'MM/dd/yyyy'),
+          size: draying.containerSize.id,
+          type: draying.containerType.id,
         }
       default:
         throw new Error(`Unhandled action: ${type}`)
@@ -173,21 +163,14 @@ const ContainerPanel = ({ draying }) => {
   const [fieldValues, dispatch] = React.useReducer(fieldReducer, {
     booking: draying.booking,
     containerNum: draying.container,
-    cutOffDate: cutOffDateString,
+    cutOffDate: format(cutOffDateObject, 'MM/dd/yyyy'),
     size: draying.containerSize.id,
     type: draying.containerType.id,
   })
   const update = (field, value) => dispatch({ type: 'update', field, value })
   const cancel = () => dispatch({ type: 'cancel' })
 
-  useEffect(() => {
-    update('booking', draying.booking)
-    update('containerNum', draying.container)
-    update('cutOffDate', cutOffDateString)
-    update('size', draying.containerSize.id)
-    update('type', draying.containerType.id)
-    setSaving(false)
-  }, [draying, cutOffDateString])
+  useEffect(() => cancel(), [draying])
 
   const handleSave = () => {
     setSaving(true)
@@ -199,6 +182,10 @@ const ContainerPanel = ({ draying }) => {
           { field: 'Container', value: fieldValues.containerNum },
           { field: 'ContainerSizeId', value: fieldValues.size.toString() },
           { field: 'ContainerTypeId', value: fieldValues.type.toString() },
+          {
+            field: 'CutOffDate',
+            value: formatISO(new Date(fieldValues.cutOffDate)),
+          },
         ],
       },
     })
@@ -206,6 +193,10 @@ const ContainerPanel = ({ draying }) => {
 
   const handleChange = field => event => {
     update(field, event.target.value)
+  }
+
+  const handleDateChange = date => {
+    update('cutOffDate', date)
   }
 
   const handleClick = event => {
@@ -249,7 +240,7 @@ const ContainerPanel = ({ draying }) => {
         <div className={classes.cardRow}>
           <Typography>{draying.loadType.name}</Typography>
           <Typography>
-            {draying.cutOffDate && draying.cutOffDate.slice(0, 10)}
+            {cutOffDateObject && format(cutOffDateObject, 'MM/dd/yyyy')}
           </Typography>
           <Typography>{draying.portStatus.name}</Typography>
         </div>
@@ -309,9 +300,10 @@ const ContainerPanel = ({ draying }) => {
           <KeyboardDatePicker
             variant="inline"
             inputVariant="outlined"
-            format="dd/MM/yyyy"
+            format="MM/dd/yyyy"
             label="Cut Off Date"
             value={fieldValues.cutOffDate}
+            onChange={date => handleDateChange(date)}
             InputLabelProps={{ shrink: true }}
             className={classes.formControl}
           />

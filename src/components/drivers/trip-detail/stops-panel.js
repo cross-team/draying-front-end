@@ -119,7 +119,7 @@ const StopsPanel = ({ draying }) => {
           InputProps={{
             readOnly: true,
           }}
-          startAdornment={
+          startadornment={
             <InputAdornment position="start">
               <IconButton>
                 <FontAwesomeIcon
