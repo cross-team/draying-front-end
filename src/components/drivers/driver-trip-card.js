@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
   tabText: {
     color: '#979797',
+    marginRight: theme.spacing(1),
   },
 }))
 

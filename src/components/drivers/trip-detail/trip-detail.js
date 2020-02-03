@@ -13,6 +13,7 @@ import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'
+// import StopsPanel from './stops-panel'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {

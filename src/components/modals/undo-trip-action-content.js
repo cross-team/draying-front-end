@@ -46,7 +46,7 @@ export default function UndoTripActionContent({
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(true)
   useEffect(() => {
-    if (tripMessages) {
+    if (tripMessages && tripMessages.length > 0) {
       setBody(tripMessages[0].body)
     }
   }, [tripMessages])
@@ -84,51 +84,53 @@ export default function UndoTripActionContent({
     })
   }
 
+  const SendMessagePanel = ({ message }) => {
+    return (
+      <>
+        <Typography className={classes.title} color="textPrimary" gutterBottom>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={sendMessage}
+                onChange={e => setSendMessage(e.target.checked)}
+                value="sendMessage"
+                color="primary"
+              />
+            }
+            label="Send Message?"
+          />
+        </Typography>
+        <Collapse in={sendMessage} timeout="auto" unmountOnExit>
+          <Grid container spacing={2}>
+            <Grid item>
+              <Typography>Message:</Typography>
+            </Grid>
+            <Grid item>
+              <TextareaAutosize
+                aria-label="Send message text."
+                rowsMin={3}
+                placeholder={message.body}
+                onChange={e => setBody(e.target.value)}
+                value={body}
+              />
+            </Grid>
+          </Grid>
+        </Collapse>
+      </>
+    )
+  }
+
   return (
     <>
       <CardContent>
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           Are you sure you want to undo the previous trip action?
         </Typography>
-        {tripMessages.length > 0
-          ? tripMessages.map(message => (
-              <>
-                <Typography
-                  className={classes.title}
-                  color="textPrimary"
-                  gutterBottom
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={sendMessage}
-                        onChange={e => setSendMessage(e.target.checked)}
-                        value="sendMessage"
-                        color="primary"
-                      />
-                    }
-                    label="Send Message?"
-                  />
-                </Typography>
-                <Collapse in={sendMessage} timeout="auto" unmountOnExit>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <Typography>Message:</Typography>
-                    </Grid>
-                    <Grid item>
-                      <TextareaAutosize
-                        aria-label="Send message text."
-                        rowsMin={3}
-                        placeholder={message.body}
-                        onChange={e => setBody(e.target.value)}
-                        value={body}
-                      />
-                    </Grid>
-                  </Grid>
-                </Collapse>
-              </>
-            ))
-          : null}
+        {tripMessages.length > 0 ? (
+          tripMessages.map(message => <SendMessagePanel message={message} />)
+        ) : (
+          <SendMessagePanel message={{ body: '' }} />
+        )}
         <CardActions>
           {!saving && !undoResponse ? (
             <Button size="small" onClick={handleUndoTripAction}>

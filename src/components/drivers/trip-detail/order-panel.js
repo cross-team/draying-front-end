@@ -1,34 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import {
-  makeStyles,
-  Typography,
-  IconButton,
-  AppBar,
-  Toolbar,
-  Menu,
-  MenuItem,
-  TextField,
-  CircularProgress,
-} from '@material-ui/core/'
-import Alert from '@material-ui/lab/Alert'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faEllipsisV,
-  faTimes,
-  faCheck,
-} from '@fortawesome/pro-light-svg-icons/'
-import { useMutation, useApolloClient } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-
-export const UPDATE_DRAYING = gql`
-  mutation updateDraying($drayingId: Int, $field: String, $value: String) {
-    updateDraying(drayingId: $drayingId, field: $field, value: $value) {
-      success
-      message
-      updatedId
-    }
-  }
-`
+import React from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -39,10 +13,6 @@ const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText,
   },
-  headerIcons: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   details: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -52,68 +22,6 @@ const useStyles = makeStyles(theme => ({
 
 const OrderPanel = ({ draying }) => {
   const classes = useStyles()
-  const client = useApolloClient()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [edit, setEdit] = useState(false)
-  const [booking, setBooking] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [updateDraying, { data }] = useMutation(UPDATE_DRAYING)
-
-  const writeToCache = data => {
-    if (data && data.updateDraying.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-          }
-        `,
-        data: {
-          booking,
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-    }
-  }
-  useEffect(() => setBooking(draying.booking), [draying.booking])
-
-  useEffect(() => writeToCache(data), [data, writeToCache])
-
-  const handleClick = event => {
-    event.stopPropagation()
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleChange = event => {
-    setBooking(event.target.value)
-  }
-
-  const handleEdit = () => {
-    setEdit(true)
-    handleClose()
-  }
-
-  const handleCancel = () => {
-    setEdit(false)
-    setBooking(draying.booking)
-  }
-
-  const handleSave = () => {
-    setSaving(true)
-    updateDraying({
-      variables: {
-        drayingId: parseInt(draying.id),
-        field: 'Booking',
-        value: booking,
-      },
-    })
-  }
 
   let doStatus = ''
   if (draying.containerStage.id === '2' || draying.containerStage.id === '3') {
@@ -138,38 +46,6 @@ const OrderPanel = ({ draying }) => {
       <AppBar position="static">
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Order</Typography>
-          <div className={classes.headerIcons}>
-            {saving && <CircularProgress color="secondary" />}
-            {edit && !saving && (
-              <>
-                <IconButton onClick={handleSave}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faCheck}
-                  />
-                </IconButton>
-                <IconButton onClick={handleCancel}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faTimes}
-                  />
-                </IconButton>
-              </>
-            )}
-            <IconButton onClick={handleClick}>
-              <FontAwesomeIcon
-                className={classes.headerText}
-                icon={faEllipsisV}
-              />
-            </IconButton>
-          </div>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleEdit}>Edit Order</MenuItem>
-          </Menu>
         </Toolbar>
       </AppBar>
       <div className={classes.details}>
@@ -179,25 +55,13 @@ const OrderPanel = ({ draying }) => {
               ? `#${draying.order.id}`
               : 'No order number was found for this trip.'}
           </Typography>
-          {edit ? (
-            <TextField
-              label="Booking"
-              value={booking}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          ) : (
-            <Typography>{`#${booking}`}</Typography>
-          )}
+          <Typography>{`#${draying.booking}`}</Typography>
         </div>
         <div>
           <Typography>{doStatus}</Typography>
           <Typography>{draying.client.companyName}</Typography>
         </div>
       </div>
-      {data && !data.updateDraying.success && (
-        <Alert severity="error">{data.updateDraying.message}</Alert>
-      )}
     </>
   )
 }
