@@ -46,7 +46,7 @@ export default function UndoTripActionContent({
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(true)
   useEffect(() => {
-    if (tripMessages) {
+    if (tripMessages && tripMessages.length > 0) {
       setBody(tripMessages[0].body)
     }
   }, [tripMessages])
