@@ -130,8 +130,13 @@ const useStyles = makeStyles(theme => ({
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
-  // const client = useApolloClient()
-  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS)
+  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS, {
+    refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
+    onCompleted: () => {
+      setSaving(false)
+      setEdit(false)
+    },
+  })
   const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -184,51 +189,7 @@ const ContainerPanel = ({ draying }) => {
     setSaving(false)
   }, [draying, cutOffDateString])
 
-  /*
-  const writeToCache = data => {
-    if (data && data.updateDrayingFields.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-            container
-            containerSize {
-              id
-              name
-            }
-            containerType {
-              id
-              name
-            }
-          }
-        `,
-        data: {
-          booking: fieldValues.booking,
-          container: fieldValues.containerNum,
-          containerSize: {
-            id: fieldValues.size,
-            name: dropdownData.containerSizes[fieldValues.size - 1].name,
-            __typename: 'ContainerSize',
-          },
-          containerType: {
-            id: fieldValues.type,
-            name: dropdownData.containerTypes[fieldValues.type - 1].name,
-            __typename: 'ContainerType',
-          },
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-    }
-  }
-
-  useEffect(() => writeToCache(data), [data, writeToCache])
-  */
-
   const handleSave = () => {
-    debugger
     setSaving(true)
     updateDrayingFields({
       variables: {
