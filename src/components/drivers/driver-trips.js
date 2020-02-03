@@ -155,6 +155,11 @@ const useStyles = makeStyles(theme => ({
   routeHeader: {
     padding: theme.spacing(2),
   },
+  trip: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
 }))
 
 export default function DriverTrips() {
@@ -259,7 +264,7 @@ export default function DriverTrips() {
           </Grid>
           <Grid container spacing={1} direction="column">
             {route.trips.map(trip => (
-              <Grid key={trip.id} item>
+              <Grid key={trip.id} item className={classes.trip}>
                 <DriverTripCard trip={trip} />
               </Grid>
             ))}
