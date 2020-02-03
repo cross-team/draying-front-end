@@ -179,8 +179,9 @@ const ContainerPanel = ({ draying }) => {
     update('booking', draying.booking)
     update('containerNum', draying.container)
     update('cutOffDate', cutOffDateString)
-    update('size', draying.containerSize.name)
-    update('type', draying.containerType.name)
+    update('size', draying.containerSize.id)
+    update('type', draying.containerType.id)
+    setSaving(false)
   }, [draying, cutOffDateString])
 
   /*
@@ -227,15 +228,16 @@ const ContainerPanel = ({ draying }) => {
   */
 
   const handleSave = () => {
+    debugger
     setSaving(true)
     updateDrayingFields({
       variables: {
         drayingId: parseInt(draying.id),
         drayingFields: [
-          { field: 'booking', value: fieldValues.booking },
-          { field: 'container', value: fieldValues.containerNum },
-          { field: 'containerSize', value: fieldValues.size },
-          { field: 'containerType', value: fieldValues.type },
+          { field: 'Booking', value: fieldValues.booking },
+          { field: 'Container', value: fieldValues.containerNum },
+          { field: 'ContainerSizeId', value: fieldValues.size.toString() },
+          { field: 'ContainerTypeId', value: fieldValues.type.toString() },
         ],
       },
     })
@@ -314,8 +316,7 @@ const ContainerPanel = ({ draying }) => {
         <FormControl className={classes.formControl} variant="outlined">
           <InputLabel>Size (Ft)</InputLabel>
           <Select value={fieldValues.size} onChange={handleChange('size')}>
-            {!loading ? (
-              dropdownData &&
+            {!loading && dropdownData ? (
               dropdownData.containerSizes.map(size => (
                 <MenuItem key={size.id} value={size.id}>
                   {size.name}
@@ -328,11 +329,13 @@ const ContainerPanel = ({ draying }) => {
         </FormControl>
         <FormControl className={classes.formControl} variant="outlined">
           <InputLabel>Type</InputLabel>
-          <Select value={fieldValues.type} onChange={handleChange('type')}>
-            {!loading ? (
-              dropdownData &&
+          <Select
+            value={parseInt(fieldValues.type)}
+            onChange={handleChange('type')}
+          >
+            {!loading && dropdownData ? (
               dropdownData.containerTypes.map(type => (
-                <MenuItem key={type.id} value={type.id}>
+                <MenuItem key={type.id} value={parseInt(type.id)}>
                   {type.name}
                 </MenuItem>
               ))
@@ -401,6 +404,7 @@ const ContainerPanel = ({ draying }) => {
       </AppBar>
       <div className={classes.details}>
         {edit ? contentEdit : content}
+        {/*
         <div className={classes.stopContainer}>
           <Typography>
             {draying.terminalLocation && draying.terminalLocation.nickName}
@@ -478,6 +482,7 @@ const ContainerPanel = ({ draying }) => {
           )}
           <Typography>Completed</Typography>
         </div>
+          */}
       </div>
     </>
   )
