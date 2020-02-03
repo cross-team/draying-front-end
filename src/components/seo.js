@@ -26,6 +26,10 @@ const SEO = ({ title, description, author, lang }) => (
         <>
           <Helmet title={seo.title}>
             <html lang={seo.lang} />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0, user-scalable=no"
+            />
             {seo.title && <meta property="og:title" content={seo.title} />}
             <meta name="description" content={seo.description} />
             {seo.description && (

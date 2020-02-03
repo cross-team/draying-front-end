@@ -17,6 +17,10 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
+    '&:hover': {
+      backgroundColor: '#ebf5ff',
+      cursor: 'pointer',
+    },
   },
   selected: {
     backgroundColor: '#ebf5ff',
