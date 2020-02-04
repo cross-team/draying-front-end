@@ -7,6 +7,7 @@ export const typeDefs = gql`
     isLoggedIn: Boolean!
     columnState: ColumnState!
     dispatchState: DispatchState!
+    currentTrip: Trip!
   }
 
   extend type Mutation {
@@ -19,6 +20,10 @@ export const typeDefs = gql`
       selectedDriver: SelectedDriver
       selectedDate: Date
     ): DispatchState!
+  }
+
+  extend type Trip {
+    refresh: Boolean!
   }
 
   type ColumnState {
@@ -52,6 +57,14 @@ export const typeDefs = gql`
 `
 
 export const resolvers = {
+  Query: {
+    currentTrip: (_root, __, { cache }) => {
+      return {
+        id: 1,
+        refresh: true,
+      }
+    },
+  },
   Mutation: {
     setColumnState: (_root, { hideLeft, hideMiddle, hideRight }, { cache }) => {
       const { columnState } = cache.readQuery({
@@ -121,5 +134,11 @@ export const resolvers = {
       })
       return null
     },
+  },
+  Trip: (trip, __, ___) => {
+    return {
+      ...trip,
+      refresh: true,
+    }
   },
 }
