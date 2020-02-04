@@ -25,10 +25,8 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const AllStops = ({ draying, setEdit, setIsTerminal }) => {
+const AllStops = ({ draying, setEdit, setAddS, setIsTerminal }) => {
   const classes = useStyles()
-
-  const handleClick = event => {}
 
   const extraStops = draying.extraStops.map((stop, index) => (
     <TextField
@@ -59,7 +57,7 @@ const AllStops = ({ draying, setEdit, setIsTerminal }) => {
           <Grid container justify="space-between" alignItems="center">
             <Typography className={classes.headerText}>Stops</Typography>
             <div>
-              <IconButton onClick={handleClick}>
+              <IconButton onClick={() => setAddS(true)}>
                 <FontAwesomeIcon className={classes.headerText} icon={faPlus} />
               </IconButton>
             </div>
@@ -96,7 +94,7 @@ const AllStops = ({ draying, setEdit, setIsTerminal }) => {
                 <IconButton
                   onClick={() => {
                     setIsTerminal(true)
-                    setEdit(draying.returnTerminal)
+                    setEdit(true)
                   }}
                 >
                   <EditIcon />

@@ -1,14 +1,22 @@
 import React, { useState } from 'react'
 import AllStops from './all-stops'
 import EditStop from './edit-stop'
+import AddStops from './add-stop'
+import AddLocation from './add-location'
 
 const StopsPanel = ({ draying }) => {
-  const [edit, setEdit] = useState('')
+  const [edit, setEdit] = useState(false)
+  const [addS, setAddS] = useState(false)
+  const [addL, setAddL] = useState(false)
   const [isTerminal, setIsTerminal] = useState(false)
 
-  return (
-    <>
-      {edit ? (
+  const content = () => {
+    if (addL) {
+      return <AddLocation setAddL={setAddL} />
+    } else if (addS) {
+      return <AddStops setAddS={setAddS} draying={draying} setAddL={setAddL} />
+    } else if (edit) {
+      return (
         <EditStop
           stop={edit}
           setEdit={setEdit}
@@ -16,15 +24,20 @@ const StopsPanel = ({ draying }) => {
           setIsTerminal={setIsTerminal}
           drayingId={draying.id}
         />
-      ) : (
+      )
+    } else {
+      return (
         <AllStops
           draying={draying}
           setEdit={setEdit}
+          setAddS={setAddS}
           setIsTerminal={setIsTerminal}
         />
-      )}
-    </>
-  )
+      )
+    }
+  }
+
+  return content()
 }
 
 export default StopsPanel

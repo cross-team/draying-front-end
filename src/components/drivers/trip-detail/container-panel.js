@@ -368,32 +368,6 @@ const ContainerPanel = ({ draying }) => {
       <div className={classes.details}>
         {edit ? contentEdit : content}
         {/*
-        <div className={classes.stopContainer}>
-          <Typography>
-            {draying.terminalLocation && draying.terminalLocation.nickName}
-          </Typography>
-          <div>
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>{draying.deliveryLocation.nickName}</Typography>
-            </div>
-            {draying.extraStops.map(stop => (
-              <div className={classes.stop}>
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className={classes.margin}
-                />
-                <Typography>{stop.deliveryLocation.nickName}</Typography>
-              </div>
-            ))}
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>
-                {draying.returnTerminal && draying.returnTerminal.nickName}
-              </Typography>
-            </div>
-          </div>
-        </div>
         <Typography>Appointments</Typography>
         {draying.appointments.map(appointment => (
           <div className={classes.appointment}>

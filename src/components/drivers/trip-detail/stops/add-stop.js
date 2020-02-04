@@ -25,31 +25,6 @@ export const GET_LOCATIONS = gql`
   }
 `
 
-export const GET_TERMINALS = gql`
-  query activeTerminalLocations {
-    activeTerminalLocations {
-      id
-      nickName
-    }
-  }
-`
-
-export const UPDATE_TERMINAL = gql`
-  mutation updateDrayingReturnTerminal(
-    $drayingId: Int!
-    $returnTerminalId: Int!
-  ) {
-    updateDrayingReturnTerminal(
-      drayingId: $drayingId
-      returnTerminalId: $returnTerminalId
-    ) {
-      success
-      message
-      updatedId
-    }
-  }
-`
-
 const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText,
@@ -71,8 +46,8 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
-  console.log(stop)
+const AddStop = ({ setAddS, setAddL, draying }) => {
+  console.log(draying)
   const classes = useStyles()
   const inputLabel = React.useRef(null)
   const [labelWidth, setLabelWidth] = useState(0)
@@ -80,47 +55,20 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
 
-  const [location, setLocation] = useState(parseInt(stop.id))
+  const [location, setLocation] = useState('')
   const [saving, setSaving] = useState(false)
 
-  const { loading: loadingLocations, data: locationData } = useQuery(
-    GET_LOCATIONS,
-  )
-  const { loading: loadingTerminals, data: terminalData } = useQuery(
-    GET_TERMINALS,
-  )
-
-  let data
-  let loading = true
-  if (isTerminal && loadingTerminals !== undefined) {
-    data = terminalData
-    loading = loadingTerminals
-  } else if (loadingLocations !== undefined) {
-    data = locationData
-    loading = loadingLocations
-  }
-
-  const [updateDrayingReturnTerminal] = useMutation(UPDATE_TERMINAL, {
-    refetchQueries: ['allDriverRoutes', 'getSelectedTrip'],
-    onCompleted: () => {
-      setEdit(false)
-      setIsTerminal(false)
-    },
-  })
+  const { loading, data } = useQuery(GET_LOCATIONS)
 
   const handleChange = event => {
     setLocation(event.target.value)
   }
 
   const handleSave = () => {
-    setSaving(true)
-    if (isTerminal) {
-      updateDrayingReturnTerminal({
-        variables: {
-          drayingId: parseInt(drayingId),
-          returnTerminalId: parseInt(location),
-        },
-      })
+    if (location === 'create') {
+      setAddL(true)
+    } else {
+      setSaving(true)
     }
   }
 
@@ -137,8 +85,7 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
             <Grid container justify="flex-start" alignItems="center">
               <IconButton
                 onClick={() => {
-                  setEdit(false)
-                  setIsTerminal(false)
+                  setAddS(false)
                 }}
               >
                 <FontAwesomeIcon
@@ -146,7 +93,7 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
                   icon={faChevronLeft}
                 />
               </IconButton>
-              <Typography className={classes.headerText}>Edit Stop</Typography>
+              <Typography className={classes.headerText}>Add Stop</Typography>
             </Grid>
             {saving ? (
               <CircularProgress color="secondary" />
@@ -156,7 +103,7 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
                 variant="contained"
                 onClick={handleSave}
               >
-                APPLY
+                DONE
               </Button>
             )}
           </Grid>
@@ -164,18 +111,15 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
       </AppBar>
       <Grid className={classes.details}>
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel ref={inputLabel}>
-            Edit {isTerminal ? 'Terminal' : 'Stop'}
-          </InputLabel>
+          <InputLabel ref={inputLabel}>Add Stop</InputLabel>
           <Select
             value={location}
             onChange={handleChange}
             labelWidth={labelWidth}
           >
+            <MenuItem value="create">Create New Location</MenuItem>
             {!loading && data !== undefined ? (
-              data[
-                isTerminal ? 'activeTerminalLocations' : 'deliveryLocations'
-              ].map(loc => (
+              data.deliveryLocations.map(loc => (
                 <MenuItem key={loc.id} value={parseInt(loc.id)}>
                   {loc.nickName}
                 </MenuItem>
@@ -190,4 +134,4 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
   )
 }
 
-export default EditStop
+export default AddStop
