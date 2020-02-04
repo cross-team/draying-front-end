@@ -239,10 +239,4 @@ export const resolvers = {
       return null
     },
   },
-  Trip: (trip, __, ___) => {
-    return {
-      ...trip,
-      refresh: true,
-    }
-  },
 }
