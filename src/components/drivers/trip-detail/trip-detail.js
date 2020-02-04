@@ -218,8 +218,8 @@ const TripDetail = ({ width }) => {
               <IconButton onClick={handleClose}>
                 <FontAwesomeIcon icon={faTimes} />
               </IconButton>
-              <Typography>{`Trip ${selectedTrip &&
-                selectedTrip.id} Details`}</Typography>
+              <Typography>{`Trip ${selectedTripId &&
+                selectedTripId} Details`}</Typography>
             </Toolbar>
           </AppBar>
           <OrderPanel draying={trip.draying} />
