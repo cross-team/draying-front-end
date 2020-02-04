@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
   withWidth,
@@ -22,9 +22,116 @@ export const GET_DISPATCH_STATE = gql`
         id
       }
     }
-    currentTrip @client {
+  }
+`
+
+export const GET_CURRENT_TRIP = gql`
+  query getCurrentTrip($tripId: Int) {
+    currentTrip(tripId: $tripId) @client {
       id
-      refresh
+      __typename
+      locations {
+        __typename
+        estimatedScheduledCompletedAt
+        nickName {
+          __typename
+          name
+        }
+        action {
+          __typename
+          id
+          name
+        }
+      }
+      driver {
+        __typename
+        firstName
+        lastName
+      }
+      action {
+        __typename
+        name
+      }
+      status {
+        __typename
+        name
+        id
+      }
+      draying {
+        __typename
+        id
+        container
+        priority
+        cutOffDate
+        booking
+        appointments {
+          __typename
+          appointmentDate
+          appointmentTime
+          type {
+            __typename
+            name
+          }
+        }
+        extraStops {
+          __typename
+          deliveryLocation {
+            __typename
+            nickName
+          }
+        }
+        deliveryLocation {
+          __typename
+          nickName
+          locationType {
+            __typename
+            id
+            name
+          }
+        }
+        portStatus {
+          __typename
+          name
+        }
+        loadType {
+          __typename
+          name
+        }
+        containerSize {
+          __typename
+          id
+          name
+        }
+        containerType {
+          __typename
+          id
+          name
+        }
+        shippingLine {
+          __typename
+          name
+        }
+        terminalLocation {
+          __typename
+          nickName
+        }
+        returnTerminal {
+          __typename
+          nickName
+        }
+        order {
+          __typename
+          id
+        }
+        client {
+          __typename
+          companyName
+        }
+        containerStage {
+          __typename
+          id
+        }
+      }
     }
   }
 `
@@ -56,109 +163,28 @@ export const SET_DISPATCH_STATE = gql`
 `
 
 const TripDetail = ({ width }) => {
-  const client = useApolloClient()
-  const { data, error } = useQuery(GET_DISPATCH_STATE)
+  const { data } = useQuery(GET_DISPATCH_STATE)
 
   let dispatchState
-  let currentTrip
-  let selectedTrip
+  let selectedTripId
   if (data) {
     dispatchState = data.dispatchState
-    currentTrip = data.currentTrip
   }
 
-  if (dispatchState) {
-    selectedTrip = dispatchState.selectedTrip
+  if (dispatchState && dispatchState.selectedTrip) {
+    selectedTripId = parseInt(dispatchState.selectedTrip.id)
   }
 
-  const trip = currentTrip
-  // const trip = client.readFragment({
-  //   id: `Trip:${selectedTrip.id}`,
-  //   fragment: gql`
-  //     fragment currentTrip on Trip {
-  //       id
-  //       locations {
-  //         estimatedScheduledCompletedAt
-  //         nickName {
-  //           name
-  //         }
-  //         action {
-  //           id
-  //           name
-  //         }
-  //       }
-  //       driver {
-  //         firstName
-  //         lastName
-  //       }
-  //       action {
-  //         name
-  //       }
-  //       status {
-  //         name
-  //         id
-  //       }
-  //       draying {
-  //         id
-  //         container
-  //         priority
-  //         cutOffDate
-  //         booking
-  //         appointments {
-  //           appointmentDate
-  //           appointmentTime
-  //           type {
-  //             name
-  //           }
-  //         }
-  //         extraStops {
-  //           deliveryLocation {
-  //             nickName
-  //           }
-  //         }
-  //         deliveryLocation {
-  //           nickName
-  //           locationType {
-  //             id
-  //             name
-  //           }
-  //         }
-  //         portStatus {
-  //           name
-  //         }
-  //         loadType {
-  //           name
-  //         }
-  //         containerSize {
-  //           id
-  //           name
-  //         }
-  //         containerType {
-  //           id
-  //           name
-  //         }
-  //         shippingLine {
-  //           name
-  //         }
-  //         terminalLocation {
-  //           nickName
-  //         }
-  //         returnTerminal {
-  //           nickName
-  //         }
-  //         order {
-  //           id
-  //         }
-  //         client {
-  //           companyName
-  //         }
-  //         containerStage {
-  //           id
-  //         }
-  //       }
-  //     }
-  //   `,
-  // })
+  const { data: tripData } = useQuery(GET_CURRENT_TRIP, {
+    variables: {
+      tripId: selectedTripId,
+    },
+  })
+  let trip
+  if (tripData && tripData.currentTrip) {
+    trip = tripData.currentTrip
+  }
+
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
 
@@ -184,22 +210,24 @@ const TripDetail = ({ width }) => {
   }
 
   return (
-    trip && (
-      <>
-        <AppBar position="sticky">
-          <Toolbar>
-            <IconButton onClick={handleClose}>
-              <FontAwesomeIcon icon={faTimes} />
-            </IconButton>
-            <Typography>{`Trip ${selectedTrip &&
-              selectedTrip.id} Details`}</Typography>
-          </Toolbar>
-        </AppBar>
-        <OrderPanel draying={trip.draying} />
-        <ContainerPanel draying={trip.draying} />
-        <TripPanel trip={trip} />
-      </>
-    )
+    <>
+      {trip && trip.draying && (
+        <>
+          <AppBar position="sticky">
+            <Toolbar>
+              <IconButton onClick={handleClose}>
+                <FontAwesomeIcon icon={faTimes} />
+              </IconButton>
+              <Typography>{`Trip ${selectedTrip &&
+                selectedTrip.id} Details`}</Typography>
+            </Toolbar>
+          </AppBar>
+          <OrderPanel draying={trip.draying} />
+          <ContainerPanel draying={trip.draying} />
+          <TripPanel trip={trip} />
+        </>
+      )}
+    </>
   )
 }
 
