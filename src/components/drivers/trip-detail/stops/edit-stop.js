@@ -101,11 +101,12 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
   }
 
   const [updateDrayingReturnTerminal] = useMutation(UPDATE_TERMINAL, {
-    refetchQueries: ['allDriverRoutes', 'getSelectedTrip'],
+    refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
     onCompleted: () => {
       setEdit(false)
       setIsTerminal(false)
     },
+    awaitRefetchQueries: true,
   })
 
   const handleChange = event => {
