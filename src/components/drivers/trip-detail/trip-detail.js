@@ -211,20 +211,6 @@ const TripDetail = ({ width }) => {
 
   return (
     <>
-<<<<<<< HEAD
-      <AppBar position="sticky">
-        <Toolbar>
-          <IconButton onClick={handleClose}>
-            <FontAwesomeIcon icon={faTimes} />
-          </IconButton>
-          <Typography>{`Trip ${selectedTrip.id} Details`}</Typography>
-        </Toolbar>
-      </AppBar>
-      <OrderPanel draying={trip.draying} />
-      <ContainerPanel draying={trip.draying} />
-      <StopsPanel draying={trip.draying} />
-      <TripPanel trip={trip} />
-=======
       {trip && trip.draying && (
         <>
           <AppBar position="sticky">
@@ -241,7 +227,6 @@ const TripDetail = ({ width }) => {
           <TripPanel trip={trip} />
         </>
       )}
->>>>>>> dev
     </>
   )
 }
