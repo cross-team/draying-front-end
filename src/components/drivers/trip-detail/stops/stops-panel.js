@@ -14,6 +14,7 @@ const StopsPanel = ({ draying }) => {
           setEdit={setEdit}
           isTerminal={isTerminal}
           setIsTerminal={setIsTerminal}
+          drayingId={draying.id}
         />
       ) : (
         <AllStops

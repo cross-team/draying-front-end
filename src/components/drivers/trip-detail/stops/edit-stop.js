@@ -10,9 +10,10 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 export const GET_LOCATIONS = gql`
@@ -33,6 +34,22 @@ export const GET_TERMINALS = gql`
   }
 `
 
+export const UPDATE_TERMINAL = gql`
+  mutation updateDrayingReturnTerminal(
+    $drayingId: Int
+    $returnTerminalId: Int
+  ) {
+    updateDrayingReturnTerminal(
+      drayingId: $drayingId
+      returnTerminalId: $returnTerminalId
+    ) {
+      success
+      message
+      updatedId
+    }
+  }
+`
+
 const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText,
@@ -40,13 +57,10 @@ const useStyles = makeStyles(theme => ({
   details: {
     margin: theme.spacing(1),
   },
-  input: {
-    width: '100%',
-    marginTop: theme.spacing(2),
-  },
   formControl: {
     width: '100%',
     margin: 'auto',
+    marginTop: theme.spacing(2),
   },
   toolbar: {
     width: '100%',
@@ -57,7 +71,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const StopsPanel = ({ stop, setEdit, isTerminal, setIsTerminal }) => {
+const StopsPanel = ({
+  stop,
+  setEdit,
+  isTerminal,
+  setIsTerminal,
+  drayingId,
+}) => {
   console.log(stop)
   const classes = useStyles()
   const inputLabel = React.useRef(null)
@@ -67,6 +87,7 @@ const StopsPanel = ({ stop, setEdit, isTerminal, setIsTerminal }) => {
   }, [])
 
   const [location, setLocation] = useState(parseInt(stop.id))
+  const [saving, setSaving] = useState(false)
 
   const { loading: loadingLocations, data: locationData } = useQuery(
     GET_LOCATIONS,
@@ -85,8 +106,25 @@ const StopsPanel = ({ stop, setEdit, isTerminal, setIsTerminal }) => {
     loading = loadingLocations
   }
 
+  const [updateDrayingReturnTerminal] = useMutation(UPDATE_TERMINAL, {
+    refetchQueries: ['allDriverRoutes', 'getSelectedTrip'],
+    onCompleted: () => {
+      setEdit('')
+      setIsTerminal(false)
+    },
+  })
+
   const handleChange = event => {
     setLocation(event.target.value)
+  }
+
+  const handleSave = () => {
+    setSaving(true)
+    updateDrayingReturnTerminal({
+      variables: {
+        drayingId: parseInt(drayingId),
+      },
+    })
   }
 
   return (
@@ -113,15 +151,21 @@ const StopsPanel = ({ stop, setEdit, isTerminal, setIsTerminal }) => {
               </IconButton>
               <Typography className={classes.headerText}>Edit Stop</Typography>
             </Grid>
-            <Button className={classes.button} variant="contained">
-              APPLY
-            </Button>
+            {saving ? (
+              <CircularProgress color="secondary" />
+            ) : (
+              <Button className={classes.button} variant="contained">
+                APPLY
+              </Button>
+            )}
           </Grid>
         </Toolbar>
       </AppBar>
       <Grid className={classes.details}>
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel ref={inputLabel}>Edit Stop</InputLabel>
+          <InputLabel ref={inputLabel}>
+            Edit {isTerminal ? 'Terminal' : 'Stop'}
+          </InputLabel>
           <Select
             value={location}
             onChange={handleChange}
