@@ -3,11 +3,11 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
-import PopUp from '../common/pop-up'
+import PopUp from '../../common/pop-up'
 import UndoTripActionContent from './undo-trip-action-content'
 
-const CAN_UNDO_TRIP_QUERY = gql`
-  query CanUndo($drayingId: Int) {
+const UNDO_TRIP_QUERY_MESSAGES = gql`
+  query tripMessages($drayingId: Int) {
     drayingGetUndoTripActionMessage(drayingId: $drayingId) {
       driverId
       tripStatusId
@@ -21,7 +21,7 @@ const CAN_UNDO_TRIP_QUERY = gql`
 `
 
 export default function UndoTripActionPopUp({ OpenPopUpButton, drayingId }) {
-  const { loading, error, data } = useQuery(CAN_UNDO_TRIP_QUERY, {
+  const { loading, error, data } = useQuery(UNDO_TRIP_QUERY_MESSAGES, {
     variables: { drayingId },
     fetchPolicy: 'cache-and-network',
   })
