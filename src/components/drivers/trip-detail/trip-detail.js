@@ -13,7 +13,7 @@ import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'
-// import StopsPanel from './stops-panel'
+import StopsPanel from './stops/stops-panel'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -99,11 +99,14 @@ const TripDetail = ({ width }) => {
             }
           }
           extraStops {
+            id
             deliveryLocation {
+              id
               nickName
             }
           }
           deliveryLocation {
+            id
             nickName
             locationType {
               id
@@ -131,6 +134,7 @@ const TripDetail = ({ width }) => {
             nickName
           }
           returnTerminal {
+            id
             nickName
           }
           order {
@@ -182,6 +186,7 @@ const TripDetail = ({ width }) => {
       </AppBar>
       <OrderPanel draying={trip.draying} />
       <ContainerPanel draying={trip.draying} />
+      <StopsPanel draying={trip.draying} />
       <TripPanel trip={trip} />
     </>
   )
