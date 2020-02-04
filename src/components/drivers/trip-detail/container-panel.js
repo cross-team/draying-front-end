@@ -104,11 +104,12 @@ const useStyles = makeStyles(theme => ({
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
   const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS, {
-    refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
+    refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
     onCompleted: () => {
       setSaving(false)
       setEdit(false)
     },
+    awaitRefetchQueries: true,
   })
   const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
 

@@ -7,6 +7,7 @@ export const typeDefs = gql`
     isLoggedIn: Boolean!
     columnState: ColumnState!
     dispatchState: DispatchState!
+    currentTrip: Trip!
   }
 
   extend type Mutation {
@@ -52,6 +53,122 @@ export const typeDefs = gql`
 `
 
 export const resolvers = {
+  Query: {
+    currentTrip: (_root, { tripId }, { cache }) => {
+      const trip = cache.readFragment({
+        id: `Trip:${tripId}`,
+        fragment: gql`
+          fragment currentTrip on Trip {
+            id
+            __typename
+            locations {
+              __typename
+              estimatedScheduledCompletedAt
+              nickName {
+                __typename
+                name
+              }
+              action {
+                __typename
+                id
+                name
+              }
+            }
+            driver {
+              __typename
+              firstName
+              lastName
+            }
+            action {
+              __typename
+              name
+            }
+            status {
+              __typename
+              name
+              id
+            }
+            draying {
+              __typename
+              id
+              container
+              priority
+              cutOffDate
+              booking
+              appointments {
+                __typename
+                appointmentDate
+                appointmentTime
+                type {
+                  __typename
+                  name
+                }
+              }
+              extraStops {
+                __typename
+                deliveryLocation {
+                  __typename
+                  nickName
+                }
+              }
+              deliveryLocation {
+                __typename
+                nickName
+                locationType {
+                  __typename
+                  id
+                  name
+                }
+              }
+              portStatus {
+                __typename
+                name
+              }
+              loadType {
+                __typename
+                name
+              }
+              containerSize {
+                __typename
+                id
+                name
+              }
+              containerType {
+                __typename
+                id
+                name
+              }
+              shippingLine {
+                __typename
+                name
+              }
+              terminalLocation {
+                __typename
+                nickName
+              }
+              returnTerminal {
+                __typename
+                nickName
+              }
+              order {
+                __typename
+                id
+              }
+              client {
+                __typename
+                companyName
+              }
+              containerStage {
+                __typename
+                id
+              }
+            }
+          }
+        `,
+      })
+      return trip
+    },
+  },
   Mutation: {
     setColumnState: (_root, { hideLeft, hideMiddle, hideRight }, { cache }) => {
       const { columnState } = cache.readQuery({
