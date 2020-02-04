@@ -16,7 +16,7 @@ import TripPanel from './trip-panel'
 import StopsPanel from './stops/stops-panel'
 
 export const GET_DISPATCH_STATE = gql`
-  query getSelectedTrip {
+  query getDispatchState {
     dispatchState @client {
       selectedTrip {
         id
