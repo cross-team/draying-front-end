@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
@@ -43,6 +43,22 @@ const PriceFields = ({
     },
   })
 
+  useEffect(() => {
+    if (data && data.quoteExtraStopPrices) {
+      setTripActions(
+        data.quoteExtraStopPrices.map(action => {
+          return {
+            drayingId: parseInt(drayingId),
+            tripActionOrder: parseInt(action.tripActionOrder),
+            tripActionId: parseInt(action.tripActionId),
+            price: parseFloat(action.suggestedPrice),
+            priceQuote: parseFloat(action.suggestedPrice),
+          }
+        }),
+      )
+    }
+  }, [data, drayingId, setTripActions])
+
   if (loading) {
     return <Typography>Loading...</Typography>
   }
@@ -52,32 +68,23 @@ const PriceFields = ({
     return <Typography>Error</Typography>
   }
 
-  console.log(data)
-
-  const fields = data.quoteExtraStopPrices.map(action => (
-    <TextField
-      className={classes.input}
-      variant="outlined"
-      label={action.name}
-      value={
-        tripActions.filter(obj => obj.tripActionId === action.tripActionId)
-          .price
-      }
-      onChange={() => handlePriceChange(action.tripActionId)}
-    />
-  ))
-
-  setTripActions(
-    data.quoteExtraStopPrices.map(action => {
-      return {
-        drayingId: parseInt(drayingId),
-        tripActionOrder: parseInt(action.tripActionOrder),
-        tripActionId: parseInt(action.tripActionId),
-        price: parseFloat(action.suggestedPrice),
-        priceQuote: parseFloat(action.suggestedPrice),
-      }
-    }),
-  )
+  let fields
+  if (data && data.quoteExtraStopPrices) {
+    console.log(data)
+    fields = data.quoteExtraStopPrices.map(action => (
+      <TextField
+        className={classes.input}
+        variant="outlined"
+        label={action.name}
+        defaultValue={action.suggestedPrice}
+        value={
+          tripActions.filter(obj => obj.tripActionId === action.tripActionId)
+            .price
+        }
+        onChange={handlePriceChange(action.tripActionId)}
+      />
+    ))
+  }
 
   return fields
 }

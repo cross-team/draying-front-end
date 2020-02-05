@@ -87,11 +87,18 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
     setLocation(event.target.value)
   }
 
-  const handlePriceChange = event => actionId => {
-    const result = tripActions
-    result.filter(obj => obj.tripActionId === actionId).price =
-      event.target.value
-    setTripActions(result)
+  const handlePriceChange = actionId => event => {
+    const newTripActions = tripActions.map(action => {
+      if (action.tripActionId === actionId) {
+        return {
+          ...action,
+          price: +event.target.value,
+        }
+      }
+      return action
+    })
+    console.log(newTripActions)
+    setTripActions(newTripActions)
   }
 
   const handleSave = () => {
@@ -104,7 +111,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
           extraStopsAndPrices: {
             extraStops: [
               {
-                drayingId: draying.id,
+                drayingId: +draying.id,
                 deliveryLocationId: location,
               },
             ],

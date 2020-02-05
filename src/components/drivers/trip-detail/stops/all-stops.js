@@ -119,13 +119,13 @@ const AllStops = ({
           value={draying.deliveryLocation.nickName}
           InputProps={{
             readOnly: true,
-            endAdornment: (
+            /* endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={() => setEdit(draying.deliveryLocation)}>
                   <EditIcon />
                 </IconButton>
               </InputAdornment>
-            ),
+            ), */
           }}
         />
         {extraStops}
