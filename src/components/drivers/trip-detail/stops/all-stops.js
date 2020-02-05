@@ -38,7 +38,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const AllStops = ({ draying, setEdit, setAddS, setIsTerminal }) => {
+const AllStops = ({
+  draying,
+  setEdit,
+  setAddS,
+  setIsTerminal,
+  setSelectedStop,
+}) => {
   const classes = useStyles()
   const [removeDrayingExtraStop] = useMutation(REMOVE_STOP, {
     refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
@@ -70,7 +76,12 @@ const AllStops = ({ draying, setEdit, setAddS, setIsTerminal }) => {
         readOnly: true,
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={() => setEdit(stop.deliveryLocation)}>
+            <IconButton
+              onClick={() => {
+                setSelectedStop(stop)
+                setEdit(stop.deliveryLocation)
+              }}
+            >
               <EditIcon />
             </IconButton>
             {saving === stop.id ? (

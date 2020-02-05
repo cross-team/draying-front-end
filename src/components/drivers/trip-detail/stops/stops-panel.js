@@ -6,6 +6,7 @@ import AddLocation from './add-location'
 
 const StopsPanel = ({ draying }) => {
   const [edit, setEdit] = useState(false)
+  const [selectedStop, setSelectedStop] = useState()
   const [addS, setAddS] = useState(false)
   const [addL, setAddL] = useState(false)
   const [isTerminal, setIsTerminal] = useState(false)
@@ -18,7 +19,8 @@ const StopsPanel = ({ draying }) => {
     } else if (edit) {
       return (
         <EditStop
-          stop={edit}
+          stop={selectedStop}
+          stopLocation={edit}
           setEdit={setEdit}
           isTerminal={isTerminal}
           setIsTerminal={setIsTerminal}
@@ -32,6 +34,7 @@ const StopsPanel = ({ draying }) => {
           setEdit={setEdit}
           setAddS={setAddS}
           setIsTerminal={setIsTerminal}
+          setSelectedStop={setSelectedStop}
         />
       )
     }

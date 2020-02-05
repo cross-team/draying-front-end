@@ -11,10 +11,12 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Collapse from '@material-ui/core/Collapse'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import PriceFields from './price-fields'
 
 export const GET_LOCATIONS = gql`
   query deliveryLocations {
@@ -22,6 +24,18 @@ export const GET_LOCATIONS = gql`
       __typename
       id
       nickName
+    }
+  }
+`
+
+export const ADD_STOP = gql`
+  mutation addDrayingExtraStop(
+    $extraStopsAndPrices: AddDrayingExtraStopInput!
+  ) {
+    addDrayingExtraStop(extraStopsAndPrices: $extraStopsAndPrices) {
+      success
+      message
+      updatedId
     }
   }
 `
@@ -35,7 +49,6 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     width: '100%',
-    margin: 'auto',
     marginTop: theme.spacing(2),
   },
   toolbar: {
@@ -57,12 +70,28 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
   }, [])
 
   const [location, setLocation] = useState('')
+  const [tripActions, setTripActions] = useState([])
   const [saving, setSaving] = useState(false)
 
-  const { loading, data } = useQuery(GET_LOCATIONS)
+  const { loading, error, data } = useQuery(GET_LOCATIONS)
+  console.log(data)
+  const [addDrayingExtraStop] = useMutation(ADD_STOP, {
+    refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
+    onCompleted: () => {
+      setAddS(false)
+    },
+    awaitRefetchQueries: true,
+  })
 
   const handleChange = event => {
     setLocation(event.target.value)
+  }
+
+  const handlePriceChange = event => actionId => {
+    const result = tripActions
+    result.filter(obj => obj.tripActionId === actionId).price =
+      event.target.value
+    setTripActions(result)
   }
 
   const handleSave = () => {
@@ -70,6 +99,19 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
       setAddL(true)
     } else {
       setSaving(true)
+      addDrayingExtraStop({
+        variables: {
+          extraStopsAndPrices: {
+            extraStops: [
+              {
+                drayingId: draying.id,
+                deliveryLocationId: location,
+              },
+            ],
+            tripActionPrices: tripActions,
+          },
+        },
+      })
     }
   }
 
@@ -111,25 +153,40 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
         </Toolbar>
       </AppBar>
       <Grid className={classes.details}>
-        <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel ref={inputLabel}>Add Stop</InputLabel>
-          <Select
-            value={location}
-            onChange={handleChange}
-            labelWidth={labelWidth}
-          >
-            <MenuItem value="create">Create New Location</MenuItem>
-            {!loading && data !== undefined ? (
-              data.deliveryLocations.map(loc => (
-                <MenuItem key={loc.id} value={parseInt(loc.id)}>
-                  {loc.nickName}
-                </MenuItem>
-              ))
-            ) : (
-              <Typography>Loading...</Typography>
-            )}
-          </Select>
-        </FormControl>
+        {error ? (
+          <Typography>Error</Typography>
+        ) : (
+          <>
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel ref={inputLabel}>Add Stop</InputLabel>
+              <Select
+                value={location}
+                onChange={handleChange}
+                labelWidth={labelWidth}
+              >
+                <MenuItem value="create">Create New Location</MenuItem>
+                {!loading && data !== undefined ? (
+                  data.deliveryLocations.map(loc => (
+                    <MenuItem key={loc.id} value={parseInt(loc.id)}>
+                      {loc.nickName}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <Typography>Loading...</Typography>
+                )}
+              </Select>
+            </FormControl>
+            <Collapse in={typeof location === 'number'}>
+              <PriceFields
+                drayingId={draying.id}
+                locationId={location}
+                tripActions={tripActions}
+                setTripActions={setTripActions}
+                handlePriceChange={handlePriceChange}
+              />
+            </Collapse>
+          </>
+        )}
       </Grid>
     </>
   )

@@ -50,6 +50,24 @@ export const UPDATE_TERMINAL = gql`
   }
 `
 
+export const UPDATE_STOP = gql`
+  mutation updateExtraStop(
+    $extraStopId: Int!
+    $drayingId: Int!
+    $deliveryLocationId: Int!
+  ) {
+    updateExtraStop(
+      extraStopId: $extraStopId
+      drayingId: $drayingId
+      deliveryLocationId: $deliveryLocationId
+    ) {
+      success
+      message
+      updatedId
+    }
+  }
+`
+
 const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText,
@@ -71,7 +89,14 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
+const EditStop = ({
+  stop,
+  stopLocation,
+  setEdit,
+  isTerminal,
+  setIsTerminal,
+  drayingId,
+}) => {
   console.log(stop)
   const classes = useStyles()
   const inputLabel = React.useRef(null)
@@ -80,7 +105,7 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
 
-  const [location, setLocation] = useState(parseInt(stop.id))
+  const [location, setLocation] = useState(parseInt(stopLocation.id))
   const [saving, setSaving] = useState(false)
 
   const { loading: loadingLocations, data: locationData } = useQuery(
@@ -108,6 +133,14 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
     },
     awaitRefetchQueries: true,
   })
+  const [updateExtraStop] = useMutation(UPDATE_STOP, {
+    refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
+    onCompleted: () => {
+      setEdit(false)
+      setIsTerminal(false)
+    },
+    awaitRefetchQueries: true,
+  })
 
   const handleChange = event => {
     setLocation(event.target.value)
@@ -120,6 +153,14 @@ const EditStop = ({ stop, setEdit, isTerminal, setIsTerminal, drayingId }) => {
         variables: {
           drayingId: parseInt(drayingId),
           returnTerminalId: parseInt(location),
+        },
+      })
+    } else {
+      updateExtraStop({
+        variables: {
+          extraStopId: parseInt(stop.id),
+          drayingId: parseInt(drayingId),
+          deliveryLocationId: parseInt(location),
         },
       })
     }
