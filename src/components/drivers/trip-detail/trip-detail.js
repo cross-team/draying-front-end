@@ -228,8 +228,8 @@ const TripDetail = ({ width }) => {
           </AppBar>
           <OrderPanel draying={trip.draying} />
           <ContainerPanel draying={trip.draying} />
-          <TripPanel trip={trip} />
           <StopsPanel draying={trip.draying} />
+          <TripPanel trip={trip} />
         </>
       )}
     </>
