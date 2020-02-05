@@ -75,12 +75,15 @@ export const GET_CURRENT_TRIP = gql`
         }
         extraStops {
           __typename
+          id
           deliveryLocation {
+            id
             __typename
             nickName
           }
         }
         deliveryLocation {
+          id
           __typename
           nickName
           locationType {
@@ -117,6 +120,7 @@ export const GET_CURRENT_TRIP = gql`
         }
         returnTerminal {
           __typename
+          id
           nickName
         }
         order {

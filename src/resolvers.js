@@ -105,13 +105,16 @@ export const resolvers = {
                 }
               }
               extraStops {
+                id
                 __typename
                 deliveryLocation {
+                  id
                   __typename
                   nickName
                 }
               }
               deliveryLocation {
+                id
                 __typename
                 nickName
                 locationType {
@@ -147,6 +150,7 @@ export const resolvers = {
                 nickName
               }
               returnTerminal {
+                id
                 __typename
                 nickName
               }

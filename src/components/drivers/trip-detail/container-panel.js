@@ -49,16 +49,20 @@ export const UPDATE_DRAYING_FIELDS = gql`
 export const GET_DROPDOWN_OPTIONS = gql`
   query allDropdowns {
     containerSizes {
+      __typename
       id
       name
       size
     }
     containerTypes {
+      __typename
       id
       name
       shortName
     }
     deliveryLocations {
+      __typename
+      id
       nickName
     }
   }
