@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const EditTripMenu = ({ drayingId }) => {
+const EditTripMenu = ({ drayingId, tripId }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -32,7 +32,7 @@ const EditTripMenu = ({ drayingId }) => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <UndoTripActionPopUp drayingId={drayingId} />
 
-        <ChangeTripActionPopUp drayingId={drayingId} />
+        <ChangeTripActionPopUp drayingId={drayingId} tripId={tripId} />
 
         <MenuItem onClick={handleClose}>Change Trip Action</MenuItem>
         <MenuItem onClick={handleClose}>Undo Trip Action</MenuItem>

@@ -13,8 +13,11 @@ import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
 import CardHeader from '@material-ui/core/CardHeader'
-import { lastTrip, isPreDispatched } from '../../../utils/draying-helpers'
-import { GET_DISPATCH_STATE } from '../../drivers/trip-detail/trip-detail'
+import {
+  getLastTrip,
+  drayingIsPreDispatched,
+} from '../../../utils/draying-helpers'
+import { tripIsCompletable } from '../../../utils/trip-helpers'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -130,19 +133,14 @@ const UNDO_TRIP_MUTATION = gql`
   }
 `
 
-export default function ChangeTripActionContent({ handleClose, drayingId }) {
+export default function ChangeTripActionContent({
+  handleClose,
+  drayingId,
+  tripId,
+}) {
   const classes = useStyles()
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(false)
-
-  const { loading: loadingSelectedTrip, data: selectedTripData } = useQuery(
-    GET_DISPATCH_STATE,
-  )
-
-  let tripId = null
-  if (selectedTripData.dispatchState) {
-    tripId = +selectedTripData.dispatchState.selectedTrip.id
-  }
 
   const { loading, error, data } = useQuery(DRAYING_QUERY, {
     variables: { drayingId, ...(tripId && { tripId }) },
@@ -151,16 +149,12 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
 
   const [
     callUndoTripAction,
-    { data: undoResponse, loading: saving, error: errorSaving },
+    { data: changeResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
     variables: { drayingId },
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
     onCompleted: () => handleClose(),
   })
-
-  if (loadingSelectedTrip && !selectedTripData) {
-    return <Typography>Loading...</Typography>
-  }
 
   if (loading && !data) {
     return <Typography>Loading...</Typography>
@@ -173,7 +167,7 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
     return null
   }
 
-  if (saving && !undoResponse) {
+  if (saving && !changeResponse) {
     return (
       <CardContent>
         <CircularProgress />
@@ -222,6 +216,8 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
   }
 
   const { draying, currentTrip, drayingNextActions, drivers } = data
+
+  const { drayingTrip } = drayingNextActions
 
   const ActionDropDown = ({ actions, onChange }) => {
     if (actions.length > 1) {
@@ -298,15 +294,18 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
   } | ${draying.terminalLocation.id}`
 
   const fromOrCurrentLocationLabel =
-    +lastTrip(draying).status.id === 5 ? 'From: ' : 'Current Location: '
+    +getLastTrip(draying).status.id === 5 ? 'From: ' : 'Current Location: '
 
   const fromOrCurrentLocation =
-    +lastTrip(draying).status.id === 5
-      ? lastTrip(draying).startLocationType.name
-      : lastTrip(draying).endLocationType.name
+    +getLastTrip(draying).status.id === 5
+      ? getLastTrip(draying).startLocationType.name
+      : getLastTrip(draying).endLocationType.name
 
   const displaySkipInMovement =
-    !isPreDispatched(draying) && +currentTrip.action.id !== 14
+    !drayingIsPreDispatched(draying) && +currentTrip.action.id !== 14
+
+  const showDispatchButton =
+    drayingIsPreDispatched(draying) && typeof drayingTrip !== 'undefined'
 
   return (
     <>
@@ -338,10 +337,12 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
         <ActionsDropDowns />
         <SendMessagePanel message={{ body: '' }} />
         <CardActions>
-          {!saving && !undoResponse ? (
-            <Button size="small" onClick={handleUndoTripAction}>
-              Yes
-            </Button>
+          {!saving && !changeResponse ? (
+            showDispatchButton && (
+              <Button size="small" onClick={handleUndoTripAction}>
+                Dispatch
+              </Button>
+            )
           ) : (
             <Typography
               className={classes.title}
@@ -352,7 +353,7 @@ export default function ChangeTripActionContent({ handleClose, drayingId }) {
             </Typography>
           )}
           <Button size="small" color="secondary" onClick={handleClose}>
-            {undoResponse ? 'Close' : 'Cancel'}
+            {changeResponse ? 'Close' : 'Cancel'}
           </Button>
         </CardActions>
       </CardContent>

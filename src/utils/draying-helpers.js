@@ -1,4 +1,4 @@
-export const lastTrip = draying => {
+export const getLastTrip = draying => {
   let lastTrip = null
   draying.trips.forEach(function(trip) {
     if (+trip.status.id >= 3) {
@@ -8,7 +8,7 @@ export const lastTrip = draying => {
   return lastTrip
 }
 
-export const isPreDispatched = draying => {
+export const drayingIsPreDispatched = draying => {
   let res = false
 
   draying.trips.forEach(function(trip) {
@@ -19,6 +19,4 @@ export const isPreDispatched = draying => {
   return res
 }
 
-export const isComplete = draying => {
-
-}
+export const isComplete = draying => {}
