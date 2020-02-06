@@ -49,16 +49,20 @@ export const UPDATE_DRAYING_FIELDS = gql`
 export const GET_DROPDOWN_OPTIONS = gql`
   query allDropdowns {
     containerSizes {
+      __typename
       id
       name
       size
     }
     containerTypes {
+      __typename
       id
       name
       shortName
     }
     deliveryLocations {
+      __typename
+      id
       nickName
     }
   }
@@ -103,6 +107,19 @@ const useStyles = makeStyles(theme => ({
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [edit, setEdit] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const sizeLabel = React.useRef(null)
+  const typeLabel = React.useRef(null)
+  const [sizeWidth, setSizeWidth] = React.useState(0)
+  const [typeWidth, setTypeWidth] = React.useState(0)
+  React.useEffect(() => {
+    edit && setSizeWidth(sizeLabel.current.offsetWidth)
+    edit && setTypeWidth(typeLabel.current.offsetWidth)
+  }, [edit])
+
   const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS, {
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
     onCompleted: () => {
@@ -112,10 +129,6 @@ const ContainerPanel = ({ draying }) => {
     awaitRefetchQueries: true,
   })
   const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
-
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [edit, setEdit] = useState(false)
-  const [saving, setSaving] = useState(false)
 
   const cutOffDateObject = draying.cutOffDate
     ? new Date(draying.cutOffDate)
@@ -261,8 +274,12 @@ const ContainerPanel = ({ draying }) => {
           className={classes.formControl}
         />
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel>Size (Ft)</InputLabel>
-          <Select value={fieldValues.size} onChange={handleChange('size')}>
+          <InputLabel ref={sizeLabel}>Size (Ft)</InputLabel>
+          <Select
+            value={fieldValues.size}
+            onChange={handleChange('size')}
+            labelWidth={sizeWidth}
+          >
             {!loading && dropdownData ? (
               dropdownData.containerSizes.map(size => (
                 <MenuItem key={size.id} value={size.id}>
@@ -275,10 +292,11 @@ const ContainerPanel = ({ draying }) => {
           </Select>
         </FormControl>
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel>Type</InputLabel>
+          <InputLabel ref={typeLabel}>Type</InputLabel>
           <Select
             value={parseInt(fieldValues.type)}
             onChange={handleChange('type')}
+            labelWidth={typeWidth}
           >
             {!loading && dropdownData ? (
               dropdownData.containerTypes.map(type => (
@@ -355,32 +373,6 @@ const ContainerPanel = ({ draying }) => {
       <div className={classes.details}>
         {edit ? contentEdit : content}
         {/*
-        <div className={classes.stopContainer}>
-          <Typography>
-            {draying.terminalLocation && draying.terminalLocation.nickName}
-          </Typography>
-          <div>
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>{draying.deliveryLocation.nickName}</Typography>
-            </div>
-            {draying.extraStops.map(stop => (
-              <div className={classes.stop}>
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className={classes.margin}
-                />
-                <Typography>{stop.deliveryLocation.nickName}</Typography>
-              </div>
-            ))}
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>
-                {draying.returnTerminal && draying.returnTerminal.nickName}
-              </Typography>
-            </div>
-          </div>
-        </div>
         <Typography>Appointments</Typography>
         {draying.appointments.map(appointment => (
           <div className={classes.appointment}>

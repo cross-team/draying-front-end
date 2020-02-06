@@ -90,12 +90,15 @@ export const GET_ROUTES = gql`
             }
           }
           extraStops {
+            id
             deliveryLocation {
+              id
               nickName
             }
           }
           deliveryLocation {
             __typename
+            id
             nickName
             locationType {
               id
@@ -128,6 +131,7 @@ export const GET_ROUTES = gql`
           }
           returnTerminal {
             __typename
+            id
             nickName
           }
           order {
