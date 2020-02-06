@@ -53,9 +53,9 @@ export const GET_CURRENT_TRIP = gql`
         name
       }
       status {
+        id
         __typename
         name
-        id
       }
       draying {
         __typename
@@ -76,6 +76,7 @@ export const GET_CURRENT_TRIP = gql`
         extraStops {
           __typename
           deliveryLocation {
+            id
             __typename
             nickName
           }
@@ -130,6 +131,14 @@ export const GET_CURRENT_TRIP = gql`
         containerStage {
           __typename
           id
+        }
+        trips {
+          id
+          __typename
+          status {
+            id
+            __typename
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import React, { useState } from 'react'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -12,12 +12,105 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
+import CardHeader from '@material-ui/core/CardHeader'
+import { lastTrip, isPreDispatched } from '../../../utils/draying-helpers'
+import { GET_DISPATCH_STATE } from '../../drivers/trip-detail/trip-detail'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
 
 const useStyles = makeStyles({
   title: {
     fontSize: 14,
   },
 })
+
+const DRAYING_QUERY = gql`
+  query drayingInfo($drayingId: Int!, $tripId: Int!) {
+    draying(drayingId: $drayingId) {
+      id
+      __typename
+      trips {
+        __typename
+        id
+        status {
+          id
+          __typename
+          name
+        }
+        action {
+          id
+          __typename
+        }
+        startLocationType {
+          __typename
+          name
+        }
+        endLocationType {
+          __typename
+          name
+        }
+      }
+      booking
+      container
+      client {
+        id
+        __typename
+        companyName
+      }
+      order {
+        id
+        __typename
+      }
+      terminalLocation {
+        id
+        __typename
+      }
+    }
+    drayingNextActions(drayingId: $drayingId, tripId: $tripId) {
+      tripActions {
+        id
+        __typename
+        name
+      }
+      startLocationTypes {
+        id
+        __typename
+        name
+      }
+      drayingTrip {
+        id
+        __typename
+        status {
+          id
+        }
+      }
+    }
+    currentTrip(tripId: $tripId) @client {
+      id
+      __typename
+      action {
+        id
+        __typename
+      }
+      driver {
+        id
+        __typename
+      }
+      status {
+        id
+        __typename
+      }
+    }
+    drivers(first: 25, active: true) {
+      nodes {
+        id
+        __typename
+        firstName
+        lastName
+      }
+    }
+  }
+`
 
 const UNDO_TRIP_MUTATION = gql`
   mutation undoTripActionMutation(
@@ -37,19 +130,25 @@ const UNDO_TRIP_MUTATION = gql`
   }
 `
 
-export default function UndoTripActionContent({
-  handleClose,
-  drayingId,
-  tripMessages,
-}) {
+export default function ChangeTripActionContent({ handleClose, drayingId }) {
   const classes = useStyles()
   const [body, setBody] = useState('')
-  const [sendMessage, setSendMessage] = useState(true)
-  useEffect(() => {
-    if (tripMessages && tripMessages.length > 0) {
-      setBody(tripMessages[0].body)
-    }
-  }, [tripMessages])
+  const [sendMessage, setSendMessage] = useState(false)
+
+  const { loading: loadingSelectedTrip, data: selectedTripData } = useQuery(
+    GET_DISPATCH_STATE,
+  )
+
+  let tripId = null
+  if (selectedTripData.dispatchState) {
+    tripId = +selectedTripData.dispatchState.selectedTrip.id
+  }
+
+  const { loading, error, data } = useQuery(DRAYING_QUERY, {
+    variables: { drayingId, ...(tripId && { tripId }) },
+    fetchPolicy: 'cache-and-network',
+  })
+
   const [
     callUndoTripAction,
     { data: undoResponse, loading: saving, error: errorSaving },
@@ -58,6 +157,21 @@ export default function UndoTripActionContent({
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
     onCompleted: () => handleClose(),
   })
+
+  if (loadingSelectedTrip && !selectedTripData) {
+    return <Typography>Loading...</Typography>
+  }
+
+  if (loading && !data) {
+    return <Typography>Loading...</Typography>
+  }
+
+  if (error) {
+    return <Typography color="error">Error</Typography>
+  }
+  if (data && !data.draying) {
+    return null
+  }
 
   if (saving && !undoResponse) {
     return (
@@ -87,20 +201,7 @@ export default function UndoTripActionContent({
   const SendMessagePanel = ({ message }) => {
     return (
       <>
-        <Typography className={classes.title} color="textPrimary" gutterBottom>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={sendMessage}
-                onChange={e => setSendMessage(e.target.checked)}
-                value="sendMessage"
-                color="primary"
-              />
-            }
-            label="Send Message?"
-          />
-        </Typography>
-        <Collapse in={sendMessage} timeout="auto" unmountOnExit>
+        <Collapse in={!sendMessage} timeout="auto" unmountOnExit>
           <Grid container spacing={2}>
             <Grid item>
               <Typography>Message:</Typography>
@@ -120,17 +221,122 @@ export default function UndoTripActionContent({
     )
   }
 
+  const { draying, currentTrip, drayingNextActions, drivers } = data
+
+  const ActionDropDown = ({ actions, onChange }) => {
+    if (actions.length > 1) {
+      const menuItems = actions.map(item => (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
+        </MenuItem>
+      ))
+      return (
+        <TextField
+          label="Trip Action"
+          // className={classes.textField}
+          value={currentTrip.action.id}
+          select
+          onChange={onChange}
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        >
+          {menuItems}
+        </TextField>
+      )
+    }
+    return null
+  }
+
+  const DriverDropDown = ({ activeDrivers, onChange }) => {
+    if (activeDrivers && activeDrivers.nodes.length > 1) {
+      const menuItems = activeDrivers.nodes.map(item => (
+        <MenuItem key={item.id} value={item.id}>
+          {item.firstName} {item.lastName}
+        </MenuItem>
+      ))
+      return (
+        <TextField
+          label="Driver"
+          // className={classes.textField}
+          value={currentTrip.driver.id}
+          select
+          onChange={onChange}
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        >
+          {menuItems}
+        </TextField>
+      )
+    }
+    return null
+  }
+
+  const ActionsDropDowns = () => {
+    return (
+      <Grid container>
+        <Grid item xs={12} sm={6}>
+          <ActionDropDown actions={drayingNextActions.tripActions} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <DriverDropDown activeDrivers={drivers} />
+        </Grid>
+      </Grid>
+    )
+  }
+  const headerText = `Trip (${draying.trips.length}) | ${draying.order.id} ${
+    draying.client.companyName
+  } | ${draying.container} ${
+    draying.booking !== null ? '/' + draying.booking : ''
+  } | ${draying.terminalLocation.id}`
+
+  const fromOrCurrentLocationLabel =
+    +lastTrip(draying).status.id === 5 ? 'From: ' : 'Current Location: '
+
+  const fromOrCurrentLocation =
+    +lastTrip(draying).status.id === 5
+      ? lastTrip(draying).startLocationType.name
+      : lastTrip(draying).endLocationType.name
+
+  const displaySkipInMovement =
+    !isPreDispatched(draying) && +currentTrip.action.id !== 14
+
   return (
     <>
       <CardContent>
+        <CardHeader title={headerText}></CardHeader>
         <Typography className={classes.title} color="textPrimary" gutterBottom>
-          Are you sure you want to undo the previous trip action?
+          {fromOrCurrentLocationLabel}
+          {fromOrCurrentLocation}
         </Typography>
-        {tripMessages.length > 0 ? (
-          tripMessages.map(message => <SendMessagePanel message={message} />)
-        ) : (
-          <SendMessagePanel message={{ body: '' }} />
+        {displaySkipInMovement && (
+          <Typography
+            className={classes.title}
+            color="textPrimary"
+            gutterBottom
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={sendMessage}
+                  onChange={e => setSendMessage(e.target.checked)}
+                  value="sendMessage"
+                  color="primary"
+                />
+              }
+              label="Skip in movement?"
+            />
+          </Typography>
         )}
+        <ActionsDropDowns />
+        <SendMessagePanel message={{ body: '' }} />
         <CardActions>
           {!saving && !undoResponse ? (
             <Button size="small" onClick={handleUndoTripAction}>

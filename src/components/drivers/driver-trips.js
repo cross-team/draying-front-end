@@ -49,52 +49,65 @@ export const GET_ROUTES = gql`
         id
         __typename
         locations {
+          id
           __typename
           estimatedScheduledCompletedAt
           nickName {
-            name
+            id
             __typename
+            name
           }
           action {
             id
-            name
             __typename
+            name
           }
         }
         driver {
+          id
           __typename
           firstName
           lastName
         }
         action {
+          id
           __typename
           name
         }
         status {
+          id
           __typename
           name
-          id
         }
         draying {
-          __typename
           id
+          __typename
           container
           priority
           cutOffDate
           booking
           appointments {
+            id
+            __typename
             appointmentDate
             appointmentTime
             type {
+              id
+              __typename
               name
             }
           }
           extraStops {
+            id
+            __typename
             deliveryLocation {
+              id
+              __typename
               nickName
             }
           }
           deliveryLocation {
+            id
             __typename
             nickName
             locationType {
@@ -103,41 +116,60 @@ export const GET_ROUTES = gql`
             }
           }
           portStatus {
+            id
+            __typename
             name
           }
           loadType {
+            id
+            __typename
             name
           }
           containerSize {
-            __typename
             id
+            __typename
             name
           }
           containerType {
-            __typename
             id
+            __typename
             name
           }
           shippingLine {
+            id
             __typename
             name
           }
           terminalLocation {
+            id
             __typename
             nickName
           }
           returnTerminal {
+            id
             __typename
             nickName
           }
           order {
             id
+            __typename
           }
           client {
+            id
+            __typename
             companyName
           }
           containerStage {
             id
+            __typename
+          }
+          trips {
+            id
+            __typename
+            status {
+              id
+              __typename
+            }
           }
         }
       }

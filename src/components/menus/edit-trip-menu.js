@@ -3,6 +3,7 @@ import { Menu, MenuItem, IconButton, makeStyles } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
 import UndoTripActionPopUp from '../modals/undo-trip-action'
+import ChangeTripActionPopUp from '../modals/change-trip-action'
 
 const useStyles = makeStyles(theme => ({
   headerText: {
@@ -23,20 +24,16 @@ const EditTripMenu = ({ drayingId }) => {
     setAnchorEl(null)
   }
 
-  const OpenUndoTripActionButton = ({ onClick }) => (
-    <MenuItem onClick={onClick}>Undo Trip Action</MenuItem>
-  )
-
   return (
     <>
       <IconButton onClick={handleClick}>
         <FontAwesomeIcon className={classes.headerText} icon={faEllipsisV} />
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <UndoTripActionPopUp
-          OpenPopUpButton={OpenUndoTripActionButton}
-          drayingId={drayingId}
-        />
+        <UndoTripActionPopUp drayingId={drayingId} />
+
+        <ChangeTripActionPopUp drayingId={drayingId} />
+
         <MenuItem onClick={handleClose}>Change Trip Action</MenuItem>
         <MenuItem onClick={handleClose}>Undo Trip Action</MenuItem>
         <MenuItem onClick={handleClose}>Add Leg</MenuItem>
