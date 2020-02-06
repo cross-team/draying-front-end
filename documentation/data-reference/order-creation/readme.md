@@ -2,21 +2,24 @@
 
 APIs Referenced
 
-- contacttypes
-- phonetypes
-- ClientTypes
-- Terms
 - ClientOrderTemplates
-- ClientPriorities
-- QuickBooks/customersavailablesbyclient
 - deliverytypes
 - Draying/ActionLocation
 - shippinglines
 - Client
-- LoadTypes
 - DeliveryLocation
 - DeliveryOrder
 - DeliveryPlace
+
+General APIs Referenced
+
+- contacttypes
+- phonetypes
+- ClientTypes
+- ClientPriorities
+- Terms
+- LoadTypes
+- QuickBooks/customersavailablesbyclient
 
 ### POSTs
 

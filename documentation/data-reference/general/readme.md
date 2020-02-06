@@ -1,5 +1,15 @@
 # General API Reference
 
+APIs Referenced
+
+- contacttypes
+- phonetypes
+- ClientTypes
+- ClientPriorities
+- Terms
+- LoadTypes
+- QuickBooks/customersavailablesbyclient
+
 ## Drivers
 
 ### Driver
