@@ -12,7 +12,6 @@ const UndoTripActionPopUp = React.forwardRef(
     )
     return (
       <>
-        (
         <PopUp ActionButton={OpenUndoTripActionButton}>
           {handleClose => {
             return (

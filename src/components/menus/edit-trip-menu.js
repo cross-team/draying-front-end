@@ -31,12 +31,7 @@ const EditTripMenu = ({ drayingId, tripId }) => {
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <UndoTripActionPopUp drayingId={drayingId} />
-
         <ChangeTripActionPopUp drayingId={drayingId} tripId={tripId} />
-
-        <MenuItem onClick={handleClose}>Change Trip Action</MenuItem>
-        <MenuItem onClick={handleClose}>Undo Trip Action</MenuItem>
-        <MenuItem onClick={handleClose}>Add Leg</MenuItem>
         <MenuItem onClick={handleClose}>Lost Trip</MenuItem>
       </Menu>
     </>
