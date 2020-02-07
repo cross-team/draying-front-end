@@ -4,7 +4,8 @@ import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { resolvers, typeDefs } from '../resolvers'
+import { resolvers } from '../resolvers'
+import { typeDefs } from '../schema'
 import { getUser } from '../services/auth'
 
 const cache = new InMemoryCache({

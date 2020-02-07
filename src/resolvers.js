@@ -2,56 +2,6 @@ import gql from 'graphql-tag'
 import { GET_COLUMN_STATE } from './components/columns/shell'
 import { GET_DISPATCH_STATE } from './components/drivers/driver-trips'
 
-export const typeDefs = gql`
-  extend type Query {
-    isLoggedIn: Boolean!
-    columnState: ColumnState!
-    dispatchState: DispatchState!
-    currentTrip: Trip!
-  }
-
-  extend type Mutation {
-    setColumnState(
-      hideLeft: Boolean
-      hideMiddle: Boolean
-      hideRight: Boolean
-    ): ColumnState!
-    setDispatchState(
-      selectedDriver: SelectedDriver
-      selectedDate: Date
-    ): DispatchState!
-  }
-
-  type ColumnState {
-    leftHidden: Boolean!
-    middleHidden: Boolean!
-    rightHidden: Boolean!
-  }
-
-  type DispatchState {
-    selectedTrip: SelectedTrip!
-    selectedDriver: SelectedDriver!
-    selectedDate: Date!
-  }
-
-  type SelectedTrip {
-    id: String!
-  }
-
-  type SelectedDriver {
-    id: String!
-    firstName: String!
-    lastName: String!
-    phone: String!
-  }
-
-  type Date {
-    day: Int!
-    month: Int!
-    year: Int!
-  }
-`
-
 export const resolvers = {
   Query: {
     currentTrip: (_root, { tripId }, { cache }) => {
@@ -62,44 +12,50 @@ export const resolvers = {
             id
             __typename
             locations {
+              id
               __typename
               estimatedScheduledCompletedAt
               nickName {
+                id
                 __typename
                 name
               }
               action {
-                __typename
                 id
+                __typename
                 name
               }
             }
             driver {
+              id
               __typename
               firstName
               lastName
             }
             action {
+              id
               __typename
               name
             }
             status {
+              id
               __typename
               name
-              id
             }
             draying {
-              __typename
               id
+              __typename
               container
               priority
               cutOffDate
               booking
               appointments {
+                id
                 __typename
                 appointmentDate
                 appointmentTime
                 type {
+                  id
                   __typename
                   name
                 }
@@ -118,34 +74,37 @@ export const resolvers = {
                 __typename
                 nickName
                 locationType {
-                  __typename
                   id
                   name
                 }
               }
               portStatus {
+                id
                 __typename
                 name
               }
               loadType {
+                id
                 __typename
                 name
               }
               containerSize {
-                __typename
                 id
+                __typename
                 name
               }
               containerType {
-                __typename
                 id
+                __typename
                 name
               }
               shippingLine {
+                id
                 __typename
                 name
               }
               terminalLocation {
+                id
                 __typename
                 nickName
               }
@@ -155,16 +114,25 @@ export const resolvers = {
                 nickName
               }
               order {
-                __typename
                 id
+                __typename
               }
               client {
+                id
                 __typename
                 companyName
               }
               containerStage {
-                __typename
                 id
+                __typename
+              }
+              trips {
+                id
+                __typename
+                status {
+                  id
+                  __typename
+                }
               }
             }
           }
