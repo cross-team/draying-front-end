@@ -18,5 +18,3 @@ export const drayingIsPreDispatched = draying => {
   })
   return res
 }
-
-export const isComplete = draying => {}

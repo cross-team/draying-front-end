@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation showTripDetail(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -61,9 +61,11 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedTrip: SelectedTrip) {
+  mutation setSelectedTrip($selectedTrip: SelectedTripInput) {
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `

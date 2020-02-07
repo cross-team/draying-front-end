@@ -13,7 +13,7 @@ import { faPlus, faTimes } from '@fortawesome/pro-light-svg-icons/'
 import gql from 'graphql-tag'
 
 export const UPDATE_DRAYING = gql`
-  mutation updateDraying($drayingId: Int, $field: String, $value: String) {
+  mutation updateDraying($drayingId: Int!, $field: String!, $value: String!) {
     updateDraying(drayingId: $drayingId, field: $field, value: $value) {
       success
       message

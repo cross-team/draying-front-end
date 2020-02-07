@@ -2,56 +2,6 @@ import gql from 'graphql-tag'
 import { GET_COLUMN_STATE } from './components/columns/shell'
 import { GET_DISPATCH_STATE } from './components/drivers/driver-trips'
 
-export const typeDefs = gql`
-  extend type Query {
-    isLoggedIn: Boolean!
-    columnState: ColumnState!
-    dispatchState: DispatchState!
-    currentTrip: Trip!
-  }
-
-  extend type Mutation {
-    setColumnState(
-      hideLeft: Boolean
-      hideMiddle: Boolean
-      hideRight: Boolean
-    ): ColumnState!
-    setDispatchState(
-      selectedDriver: SelectedDriver
-      selectedDate: Date
-    ): DispatchState!
-  }
-
-  type ColumnState {
-    leftHidden: Boolean!
-    middleHidden: Boolean!
-    rightHidden: Boolean!
-  }
-
-  type DispatchState {
-    selectedTrip: SelectedTrip!
-    selectedDriver: SelectedDriver!
-    selectedDate: Date!
-  }
-
-  type SelectedTrip {
-    id: String!
-  }
-
-  type SelectedDriver {
-    id: String!
-    firstName: String!
-    lastName: String!
-    phone: String!
-  }
-
-  type Date {
-    day: Int!
-    month: Int!
-    year: Int!
-  }
-`
-
 export const resolvers = {
   Query: {
     currentTrip: (_root, { tripId }, { cache }) => {

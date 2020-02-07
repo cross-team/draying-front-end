@@ -26,7 +26,7 @@ export const GET_DISPATCH_STATE = gql`
 `
 
 export const GET_CURRENT_TRIP = gql`
-  query getCurrentTrip($tripId: Int) {
+  query getCurrentTrip($tripId: Int!) {
     currentTrip(tripId: $tripId) @client {
       id
       __typename
@@ -146,7 +146,7 @@ export const GET_CURRENT_TRIP = gql`
 `
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation closeTripDetail(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -164,9 +164,11 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedTrip: ID) {
+  mutation resetSelectedTrip($selectedTrip: SelectedTripInput) {
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `

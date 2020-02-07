@@ -54,11 +54,11 @@ const CAN_UNDO_TRIP_QUERY = gql`
 `
 
 export const CLOSE_PANEL = gql`
-  mutation setColumnState(
+  mutation closePanel(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
-    $selectedTrip: ID
+    $selectedTrip: SelectedTripInput
   ) {
     setColumnState(
       hideLeft: $hideLeft
@@ -71,7 +71,9 @@ export const CLOSE_PANEL = gql`
     }
 
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `

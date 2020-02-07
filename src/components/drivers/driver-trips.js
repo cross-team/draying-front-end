@@ -15,7 +15,7 @@ import formatISO from 'date-fns/formatISO'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export const GET_DISPATCH_STATE = gql`
-  query getDispatchState {
+  query getSelectedDriverAndDate {
     dispatchState @client {
       selectedDriver {
         id
