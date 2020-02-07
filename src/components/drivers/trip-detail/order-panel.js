@@ -3,19 +3,13 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import Typography from '@material-ui/core/Typography'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles(theme => ({
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   headerText: {
     color: theme.palette.primary.contrastText,
   },
   details: {
-    display: 'flex',
-    justifyContent: 'space-between',
     margin: theme.spacing(1),
   },
 }))
@@ -44,11 +38,13 @@ const OrderPanel = ({ draying }) => {
   return (
     <>
       <AppBar position="static">
-        <Toolbar className={classes.header}>
-          <Typography className={classes.headerText}>Order</Typography>
+        <Toolbar>
+          <Grid container justify="space-between" alignItems="center">
+            <Typography className={classes.headerText}>Order</Typography>
+          </Grid>
         </Toolbar>
       </AppBar>
-      <div className={classes.details}>
+      <Grid container className={classes.details} justify="space-between">
         <div>
           <Typography>
             {draying.order
@@ -61,7 +57,7 @@ const OrderPanel = ({ draying }) => {
           <Typography>{doStatus}</Typography>
           <Typography>{draying.client.companyName}</Typography>
         </div>
-      </div>
+      </Grid>
     </>
   )
 }
