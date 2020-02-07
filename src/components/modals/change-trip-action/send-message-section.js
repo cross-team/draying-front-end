@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
+// import CardContent from '@material-ui/core/CardContent'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
-import CardHeader from '@material-ui/core/CardHeader'
+// import CardHeader from '@material-ui/core/CardHeader'
 import {
-  getLastTrip,
+  // getLastTrip,
   drayingIsPreDispatched,
+  // getClientDestinations,
 } from '../../../utils/draying-helpers'
 import {
   tripIsCompletable,
@@ -47,22 +48,158 @@ const GET_NEXT_DESTINATIONS = gql`
 export default function SendMessageSection({
   handleClose,
   drayingId,
-  tripActionId,
-  startLocationTypeId,
+  selectedTripActionId,
+  selectedStartLocationTypeId,
   drayingTrip,
   draying,
+  selectedDriverId,
 }) {
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(false)
+  const [selectedEndLocationTypeId, setSelectedEndLocationTypeId] = useState()
 
   const { loading, error, data } = useQuery(GET_NEXT_DESTINATIONS, {
     variables: {
       drayingId: +drayingId,
-      tripActionId: +tripActionId,
-      startLocationTypeId: +startLocationTypeId,
+      tripActionId: +selectedTripActionId,
+      startLocationTypeId: +selectedStartLocationTypeId,
     },
     fetchPolicy: 'cache-and-network',
   })
+
+  useEffect(() => {
+    if (drayingTrip) {
+      setSelectedEndLocationTypeId(drayingTrip.tripActionLocation.id)
+    }
+  }, [drayingTrip])
+
+  useEffect(() => {
+    if (data) {
+      setSelectedEndLocationTypeId(
+        data.drayingTripDestinations.tripActionLocations[0].id,
+      )
+      const generateMessage = () => {
+        // if (draying == null || drayingTrip.action.id() == null) {
+        //   return null
+        // }
+        // const action = selectedTripActionId
+        // if (action == null) {
+        //   return null
+        // }
+        const msg = ''
+        // if (drayingIsPreDispatched(draying) || showPredispatchButton) {
+        //   msg += showPredispatchCheckbox ? 'For tomorrow | ' : ''
+        // }
+
+        // const LastTrip = getLastTrip(draying)
+        // let isLive = false
+        // if (
+        //   LastTrip != null &&
+        //   LastTrip.status.id == 5 &&
+        //   (drayingTrip.status.id == 2 || drayingTrip.status.id == 0)
+        // ) {
+        //   isLive = true
+        // }
+
+        // const from = ''
+        // const to = ''
+
+        // const ClientDestinations = getClientDestinations(draying)
+
+        // switch (drayingTrip.startLocationType.id) {
+        //   case 2:
+        //     let loc = ClientDestinations[self.NumberOfClientDestinationsCompleted(self.DeliveryOrderDraying()) - (isLive ? 0 : 1)];
+        //     from = loc.NickName + ', ' + loc.GoogleAddress;
+        //     if (self.DeliveryOrderDraying().SpecificAppoinmentPickUpFromClient) {
+        //       from = from + ' APPT: ' + FormatDate(self.DeliveryOrderDraying().PickUpClientDateFrom) + ' ' + FormatTimeFromTime(self.DeliveryOrderDraying().PickUpClientTimeFrom);
+        //     }
+        //     break;
+        //   case 3:
+        //     from = 'Yard';
+        //     break;
+        //   case 4:
+        //     from = 'Quality Cont';
+        //     break;
+        //   case 5:
+        //     from = self.DeliveryOrderDraying().TerminalLocation.ShortName;
+        //     break;
+        //   case 6:
+        //     from = 'Yard';
+        //     break;
+        //   case 7:
+        //     if (self.DeliveryOrderDraying().OriginStreetTurnLocationNickName != null) {
+        //       from = self.DeliveryOrderDraying().OriginStreetTurnLocationNickName.NickName + ', ' + self.DeliveryOrderDraying().OriginStreetTurnLocationNickName.GoogleAddress;
+        //     }
+        //     break;
+        //   default:
+        //     break
+        // }
+
+        // msg += 'from: ' + from + ' | '
+
+        // if (self.DeliveryOrderDraying().Container != null && self.DeliveryOrderDraying().Container.length > 5) {
+        //   msg += "CONT: " + self.DeliveryOrderDraying().Container + (self.DeliveryOrderDraying().Booking != null ? ' / Booking: ' + self.DeliveryOrderDraying().Booking : '') + " | ";
+        // } else if (self.DeliveryOrderDraying().Booking != null && self.DeliveryOrderDraying().Booking.length > 0) {
+        //   msg += 'Booking: ' + self.DeliveryOrderDraying().Booking + " | ";
+        // }
+
+        // msg += self.DeliveryOrderDraying().ContainerSize.Name + " | ";
+        // //msg += self.DeliveryOrderDraying().ContainerSize.Name + '/' + self.DeliveryOrderDraying().ContainerType.ShortName + " | ";
+        // if (self.DeliveryOrderDraying().Overweight) {
+        //   msg += "Overweight | "
+        // }
+
+        // if (self.DrayingTrip().TripActionLocationId() > 0) {
+        //   //console.log(self.TripActionLocationSelected(self.DrayingTrip()));
+        //   let endLocationTypeId = action.NextLocationTypeId;
+        //   //console.log(endLocationTypeId);
+        //   switch (endLocationTypeId) {
+        //     case 2:
+        //       let isSecuence = false;
+        //       if (self.DrayingTrip().StartLocationTypeId() == 2 && (self.LastTrip().TripStatusId == 5 && self.LastTrip().DrayingTripId != self.DrayingTrip().DrayingTripId())) {
+        //         isSecuence = true;
+        //       }
+        //       let loc = ClientDestinations[self.NumberOfClientDestinationsCompleted(self.DeliveryOrderDraying()) + (isSecuence ? 1 : 0)];
+        //       to = loc.NickName + ', ' + loc.GoogleAddress;
+        //       if (self.DeliveryOrderDraying().AppointmentNeeded) {
+        //         to = to + ' APPT: ' + FormatDate(self.DeliveryOrderDraying().AppointmentDate) + ' ' + FormatTimeFromTime(self.DeliveryOrderDraying().AppointmentTime);
+        //       }
+        //       if (loc.DeliveryLocationId == 133) {
+        //         to += " | Recoger cheque COD / Pick Check COD"
+        //       }
+        //       break;
+        //     case 3:
+        //       to = 'Yard';
+        //       break;
+        //     case 4:
+        //       to = 'Quality Cont';
+        //       break;
+        //     case 5:
+        //       if (self.DeliveryOrderDraying().ReturnTerminal != null) {
+        //         to = self.DeliveryOrderDraying().ReturnTerminal.ShortName;
+        //       } else {
+        //         to = self.DeliveryOrderDraying().TerminalLocation.ShortName;
+        //       }
+        //       break;
+        //     case 6:
+        //       to = 'Yard';
+        //       break;
+        //   }
+        //   msg += "to: " + to;
+
+        //   if (endLocationTypeId != 2 && (self.DeliveryOrderDraying().DrayingTrips.filter(d => d.TripStatusId >= 5).length == 0)) {
+        //     let loc = ClientDestinations[0];
+        //     let client = loc.NickName + ', ' + loc.GoogleAddress;
+        //     msg += ' | Client: ' + client;
+        //   }
+        // }
+
+        // self.Message(msg);
+        return msg
+      }
+      setBody(generateMessage())
+    }
+  }, [data])
 
   if (loading && !data) {
     return <CircularProgress />
@@ -73,6 +210,17 @@ export default function SendMessageSection({
   }
 
   const { drayingTripDestinations } = data
+
+  const tripInput = {
+    tripId: +drayingTrip.id,
+    drayingId: +selectedDriverId,
+    tripActionId: +selectedTripActionId,
+    tripStatusId: +drayingTrip.status.id,
+    driverId: +drayingTrip.driver.id,
+    tripActionLocationId: +drayingTrip.tripActionLocation.id,
+    startLocationTypeId: +selectedStartLocationTypeId,
+    endLocationTypeId: +selectedEndLocationTypeId,
+  }
 
   const hasTripToUpdate = typeof drayingTrip !== 'undefined'
 
@@ -107,7 +255,7 @@ export default function SendMessageSection({
       drayingTripDestinations.tripActionLocations,
     )
 
-  const SendMessagePanel = ({ message }) => {
+  const SendMessagePanel = () => {
     return (
       <>
         <Collapse in={!sendMessage} timeout="auto" unmountOnExit>
@@ -119,7 +267,7 @@ export default function SendMessageSection({
               <TextareaAutosize
                 aria-label="Send message text."
                 rowsMin={3}
-                placeholder={message.body}
+                placeholder={body}
                 onChange={e => setBody(e.target.value)}
                 value={body}
               />
@@ -141,9 +289,9 @@ export default function SendMessageSection({
         <TextField
           label="End Locations"
           // className={classes.textField}
-          value={drayingTrip.tripActionLocation.id}
+          value={selectedEndLocationTypeId}
           select
-          onChange={onChange}
+          onChange={e => setSelectedEndLocationTypeId(e.target.value)}
           margin="normal"
           variant="outlined"
           fullWidth
@@ -168,7 +316,7 @@ export default function SendMessageSection({
         </Grid>
       </Grid>
 
-      <SendMessagePanel message={{ body: '' }} />
+      <SendMessagePanel />
       {showPredispatchCheckbox && (
         <Typography color="textPrimary" gutterBottom>
           <FormControlLabel
@@ -194,22 +342,36 @@ export default function SendMessageSection({
                   ? 'Update Predispatch'
                   : 'Predispatch'
               }
+              tripInput={tripInput}
             />
           )}
           {showDispatchButton && (
-            <UpdateTripButton handleClose={handleClose} buttonText="Dispatch" />
+            <UpdateTripButton
+              handleClose={handleClose}
+              buttonText="Dispatch"
+              tripInput={tripInput}
+            />
           )}
           {showSaveButton && (
-            <UpdateTripButton handleClose={handleClose} buttonText="Save" />
+            <UpdateTripButton
+              handleClose={handleClose}
+              buttonText="Save"
+              tripInput={tripInput}
+            />
           )}
           {showCompleteButton && (
-            <UpdateTripButton handleClose={handleClose} buttonText="Complete" />
+            <UpdateTripButton
+              handleClose={handleClose}
+              buttonText="Complete"
+              tripInput={tripInput}
+            />
           )}
 
           {showNextActionButton && (
             <UpdateTripButton
               handleClose={handleClose}
               buttonText="Next Action"
+              tripInput={tripInput}
             />
           )}
         </>

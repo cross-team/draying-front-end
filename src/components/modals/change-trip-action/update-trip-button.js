@@ -14,12 +14,16 @@ const UPDATE_TRIP_MUTATION = gql`
   }
 `
 
-export default function UpdateTripButton({ handleClose, tripId, buttonText }) {
+export default function UpdateTripButton({
+  handleClose,
+  buttonText,
+  tripInput,
+}) {
   const [callUpdateTripAction, { data, loading, error }] = useMutation(
     UPDATE_TRIP_MUTATION,
     {
-      variables: { tripId },
-      refetchQueries: ['allDriversCapacity', 'allDriverRoutes'],
+      variables: { trip: tripInput },
+      refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
       onCompleted: () => handleClose(),
     },
   )

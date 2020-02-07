@@ -17,6 +17,7 @@ import {
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import SendMessageSection from './send-message-section'
+import { tripIsCompletable } from '../../../utils/trip-helpers'
 
 const useStyles = makeStyles({
   title: {
@@ -52,6 +53,10 @@ const DRAYING_INFO_QUERY = gql`
       }
       booking
       container
+      deliveryLocation {
+        id
+        __typename
+      }
       client {
         id
         __typename
@@ -64,6 +69,15 @@ const DRAYING_INFO_QUERY = gql`
       terminalLocation {
         id
         __typename
+      }
+      extraStops {
+        id
+        status {
+          id
+        }
+        deliveryLocation {
+          id
+        }
       }
     }
     drayingNextActions(drayingId: $drayingId, tripId: $tripId) {
@@ -80,6 +94,9 @@ const DRAYING_INFO_QUERY = gql`
       drayingTrip {
         id
         __typename
+        driver {
+          id
+        }
         action {
           id
         }
@@ -124,9 +141,12 @@ export default function ChangeTripActionContent({
   tripId,
 }) {
   const classes = useStyles()
-  const [sendMessage, setSendMessage] = useState(false)
+  const [skipInMovement, setSkipInMovement] = useState(false)
   const [selectedTripActionId, setSelectedTripActionId] = useState(0)
-  const [startLocationTypeId, setStartLocationTypeId] = useState(0)
+  const [
+    selectedStartLocationTypeId,
+    setSelectedStartLocationTypeId,
+  ] = useState(0)
   const [selectedDriverId, setSelectedDriverId] = useState(0)
 
   const { loading, error, data } = useQuery(DRAYING_INFO_QUERY, {
@@ -136,11 +156,53 @@ export default function ChangeTripActionContent({
 
   useEffect(() => {
     if (data && data.drayingNextActions) {
+      const shouldSendMessageForTrip = () => {
+        let res = false
+        if (
+          +selectedStartLocationTypeId > 0 &&
+          +data.drayingNextActions.drayingTrip.action.id > 0 &&
+          +data.drayingNextActions.drayingTrip.action.id !== 14
+        ) {
+          if (data.drayingNextActions.drayingTrip.id == null) {
+            res = true
+          } else if (
+            tripIsCompletable(data.drayingNextActions.drayingTrip) ||
+            drayingIsPreDispatched(data.draying)
+          ) {
+            res = true
+          }
+          if (
+            drayingIsPreDispatched(data.draying) &&
+            tripIsCompletable(data.drayingNextActions.drayingTrip)
+          ) {
+            if (
+              +data.drayingNextActions.drayingTrip.driver.id !==
+                +selectedDriverId ||
+              +data.drayingNextActions.drayingTrip.action.id !==
+                +selectedTripActionId
+            ) {
+              res = true
+            } else {
+              res = false
+            }
+          }
+        }
+        return res
+      }
+
       setSelectedTripActionId(data.drayingNextActions.drayingTrip.action.id)
-      setStartLocationTypeId(data.drayingNextActions.startLocationTypes[0].id)
+      setSelectedStartLocationTypeId(
+        data.drayingNextActions.startLocationTypes[0].id,
+      )
       setSelectedDriverId(data.currentTrip.driver.id)
+      setSkipInMovement(shouldSendMessageForTrip())
     }
-  }, [data])
+  }, [
+    data,
+    selectedDriverId,
+    selectedStartLocationTypeId,
+    selectedTripActionId,
+  ])
 
   if (loading && !data) {
     return <CircularProgress />
@@ -170,7 +232,7 @@ export default function ChangeTripActionContent({
           // className={classes.textField}
           value={selectedTripActionId}
           select
-          onChange={setSelectedTripActionId}
+          onChange={e => setSelectedTripActionId(e.target.value)}
           margin="normal"
           variant="outlined"
           fullWidth
@@ -185,7 +247,7 @@ export default function ChangeTripActionContent({
     return null
   }
 
-  const DriverDropDown = ({ activeDrivers, onChange }) => {
+  const DriverDropDown = ({ activeDrivers }) => {
     if (activeDrivers && activeDrivers.nodes.length > 0) {
       const menuItems = activeDrivers.nodes.map(item => (
         <MenuItem key={item.id} value={item.id}>
@@ -198,7 +260,7 @@ export default function ChangeTripActionContent({
           // className={classes.textField}
           value={selectedDriverId}
           select
-          onChange={onChange}
+          onChange={e => setSelectedDriverId(e.target.value)}
           margin="normal"
           variant="outlined"
           fullWidth
@@ -213,7 +275,7 @@ export default function ChangeTripActionContent({
     return null
   }
 
-  const StartLocationTypeDropdown = ({ startLocationTypes, onChange }) => {
+  const StartLocationTypeDropdown = ({ startLocationTypes }) => {
     if (startLocationTypes && startLocationTypes.length > 0) {
       const menuItems = startLocationTypes.map(item => (
         <MenuItem key={item.id} value={item.id}>
@@ -224,9 +286,9 @@ export default function ChangeTripActionContent({
         <TextField
           label="Start Location"
           // className={classes.textField}
-          value={startLocationTypeId}
+          value={selectedStartLocationTypeId}
           select
-          onChange={onChange}
+          onChange={e => setSelectedStartLocationTypeId(e.target.value)}
           margin="normal"
           variant="outlined"
           fullWidth
@@ -256,6 +318,7 @@ export default function ChangeTripActionContent({
       </Grid>
     )
   }
+
   const headerText = `Trip (${draying.trips.length}) | ${draying.order.id} ${
     draying.client.companyName
   } | ${draying.container} ${
@@ -281,10 +344,6 @@ export default function ChangeTripActionContent({
           {fromOrCurrentLocationLabel}
           {fromOrCurrentLocation}
         </Typography>
-        <Typography className={classes.title} color="textPrimary" gutterBottom>
-          {fromOrCurrentLocationLabel}
-          {fromOrCurrentLocation}
-        </Typography>
         {displaySkipInMovement && (
           <Typography
             className={classes.title}
@@ -294,9 +353,9 @@ export default function ChangeTripActionContent({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={sendMessage}
-                  onChange={e => setSendMessage(e.target.checked)}
-                  value="sendMessage"
+                  checked={skipInMovement}
+                  onChange={e => setSkipInMovement(e.target.checked)}
+                  value="shouldSendMessageForTrip"
                   color="primary"
                 />
               }
@@ -308,10 +367,11 @@ export default function ChangeTripActionContent({
         <SendMessageSection
           handleClose={handleClose}
           drayingId={drayingId}
-          tripActionId={selectedTripActionId}
-          startLocationTypeId={startLocationTypeId}
+          selectedTripActionId={selectedTripActionId}
+          selectedStartLocationTypeId={selectedStartLocationTypeId}
           drayingTrip={drayingTrip}
           draying={draying}
+          selectedDriverId={selectedDriverId}
         />
       </CardContent>
     </>

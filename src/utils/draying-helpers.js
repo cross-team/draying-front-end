@@ -18,3 +18,17 @@ export const drayingIsPreDispatched = draying => {
   })
   return res
 }
+
+export const getClientDestinations = draying => {
+  const locations = []
+  locations.push(draying.deliveryLocation)
+  if (draying.extraStops != null) {
+    draying.extraStops.forEach(function(extraStop) {
+      if (extraStop.status.id > 2) {
+        locations.push(extraStop.deliveryLocation)
+      }
+    })
+  }
+
+  return locations
+}
