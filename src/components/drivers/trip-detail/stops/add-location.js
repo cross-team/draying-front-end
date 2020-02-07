@@ -10,9 +10,26 @@ import TextField from '@material-ui/core/TextField'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import LocationInput from '../../../location-input '
+
+export const GET_TYPES = gql`
+  query getTypes {
+    contactTypes {
+      id
+      name
+    }
+    phoneTypes {
+      id
+      name
+    }
+  }
+`
 
 const useStyles = makeStyles(theme => ({
   headerText: {
@@ -43,13 +60,110 @@ const useStyles = makeStyles(theme => ({
 const AddLocation = ({ setAddL }) => {
   const classes = useStyles()
   const [saving, setSaving] = useState(false)
+  const { loading, error, data } = useQuery(GET_TYPES)
 
-  const fieldReducer = (state, { type, field, value }) => {
+  const fieldReducer = (state, { type, field, value, id, subId }) => {
+    let contacts
+    let subObjects
     switch (type) {
-      case 'update':
+      case 'updateField':
         return {
           ...state,
           [field]: value,
+        }
+      case 'updateContactFieldById':
+        contacts = state.contacts.map(contact => {
+          if (contact.id === id) {
+            return {
+              ...contact,
+              [field]: value,
+            }
+          }
+          return contact
+        })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'updatePhoneFieldById':
+        contacts = state.contacts.map(contact => {
+          if (contact.id === id) {
+            subObjects = contact.phones.map(phone => {
+              if (phone.id === subId) {
+                return {
+                  ...phone,
+                  [field]: value,
+                }
+              }
+              return phone
+            })
+            return {
+              ...contact,
+              phones: subObjects,
+            }
+          }
+          return contact
+        })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'updateEmailById':
+        contacts = state.contacts.map(contact => {
+          if (contact.id === id) {
+            subObjects = contact.emails.map(email => {
+              if (email.id === subId) {
+                return {
+                  ...email,
+                  email: value,
+                }
+              }
+              return email
+            })
+            return {
+              ...contact,
+              emails: subObjects,
+            }
+          }
+          return contact
+        })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'addContact':
+        contacts = [...state.contacts]
+        contacts.push({
+          id: contacts.length,
+          contactName: '',
+          contactType: '',
+          phones: [{ id: 0, phone: '', phoneType: '' }],
+          emails: [{ id: 0, email: '' }],
+        })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'addPhone':
+        contacts = [...state.contacts]
+        contacts[id].phones.push({
+          id: contacts[id].phones.length,
+          phone: '',
+          phoneType: '',
+        })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'addEmail':
+        contacts = [...state.contacts]
+        contacts[id].emails.push({
+          id: contacts[id].emails.length,
+          email: '',
+        })
+        return {
+          ...state,
+          contacts,
         }
       default:
         throw new Error(`Unhandled action: ${type}`)
@@ -61,21 +175,144 @@ const AddLocation = ({ setAddL }) => {
     hoursEnd: '',
     DLA1: '',
     DLA2: '',
-    contactName: '',
-    contactType: '',
-    phone: '',
-    phoneType: '',
-    email: '',
+    contacts: [
+      {
+        id: 0,
+        contactName: '',
+        contactType: '',
+        phones: [{ id: 0, phone: '', phoneType: '' }],
+        emails: [{ id: 0, email: '' }],
+      },
+    ],
   })
-  const update = (field, value) => dispatch({ type: 'update', field, value })
 
-  const handleChange = field => event => {
-    update(field, event.target.value)
+  const updateContactFieldById = (field, id) => event => {
+    const value = event.target.value
+    dispatch({ type: 'updateContactFieldById', field, value, id })
+  }
+
+  const updatePhoneFieldById = (field, id, subId) => event => {
+    const value = event.target.value
+    dispatch({ type: 'updatePhoneFieldById', field, value, id, subId })
+  }
+
+  const updateEmailById = (id, subId) => event => {
+    const value = event.target.value
+    dispatch({ type: 'updateEmailById', field: '', value, id, subId })
+  }
+
+  const updateField = field => event => {
+    const value = event.target.value
+    dispatch({ type: 'updateField', field, value })
+  }
+
+  const addContact = () => {
+    dispatch({ type: 'addContact' })
+  }
+
+  const addPhone = id => {
+    dispatch({ type: 'addPhone', id: id })
+  }
+
+  const addEmail = id => {
+    dispatch({ type: 'addEmail', id: id })
   }
 
   const handleSave = () => {
     setSaving(true)
   }
+
+  const phoneTypes = () => {
+    if (error) {
+      console.log(error)
+      return <Typography>Error</Typography>
+    }
+    if (loading) {
+      return <Typography>Loading</Typography>
+    }
+    const types = data.phoneTypes.map(type => (
+      <MenuItem value={+type.id}>{type.name}</MenuItem>
+    ))
+    return types
+  }
+
+  const getPhones = id => {
+    const phones = fieldValues.contacts[id].phones.map(phone => (
+      <>
+        <TextField
+          className={classes.input}
+          variant="outlined"
+          label="Phone"
+          value={phone.phone}
+          onChange={updatePhoneFieldById('phone', id, phone.id)}
+        />
+        <FormControl className={classes.input} variant="outlined">
+          <InputLabel>Phone Type</InputLabel>
+          <Select
+            value={phone.phoneType}
+            onChange={updatePhoneFieldById('phoneType', id, phone.id)}
+          >
+            {phoneTypes()}
+          </Select>
+        </FormControl>
+      </>
+    ))
+    return phones
+  }
+
+  const getEmails = id => {
+    const emails = fieldValues.contacts[id].emails.map(email => (
+      <TextField
+        className={classes.input}
+        variant="outlined"
+        label="Email"
+        value={email.email}
+        onChange={updateEmailById(id, email.id)}
+      />
+    ))
+    return emails
+  }
+
+  const contactTypes = () => {
+    if (error) {
+      console.log(error)
+      return <Typography>Error</Typography>
+    }
+    if (loading) {
+      return <Typography>Loading</Typography>
+    }
+    const types = data.contactTypes.map(type => (
+      <MenuItem value={+type.id}>{type.name}</MenuItem>
+    ))
+    return types
+  }
+
+  const contacts = fieldValues.contacts.map(contact => (
+    <>
+      <TextField
+        className={classes.input}
+        variant="outlined"
+        label="Contact Name"
+        value={contact.contactName}
+        onChange={updateContactFieldById('contactName', contact.id)}
+      />
+      <FormControl className={classes.input} variant="outlined">
+        <InputLabel>Contact Type</InputLabel>
+        <Select
+          value={contact.contactType}
+          onChange={updateContactFieldById('contactType', contact.id)}
+        >
+          {contactTypes()}
+        </Select>
+      </FormControl>
+      {getPhones(contact.id)}
+      {getEmails(contact.id)}
+      <Grid>
+        <Button onClick={() => addPhone(contact.id)}>Add Phone</Button>
+        <Button onClick={() => addEmail(contact.id)}>Add Email</Button>
+      </Grid>
+    </>
+  ))
 
   return (
     <>
@@ -123,71 +360,25 @@ const AddLocation = ({ setAddL }) => {
           variant="outlined"
           label="NickName"
           value={fieldValues.nickName}
-          onChange={handleChange('nickName')}
+          onChange={updateField('nickName')}
         />
         <TextField
           className={classes.input}
           variant="outlined"
           label="Receiving Hours Begin"
           value={fieldValues.hoursBegin}
-          onChange={handleChange('hoursBegin')}
+          onChange={updateField('hoursBegin')}
         />
         <TextField
           className={classes.input}
           variant="outlined"
           label="Receiving Hours End"
           value={fieldValues.hoursEnd}
-          onChange={handleChange('hoursEnd')}
+          onChange={updateField('hoursEnd')}
         />
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Delivery Location Address 1"
-          value={fieldValues.DLA1}
-          onChange={handleChange('DLA1')}
-        />
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Delivery Location Address 2"
-          value={fieldValues.DLA1}
-          onChange={handleChange('DLA2')}
-        />
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Contact Name"
-          value={fieldValues.contactName}
-          onChange={handleChange('contactName')}
-        />
-        <FormControl className={classes.input} variant="outlined">
-          <InputLabel>Contact Type</InputLabel>
-          <Select
-            value={fieldValues.contactType}
-            onChange={handleChange('contactType')}
-          ></Select>
-        </FormControl>
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Phone"
-          value={fieldValues.phone}
-          onChange={handleChange('phone')}
-        />
-        <FormControl className={classes.input} variant="outlined">
-          <InputLabel>Phone Type</InputLabel>
-          <Select
-            value={fieldValues.phoneType}
-            onChange={handleChange('phoneType')}
-          ></Select>
-        </FormControl>
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Email"
-          value={fieldValues.email}
-          onChange={handleChange('email')}
-        />
+        <LocationInput />
+        {contacts}
+        <Button onClick={addContact}>Add Contact</Button>
       </Grid>
     </>
   )

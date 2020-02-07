@@ -70,7 +70,6 @@ const PriceFields = ({
 
   let fields
   if (data && data.quoteExtraStopPrices) {
-    console.log(data)
     fields = data.quoteExtraStopPrices.map(action => (
       <TextField
         className={classes.input}

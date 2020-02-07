@@ -97,7 +97,6 @@ const EditStop = ({
   setIsTerminal,
   drayingId,
 }) => {
-  console.log(stop)
   const classes = useStyles()
   const inputLabel = React.useRef(null)
   const [labelWidth, setLabelWidth] = useState(0)

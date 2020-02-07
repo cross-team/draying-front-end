@@ -61,7 +61,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const AddStop = ({ setAddS, setAddL, draying }) => {
-  console.log(draying)
   const classes = useStyles()
   const inputLabel = React.useRef(null)
   const [labelWidth, setLabelWidth] = useState(0)
@@ -74,7 +73,6 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
   const [saving, setSaving] = useState(false)
 
   const { loading, error, data } = useQuery(GET_LOCATIONS)
-  console.log(data)
   const [addDrayingExtraStop] = useMutation(ADD_STOP, {
     refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
     onCompleted: () => {
@@ -97,7 +95,6 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
       }
       return action
     })
-    console.log(newTripActions)
     setTripActions(newTripActions)
   }
 
