@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const GET_COLUMN_STATE = gql`
-  query getColumnState {
+  query getRightMiddleColumnState {
     columnState @client {
       middleHidden
       rightHidden

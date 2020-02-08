@@ -10,7 +10,7 @@ import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation openAddTripPanel(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean

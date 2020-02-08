@@ -1,6 +1,6 @@
 module.exports = {
   client: {
-    name: 'Draying.io [web]',
-    service: 'Draying',
+    name: 'Draying',
+    service: 'draying',
   },
 }

@@ -7,7 +7,7 @@ import TripDetail from './trip-detail/trip-detail'
 import Shell from '../columns/shell'
 
 export const GET_DISPATCH_STATE = gql`
-  query getDispatchState {
+  query getSelectedDriverAndTrip {
     dispatchState @client {
       selectedDriver {
         id
