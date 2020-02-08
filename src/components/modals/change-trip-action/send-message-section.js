@@ -67,11 +67,11 @@ export default function SendMessageSection({
     fetchPolicy: 'cache-and-network',
   })
 
-  useEffect(() => {
-    if (drayingTrip) {
-      setSelectedEndLocationTypeId(drayingTrip.tripActionLocation.id)
-    }
-  }, [drayingTrip])
+  // useEffect(() => {
+  //   if (drayingTrip) {
+  //     setSelectedEndLocationTypeId(drayingTrip.tripActionLocation.id)
+  //   }
+  // }, [drayingTrip])
 
   useEffect(() => {
     if (data) {

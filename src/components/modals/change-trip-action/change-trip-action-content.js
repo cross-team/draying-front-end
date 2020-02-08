@@ -17,7 +17,7 @@ import {
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import SendMessageSection from './send-message-section'
-import { tripIsCompletable } from '../../../utils/trip-helpers'
+// import { tripIsCompletable } from '../../../utils/trip-helpers'
 
 const useStyles = makeStyles({
   title: {
@@ -156,52 +156,52 @@ export default function ChangeTripActionContent({
 
   useEffect(() => {
     if (data && data.drayingNextActions) {
-      const shouldSendMessageForTrip = () => {
-        let res = false
-        if (
-          +selectedStartLocationTypeId > 0 &&
-          +data.drayingNextActions.drayingTrip.action.id > 0 &&
-          +data.drayingNextActions.drayingTrip.action.id !== 14
-        ) {
-          if (data.drayingNextActions.drayingTrip.id == null) {
-            res = true
-          } else if (
-            tripIsCompletable(data.drayingNextActions.drayingTrip) ||
-            drayingIsPreDispatched(data.draying)
-          ) {
-            res = true
-          }
-          if (
-            drayingIsPreDispatched(data.draying) &&
-            tripIsCompletable(data.drayingNextActions.drayingTrip)
-          ) {
-            if (
-              +data.drayingNextActions.drayingTrip.driver.id !==
-                +selectedDriverId ||
-              +data.drayingNextActions.drayingTrip.action.id !==
-                +selectedTripActionId
-            ) {
-              res = true
-            } else {
-              res = false
-            }
-          }
-        }
-        return res
-      }
+      // const shouldSendMessageForTrip = () => {
+      //   let res = false
+      //   if (
+      //     +selectedStartLocationTypeId > 0 &&
+      //     +data.drayingNextActions.drayingTrip.action.id > 0 &&
+      //     +data.drayingNextActions.drayingTrip.action.id !== 14
+      //   ) {
+      //     if (data.drayingNextActions.drayingTrip.id == null) {
+      //       res = true
+      //     } else if (
+      //       tripIsCompletable(data.drayingNextActions.drayingTrip) ||
+      //       drayingIsPreDispatched(data.draying)
+      //     ) {
+      //       res = true
+      //     }
+      //     if (
+      //       drayingIsPreDispatched(data.draying) &&
+      //       tripIsCompletable(data.drayingNextActions.drayingTrip)
+      //     ) {
+      //       if (
+      //         +data.drayingNextActions.drayingTrip.driver.id !==
+      //           +selectedDriverId ||
+      //         +data.drayingNextActions.drayingTrip.action.id !==
+      //           +selectedTripActionId
+      //       ) {
+      //         res = true
+      //       } else {
+      //         res = false
+      //       }
+      //     }
+      //   }
+      //   return res
+      // }
 
       setSelectedTripActionId(data.drayingNextActions.drayingTrip.action.id)
       setSelectedStartLocationTypeId(
         data.drayingNextActions.startLocationTypes[0].id,
       )
       setSelectedDriverId(data.currentTrip.driver.id)
-      setSkipInMovement(shouldSendMessageForTrip())
+      // setSkipInMovement(shouldSendMessageForTrip())
     }
   }, [
     data,
-    selectedDriverId,
-    selectedStartLocationTypeId,
-    selectedTripActionId,
+    // selectedDriverId,
+    // selectedStartLocationTypeId,
+    // selectedTripActionId,
   ])
 
   if (loading && !data) {
