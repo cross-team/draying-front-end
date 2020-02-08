@@ -34,6 +34,22 @@ export const GET_TERMINALS = gql`
   }
 `
 
+export const UPDATE_DELIVERY_LOCATION = gql`
+  mutation updateDrayingDeliveryLocation(
+    $drayingId: Int!
+    $deliveryLocationId: Int!
+  ) {
+    updateDrayingDeliveryLocation(
+      drayingId: $drayingId
+      deliveryLocationId: $deliveryLocationId
+    ) {
+      success
+      message
+      updatedId
+    }
+  }
+`
+
 export const UPDATE_TERMINAL = gql`
   mutation updateDrayingReturnTerminal(
     $drayingId: Int!
@@ -93,7 +109,9 @@ const EditStop = ({
   stop,
   stopLocation,
   setEdit,
+  isDL,
   isTerminal,
+  setIsDL,
   setIsTerminal,
   drayingId,
 }) => {
@@ -130,6 +148,7 @@ const EditStop = ({
     onCompleted: () => {
       setEdit(false)
       setIsTerminal(false)
+      setIsDL(false)
     },
     awaitRefetchQueries: true,
   })
@@ -138,9 +157,22 @@ const EditStop = ({
     onCompleted: () => {
       setEdit(false)
       setIsTerminal(false)
+      setIsDL(false)
     },
     awaitRefetchQueries: true,
   })
+  const [updateDrayingDeliveryLocation] = useMutation(
+    UPDATE_DELIVERY_LOCATION,
+    {
+      refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
+      onCompleted: () => {
+        setEdit(false)
+        setIsTerminal(false)
+        setIsDL(false)
+      },
+      awaitRefetchQueries: true,
+    },
+  )
 
   const handleChange = event => {
     setLocation(event.target.value)
@@ -153,6 +185,13 @@ const EditStop = ({
         variables: {
           drayingId: parseInt(drayingId),
           returnTerminalId: parseInt(location),
+        },
+      })
+    } else if (isDL) {
+      updateDrayingDeliveryLocation({
+        variables: {
+          drayingId: parseInt(drayingId),
+          deliveryLocationId: parseInt(location),
         },
       })
     } else {
