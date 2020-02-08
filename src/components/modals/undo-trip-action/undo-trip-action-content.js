@@ -91,7 +91,7 @@ export default function UndoTripActionContent({
   const isBigScreen = useMediaQuery(theme.breakpoints.up('sm'))
 
   const { loading, error, data } = useQuery(CAN_UNDO_TRIP_QUERY, {
-    variables: { drayingId },
+    variables: { drayingId: +drayingId },
     fetchPolicy: 'cache-and-network',
   })
 
@@ -121,7 +121,7 @@ export default function UndoTripActionContent({
     callUndoTripAction,
     { data: undoResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
-    variables: { drayingId },
+    variables: { drayingId: +drayingId },
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
     awaitRefetchQueries: true,
     onCompleted: () => closePanel(),
