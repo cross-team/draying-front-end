@@ -104,7 +104,11 @@ function Login({ login }) {
                       Remember me
                     </label>
                   </Typography>
-                  <Button variant="contained" type="submit">
+                  <Button
+                    aria-label="login button"
+                    variant="contained"
+                    type="submit"
+                  >
                     Login
                   </Button>
                   {/* <div className="float-right">
