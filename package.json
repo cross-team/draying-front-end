@@ -10,7 +10,7 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "build:serve": "gatsby clean && gatsby build && gatsby serve",
+    "build:serve": "gatsby clean && gatsby build && gatsby serve -p 8000",
     "clean": "gatsby clean",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",

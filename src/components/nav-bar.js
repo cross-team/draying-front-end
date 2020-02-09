@@ -32,20 +32,19 @@ export default function NavBar() {
         <Tabs value={tab} onChange={handleChange}>
           <Tab
             label="DRIVERS"
-            icon={
-              <FontAwesomeIcon
-                icon={faTruckMoving}
-                onClick={() => navigate(`/app/drivers`)}
-              />
-            }
+            icon={<FontAwesomeIcon icon={faTruckMoving} />}
+            onClick={() => navigate(`/app/drivers`)}
           />
+
           <Tab
             label="ORDERS"
             icon={<FontAwesomeIcon icon={faContainerStorage} />}
+            onClick={() => navigate(`/app/orders`)}
           />
           <Tab
             label="CLIENTS"
             icon={<FontAwesomeIcon icon={faPersonDolly} />}
+            onClick={() => navigate(`/app/clients`)}
           />
         </Tabs>
         <UserMenu />

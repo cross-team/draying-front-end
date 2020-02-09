@@ -10,10 +10,10 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
 
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Loading from '../../loading'
 
 const useStyles = makeStyles({
   title: {
@@ -128,7 +128,11 @@ export default function UndoTripActionContent({
   })
 
   if (loading && !data) {
-    return <Typography>Loading...</Typography>
+    return (
+      <Typography>
+        <Loading />
+      </Typography>
+    )
   }
 
   if (error) {
@@ -144,7 +148,7 @@ export default function UndoTripActionContent({
   if (saving && !undoResponse) {
     return (
       <CardContent>
-        <CircularProgress />
+        <Loading />
       </CardContent>
     )
   }

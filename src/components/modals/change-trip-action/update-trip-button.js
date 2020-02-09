@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import Loading from '../../loading'
 
 const UPDATE_TRIP_MUTATION = gql`
   mutation updateTripActionMutation($trip: UpdateTripInput!) {
@@ -33,7 +34,11 @@ export default function UpdateTripButton({
   }
 
   if (loading && !data) {
-    return <Typography>Loading...</Typography>
+    return (
+      <Typography>
+        <Loading />
+      </Typography>
+    )
   }
 
   if (error) {

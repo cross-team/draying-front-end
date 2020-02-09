@@ -29,6 +29,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
+import Loading from '../../loading'
 
 export const UPDATE_DRAYING_FIELDS = gql`
   mutation updateDrayingFields(
@@ -287,7 +288,9 @@ const ContainerPanel = ({ draying }) => {
                 </MenuItem>
               ))
             ) : (
-              <Typography>Loading...</Typography>
+              <Typography>
+                <Loading />
+              </Typography>
             )}
           </Select>
         </FormControl>
@@ -305,7 +308,9 @@ const ContainerPanel = ({ draying }) => {
                 </MenuItem>
               ))
             ) : (
-              <Typography>Loading...</Typography>
+              <Typography>
+                <Loading />.
+              </Typography>
             )}
           </Select>
         </FormControl>
