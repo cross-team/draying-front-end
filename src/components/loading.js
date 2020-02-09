@@ -16,8 +16,8 @@ const Loading = () => {
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Grid container xs={12} justify="center">
-        <Grid item className={classes.item}>
+      <Grid container justify="center">
+        <Grid item xs={12} className={classes.item}>
           <CircularProgress />
         </Grid>
       </Grid>

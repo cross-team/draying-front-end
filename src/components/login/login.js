@@ -53,13 +53,15 @@ export default function Login() {
   if (error) return <p>{`An error occurred ${userMessage}`}</p>
 
   return (
-    <Grid
-      container
-      justify="center"
-      alignItems="center"
-      className={classes.root}
-    >
-      <LoginForm login={login} />
-    </Grid>
+    <div role="main">
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        className={classes.root}
+      >
+        <LoginForm login={login} />
+      </Grid>
+    </div>
   )
 }
