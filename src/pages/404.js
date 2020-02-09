@@ -1,6 +1,10 @@
 import React from 'react'
-import Index from '.'
 
-const NotFoundPage = () => <Index />
+const NotFoundPage = () => (
+  <>
+    <h1>NOT FOUND</h1>
+    <p>Redirecting</p>
+  </>
+)
 
 export default NotFoundPage
