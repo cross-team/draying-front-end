@@ -21,4 +21,4 @@ jobs:
           yarn install
           yarn run lint
           yarn run build
-          yarn run test:e2e
+          # yarn run test:e2e
