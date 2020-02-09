@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react'
-import { Link, navigate } from 'gatsby'
+import React from 'react'
+import { Link } from 'gatsby'
 
 const NotFoundPage = () => {
-  useEffect(() => {
-    setTimeout(() => navigate('/'), 4000)
-  })
   return (
     <>
       <h1>NOT FOUND</h1>
