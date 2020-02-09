@@ -3,27 +3,27 @@ name: Linux_Node_Workflow_ScmCred
 on:
   push:
     branches:
-    - master
-    - dev
+      - master
+      - dev
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-        MIDDLE_END_URL: ${{ secrets.MIDDLE_END_URL }}
+      MIDDLE_END_URL: ${{ secrets.MIDDLE_END_URL }}
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - name: 'run yarn'
-      run: |
-        yarn install
-        yarn run build
-        yarn run test
-    - name: Azure Static Website Deploy
-      uses: bacongobbler/azure-blob-storage-upload@v1.0.0
-      with:
-        source_dir: ./public
-        container_name: $web
-        connection_string: ${{ secrets.ConnectionString }}
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - name: 'run yarn'
+        run: |
+          yarn install
+          yarn run build
+          yarn run test:e2e
+      - name: Azure Static Website Deploy
+        uses: bacongobbler/azure-blob-storage-upload@v1.0.0
+        with:
+          source_dir: ./public
+          container_name: $web
+          connection_string: ${{ secrets.ConnectionString }}

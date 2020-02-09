@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import { globalHistory as history } from '@reach/router'
+import Typography from '@material-ui/core/Typography'
 
 function Login({ login }) {
   const { location } = history
@@ -57,12 +58,19 @@ function Login({ login }) {
         <Grid item xs={8} sm={6} md={4}>
           <Card>
             <CardContent>
-              <p className="text-center py-2">SIGN IN TO CONTINUE.</p>
+              <Typography
+                variant="h5"
+                component="h1"
+                className="text-center py-2"
+              >
+                SIGN IN TO CONTINUE.
+              </Typography>
               <form className="mb-3" name="formLogin" onSubmit={onSubmit}>
                 <TextField
                   id="email"
                   type="email"
                   name="email"
+                  inputProps={{ 'aria-label': 'email' }}
                   required
                   placeholder="Enter email"
                   onChange={validateOnChange}
@@ -74,6 +82,7 @@ function Login({ login }) {
                   type="password"
                   id="id-password"
                   name="password"
+                  inputProps={{ 'aria-label': 'password' }}
                   required
                   placeholder="Password"
                   onChange={validateOnChange}
@@ -82,17 +91,19 @@ function Login({ login }) {
                   variant="outlined"
                 />
                 <Grid container justify="space-between">
-                  <label htmlFor="remember">
-                    <Checkbox
-                      checked={state.formLogin.remember}
-                      onChange={validateOnChange}
-                      value="remember"
-                      name="remember"
-                      color="primary"
-                      id="remember"
-                    />
-                    Remember me
-                  </label>
+                  <Typography>
+                    <label htmlFor="remember">
+                      <Checkbox
+                        checked={state.formLogin.remember}
+                        onChange={validateOnChange}
+                        value="remember"
+                        name="remember"
+                        color="primary"
+                        id="remember"
+                      />
+                      Remember me
+                    </label>
+                  </Typography>
                   <Button variant="contained" type="submit">
                     Login
                   </Button>

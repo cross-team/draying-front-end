@@ -32,7 +32,7 @@ const client = new ApolloClient({
 
 cache.writeData({
   data: {
-    isLoggedIn: !!getUser(),
+    isLoggedIn: !!getUser().token,
     dispatchState: {
       __typename: 'DispatchState',
       selectedTrip: {

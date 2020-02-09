@@ -8,7 +8,6 @@ import CardContent from '@material-ui/core/CardContent'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import CardHeader from '@material-ui/core/CardHeader'
 import {
   getLastTrip,
@@ -17,6 +16,7 @@ import {
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import SendMessageSection from './send-message-section'
+import Loading from '../../loading'
 // import { tripIsCompletable } from '../../../utils/trip-helpers'
 
 const useStyles = makeStyles({
@@ -205,7 +205,7 @@ export default function ChangeTripActionContent({
   ])
 
   if (loading && !data) {
-    return <CircularProgress />
+    return <Loading />
   }
 
   if (error) {

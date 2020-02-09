@@ -9,7 +9,6 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
 // import CardHeader from '@material-ui/core/CardHeader'
 import {
@@ -24,6 +23,7 @@ import {
 import UpdateTripButton from './update-trip-button'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
+import Loading from '../../loading'
 
 const GET_NEXT_DESTINATIONS = gql`
   query getNextDestination(
@@ -74,7 +74,11 @@ export default function SendMessageSection({
   // }, [drayingTrip])
 
   useEffect(() => {
-    if (data) {
+    if (
+      data &&
+      typeof data.drayingTripDestinations !== 'undefined' &&
+      data.drayingTripDestinations.tripActionLocations.length > 0
+    ) {
       setSelectedEndLocationTypeId(
         data.drayingTripDestinations.tripActionLocations[0].id,
       )
@@ -202,7 +206,7 @@ export default function SendMessageSection({
   }, [data])
 
   if (loading && !data) {
-    return <CircularProgress />
+    return <Loading />
   }
 
   if (error) {

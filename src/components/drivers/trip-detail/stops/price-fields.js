@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import Loading from '../../../loading'
 
 export const GET_STOP_QUOTE = gql`
   query quoteExtraStopPrices($drayingId: Int, $deliveryLocationId: Int) {
@@ -60,7 +61,11 @@ const PriceFields = ({
   }, [data, drayingId, setTripActions])
 
   if (loading) {
-    return <Typography>Loading...</Typography>
+    return (
+      <Typography>
+        <Loading />
+      </Typography>
+    )
   }
 
   if (error) {
