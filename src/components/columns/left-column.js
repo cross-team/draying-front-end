@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
   },
   column: {
-    height: '100%',
+    minHeight: '100%',
     borderRight: '1px solid #d6d6d6',
     borderLeft: '1px solid #d6d6d6',
   },

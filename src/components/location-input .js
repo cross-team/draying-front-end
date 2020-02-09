@@ -15,32 +15,33 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const LocationInput = () => {
+const LocationInput = ({ updateLocation, appendCoordinates }) => {
   const classes = useStyles()
   const [address, setAddress] = useState('')
-  const [location, setLocation] = useState('')
 
-  const handleChange = event => {
-    setAddress(event.target.value)
+  const handleChange = addr => {
+    console.log(addr)
+    setAddress(addr)
   }
 
-  const handleSelect = () => {
-    geocodeByAddress(location)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => console.log('Success', latLng))
+  const handleSelect = addr => {
+    handleChange(addr)
+    geocodeByAddress(addr)
+      .then(results => {
+        updateLocation(results[0])
+        return getLatLng(results[0])
+      })
+      .then(latLng => {
+        console.log('Success', latLng)
+        appendCoordinates(latLng)
+      })
       .catch(error => console.error('Error', error))
-  }
-
-  const handleClick = suggestion => {
-    setAddress(suggestion.description)
-    console.log('Suggestion', suggestion)
-    console.log('Location', location)
   }
 
   return (
     <PlacesAutocomplete
-      value={location}
-      onChange={setLocation}
+      value={address}
+      onChange={handleChange}
       onSelect={handleSelect}
     >
       {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
@@ -50,7 +51,6 @@ const LocationInput = () => {
             variant="outlined"
             label="Location Address"
             value={address}
-            onChange={handleChange}
             inputProps={{
               ...getInputProps({
                 className: 'location-search-input',
@@ -68,12 +68,12 @@ const LocationInput = () => {
                 ? {
                     backgroundColor: '#fafafa',
                     cursor: 'pointer',
-                    height: '40px',
+                    minHeight: '40px',
                   }
                 : {
                     backgroundColor: '#ffffff',
                     cursor: 'pointer',
-                    height: '40px',
+                    minHeight: '40px',
                   }
               return (
                 <Grid
@@ -84,9 +84,7 @@ const LocationInput = () => {
                     style,
                   })}
                 >
-                  <Typography onClick={() => handleClick(suggestion)}>
-                    {suggestion.description}
-                  </Typography>
+                  <Typography>{suggestion.description}</Typography>
                 </Grid>
               )
             })}

@@ -68,7 +68,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
 
-  const [location, setLocation] = useState('')
+  const [location, setLocation] = useState('create')
   const [tripActions, setTripActions] = useState([])
   const [saving, setSaving] = useState(false)
 

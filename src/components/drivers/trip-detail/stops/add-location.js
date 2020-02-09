@@ -31,6 +31,16 @@ export const GET_TYPES = gql`
   }
 `
 
+export const ADD_LOCATION = gql`
+  mutation addDeliveryLocation($deliveryLocation: DeliveryLocationInput) {
+    addDeliveryLocation(deliveryLocation: $deliveryLocation) {
+      success
+      message
+      updatedId
+    }
+  }
+`
+
 const useStyles = makeStyles(theme => ({
   headerText: {
     color: theme.palette.primary.contrastText,
@@ -59,11 +69,22 @@ const useStyles = makeStyles(theme => ({
 
 const AddLocation = ({ setAddL }) => {
   const classes = useStyles()
-  const [saving, setSaving] = useState(false)
   const { loading, error, data } = useQuery(GET_TYPES)
+
+  const [
+    addDeliveryLocation,
+    { loading: mutationLoading, error: mutationError, data: mutationData },
+  ] = useMutation(ADD_LOCATION, {
+    refetchQueries: ['deliveryLocations'],
+    onCompleted: () => {
+      setAddL(false)
+    },
+    awaitRefetchQueries: true,
+  })
 
   const fieldReducer = (state, { type, field, value, id, subId }) => {
     let contacts
+    let location
     let subObjects
     switch (type) {
       case 'updateField':
@@ -135,10 +156,11 @@ const AddLocation = ({ setAddL }) => {
         contacts = [...state.contacts]
         contacts.push({
           id: contacts.length,
-          contactName: '',
-          contactType: '',
-          phones: [{ id: 0, phone: '', phoneType: '' }],
-          emails: [{ id: 0, email: '' }],
+          name: '',
+          contactTypeId: '',
+          active: true,
+          phones: [{ id: 0, phone: '', phoneTypeId: '', active: true }],
+          emails: [{ id: 0, email: '', active: true }],
         })
         return {
           ...state,
@@ -149,7 +171,8 @@ const AddLocation = ({ setAddL }) => {
         contacts[id].phones.push({
           id: contacts[id].phones.length,
           phone: '',
-          phoneType: '',
+          phoneTypeId: '',
+          active: true,
         })
         return {
           ...state,
@@ -160,10 +183,18 @@ const AddLocation = ({ setAddL }) => {
         contacts[id].emails.push({
           id: contacts[id].emails.length,
           email: '',
+          active: true,
         })
         return {
           ...state,
           contacts,
+        }
+      case 'appendCoordinates':
+        location = { ...state.location }
+        location.coordinates = value
+        return {
+          ...state,
+          location,
         }
       default:
         throw new Error(`Unhandled action: ${type}`)
@@ -173,15 +204,16 @@ const AddLocation = ({ setAddL }) => {
     nickName: '',
     hoursBegin: '',
     hoursEnd: '',
-    DLA1: '',
-    DLA2: '',
+    location: '',
+    suite: '',
     contacts: [
       {
         id: 0,
-        contactName: '',
-        contactType: '',
-        phones: [{ id: 0, phone: '', phoneType: '' }],
-        emails: [{ id: 0, email: '' }],
+        name: '',
+        contactTypeId: '',
+        active: true,
+        phones: [{ id: 0, phone: '', phoneTypeId: '', active: true }],
+        emails: [{ id: 0, email: '', active: true }],
       },
     ],
   })
@@ -218,8 +250,83 @@ const AddLocation = ({ setAddL }) => {
     dispatch({ type: 'addEmail', id: id })
   }
 
+  const appendCoordinates = value => {
+    dispatch({ type: 'appendCoordinates', value: value })
+  }
+
   const handleSave = () => {
-    setSaving(true)
+    if (fieldValues.location) {
+      const location = {
+        nickName: fieldValues.location.formatted_address,
+        googleAddress: fieldValues.location.formatted_address,
+        locStreet: '',
+        locSuite: fieldValues.suite,
+        locCity: '',
+        locZip: '',
+        locState: '',
+        locCountry: '',
+        partial: false,
+        preferred: true,
+        latitude: fieldValues.location.coordinates.lat,
+        longitude: fieldValues.location.coordinates.lng,
+      }
+      fieldValues.location.address_components.forEach(component => {
+        if (component.types[0] === 'street_number') {
+          location.locStreet += component.short_name
+        }
+        if (component.types[0] === 'route') {
+          location.locStreet += ' ' + component.short_name
+        }
+        if (
+          component.types[0] === 'locality' ||
+          component.types[0] === 'neighborhood'
+        ) {
+          location.locCity = component.short_name
+        }
+        if (component.types[0] === 'administrative_area_level_1') {
+          location.locState = component.short_name
+        }
+        if (component.types[0] === 'postal_code') {
+          location.locZip = component.short_name
+        }
+        if (component.types[0] === 'country') {
+          location.locCountry = component.short_name
+        }
+      })
+      const localStateContacts = JSON.parse(
+        JSON.stringify(fieldValues.contacts),
+      )
+      const newContacts = localStateContacts.map(contact => {
+        delete contact.id
+        const newPhones = contact.phones.map(phone => {
+          delete phone.id
+          return phone
+        })
+        const newEmails = contact.emails.map(email => {
+          delete email.id
+          return email
+        })
+        return {
+          ...contact,
+          description: '',
+          phones: newPhones,
+          emails: newEmails,
+        }
+      })
+      addDeliveryLocation({
+        variables: {
+          deliveryLocation: {
+            nickName: fieldValues.nickName,
+            isDefault: true,
+            locationTypeId: 1,
+            receivingHoursOpen: fieldValues.hoursBegin,
+            receivingHoursClose: fieldValues.hoursEnd,
+            location,
+            contacts: newContacts,
+          },
+        },
+      })
+    }
   }
 
   const phoneTypes = () => {
@@ -249,8 +356,8 @@ const AddLocation = ({ setAddL }) => {
         <FormControl className={classes.input} variant="outlined">
           <InputLabel>Phone Type</InputLabel>
           <Select
-            value={phone.phoneType}
-            onChange={updatePhoneFieldById('phoneType', id, phone.id)}
+            value={phone.phoneTypeId}
+            onChange={updatePhoneFieldById('phoneTypeId', id, phone.id)}
           >
             {phoneTypes()}
           </Select>
@@ -293,14 +400,14 @@ const AddLocation = ({ setAddL }) => {
         className={classes.input}
         variant="outlined"
         label="Contact Name"
-        value={contact.contactName}
-        onChange={updateContactFieldById('contactName', contact.id)}
+        value={contact.name}
+        onChange={updateContactFieldById('name', contact.id)}
       />
       <FormControl className={classes.input} variant="outlined">
         <InputLabel>Contact Type</InputLabel>
         <Select
-          value={contact.contactType}
-          onChange={updateContactFieldById('contactType', contact.id)}
+          value={contact.contactTypeId}
+          onChange={updateContactFieldById('contactTypeId', contact.id)}
         >
           {contactTypes()}
         </Select>
@@ -313,6 +420,63 @@ const AddLocation = ({ setAddL }) => {
       </Grid>
     </>
   ))
+
+  const hours = () => {
+    const times = [
+      { label: '12:00 AM', value: '00:00' },
+      { label: '12:30 AM', value: '00:30' },
+      { label: '01:00 AM', value: '01:00' },
+      { label: '01:30 AM', value: '01:30' },
+      { label: '02:00 AM', value: '02:00' },
+      { label: '02:30 AM', value: '02:30' },
+      { label: '03:00 AM', value: '03:00' },
+      { label: '03:30 AM', value: '03:30' },
+      { label: '04:00 AM', value: '04:00' },
+      { label: '04:30 AM', value: '04:30' },
+      { label: '05:00 AM', value: '05:00' },
+      { label: '05:30 AM', value: '05:30' },
+      { label: '06:00 AM', value: '06:00' },
+      { label: '06:30 AM', value: '06:30' },
+      { label: '07:00 AM', value: '07:00' },
+      { label: '07:30 AM', value: '07:30' },
+      { label: '08:00 AM', value: '08:00' },
+      { label: '08:30 AM', value: '08:30' },
+      { label: '09:00 AM', value: '09:00' },
+      { label: '09:30 AM', value: '09:30' },
+      { label: '10:00 AM', value: '10:00' },
+      { label: '10:30 AM', value: '10:30' },
+      { label: '11:00 AM', value: '11:00' },
+      { label: '11:30 AM', value: '11:30' },
+      { label: '12:00 PM', value: '12:00' },
+      { label: '12:30 PM', value: '12:30' },
+      { label: '01:00 PM', value: '13:00' },
+      { label: '01:30 PM', value: '13:30' },
+      { label: '02:00 PM', value: '14:00' },
+      { label: '02:30 PM', value: '14:30' },
+      { label: '03:00 PM', value: '15:00' },
+      { label: '03:30 PM', value: '15:30' },
+      { label: '04:00 PM', value: '16:00' },
+      { label: '04:30 PM', value: '16:30' },
+      { label: '05:00 PM', value: '17:00' },
+      { label: '05:30 PM', value: '17:30' },
+      { label: '06:00 PM', value: '18:00' },
+      { label: '06:30 PM', value: '18:30' },
+      { label: '07:00 PM', value: '19:00' },
+      { label: '07:30 PM', value: '19:30' },
+      { label: '08:00 PM', value: '20:00' },
+      { label: '08:30 PM', value: '20:30' },
+      { label: '09:00 PM', value: '21:00' },
+      { label: '09:30 PM', value: '21:30' },
+      { label: '10:00 PM', value: '22:00' },
+      { label: '10:30 PM', value: '22:30' },
+      { label: '11:00 PM', value: '23:00' },
+      { label: '11:30 PM', value: '23:30' },
+    ]
+
+    return times.map(time => (
+      <MenuItem value={time.value}>{time.label}</MenuItem>
+    ))
+  }
 
   return (
     <>
@@ -339,8 +503,10 @@ const AddLocation = ({ setAddL }) => {
                 Add Location
               </Typography>
             </Grid>
-            {saving ? (
+            {mutationLoading ? (
               <CircularProgress color="secondary" />
+            ) : error ? (
+              <Typography>{error}</Typography>
             ) : (
               <Button
                 className={classes.button}
@@ -362,21 +528,37 @@ const AddLocation = ({ setAddL }) => {
           value={fieldValues.nickName}
           onChange={updateField('nickName')}
         />
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Receiving Hours Begin"
-          value={fieldValues.hoursBegin}
-          onChange={updateField('hoursBegin')}
+        <FormControl className={classes.input} variant="outlined">
+          <InputLabel>Receiving Hours Begin</InputLabel>
+          <Select
+            value={fieldValues.hoursBegin}
+            onChange={updateField('hoursBegin')}
+          >
+            {hours()}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.input} variant="outlined">
+          <InputLabel>Receiving Hours End</InputLabel>
+          <Select
+            value={fieldValues.hoursEnd}
+            onChange={updateField('hoursEnd')}
+          >
+            {hours()}
+          </Select>
+        </FormControl>
+        <LocationInput
+          appendCoordinates={appendCoordinates}
+          updateLocation={value => {
+            dispatch({ type: 'updateField', field: 'location', value })
+          }}
         />
         <TextField
           className={classes.input}
           variant="outlined"
-          label="Receiving Hours End"
-          value={fieldValues.hoursEnd}
-          onChange={updateField('hoursEnd')}
+          label="Location Suite"
+          value={fieldValues.suite}
+          onChange={updateField('suite')}
         />
-        <LocationInput />
         {contacts}
         <Button onClick={addContact}>Add Contact</Button>
       </Grid>
