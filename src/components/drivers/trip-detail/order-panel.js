@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.contrastText,
   },
   details: {
-    margin: theme.spacing(1),
+    padding: theme.spacing(1),
   },
 }))
 
@@ -45,18 +45,18 @@ const OrderPanel = ({ draying }) => {
         </Toolbar>
       </AppBar>
       <Grid container className={classes.details} justify="space-between">
-        <div>
+        <Grid item>
           <Typography>
             {draying.order
               ? `#${draying.order.id}`
               : 'No order number was found for this trip.'}
           </Typography>
           <Typography>{`#${draying.booking}`}</Typography>
-        </div>
-        <div>
+        </Grid>
+        <Grid item>
           <Typography>{doStatus}</Typography>
           <Typography>{draying.client.companyName}</Typography>
-        </div>
+        </Grid>
       </Grid>
     </>
   )
