@@ -374,6 +374,7 @@ export default function DriverTrips() {
           </Grid>
         )
       )}
+      NO DATA
     </div>
   )
 }
