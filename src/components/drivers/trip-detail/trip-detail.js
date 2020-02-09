@@ -1,19 +1,19 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import {
-  withWidth,
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-} from '@material-ui/core/'
+import withWidth from '@material-ui/core/withWidth'
+import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'
 import StopsPanel from './stops/stops-panel'
+import Grid from '@material-ui/core/Grid'
+import Slide from '@material-ui/core/Slide'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -223,25 +223,33 @@ const TripDetail = ({ width }) => {
     }
   }
 
+  const showRightColumn = typeof trip !== 'undefined'
+
   return (
     <>
-      {trip && trip.draying && (
-        <>
-          <AppBar position="sticky">
-            <Toolbar>
-              <IconButton onClick={handleClose}>
-                <FontAwesomeIcon icon={faTimes} />
-              </IconButton>
-              <Typography>{`Trip ${selectedTripId &&
-                selectedTripId} Details`}</Typography>
-            </Toolbar>
-          </AppBar>
-          <OrderPanel draying={trip.draying} />
-          <ContainerPanel draying={trip.draying} />
-          <StopsPanel draying={trip.draying} />
-          <TripPanel trip={trip} />
-        </>
-      )}
+      <Slide direction="left" in={showRightColumn}>
+        <Grid>
+          <>
+            <AppBar position="sticky">
+              <Toolbar>
+                <IconButton onClick={handleClose}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </IconButton>
+                <Typography>{`Trip ${selectedTripId &&
+                  selectedTripId} Details`}</Typography>
+              </Toolbar>
+            </AppBar>
+            {trip && (
+              <>
+                <OrderPanel draying={trip.draying} />
+                <ContainerPanel draying={trip.draying} />
+                <StopsPanel draying={trip.draying} />
+                <TripPanel trip={trip} />
+              </>
+            )}
+          </>
+        </Grid>
+      </Slide>
     </>
   )
 }
