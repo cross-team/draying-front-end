@@ -65,8 +65,6 @@ const AllStops = ({
     })
   }
 
-  console.log(draying.extraStops)
-
   const extraStops = draying.extraStops.map((stop, index) => (
     <TextField
       className={classes.input}
