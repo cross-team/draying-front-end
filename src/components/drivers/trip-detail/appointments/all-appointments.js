@@ -40,7 +40,11 @@ const AllAppointments = ({ draying }) => {
         className={classes.input}
         key={index}
         variant="outlined"
-        label={`${appointment.type.shortName}-${appointment.locationType.name}`}
+        label={`${appointment.type.shortName}-${
+          appointment.locationType.name
+            ? `${appointment.locationType.name}`
+            : ''
+        }`}
         value={`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}${
           appointment.appointmentTime
             ? ` ${date.getHours()}:${
