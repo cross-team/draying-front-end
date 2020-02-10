@@ -29,7 +29,6 @@ const useStyles = makeStyles(theme => ({
 const AllAppointments = ({ draying }) => {
   const classes = useStyles()
   const [saving, setSaving] = useState(false)
-  console.log(draying.appointments)
   const appointments = draying.appointments.map((appointment, index) => {
     const date = new Date(
       `${appointment.appointmentDate.substring(0, 10)}${
@@ -39,6 +38,7 @@ const AllAppointments = ({ draying }) => {
     return (
       <TextField
         className={classes.input}
+        key={index}
         variant="outlined"
         label={`${appointment.type.shortName}-${appointment.locationType.name}`}
         value={`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}${
