@@ -98,6 +98,7 @@ const AddLocation = ({ setAddL }) => {
     let contacts
     let location
     let subObjects
+    let newId
     switch (type) {
       case 'updateField':
         return {
@@ -166,14 +167,25 @@ const AddLocation = ({ setAddL }) => {
         }
       case 'addContact':
         contacts = [...state.contacts]
+        newId = contacts[contacts.length - 1].id + 1
         contacts.push({
-          id: contacts.length,
+          id: newId,
           name: '',
           contactTypeId: '',
           active: true,
           phones: [{ id: 0, phone: '', phoneTypeId: '', active: true }],
           emails: [{ id: 0, email: '', active: true }],
         })
+        return {
+          ...state,
+          contacts,
+        }
+      case 'removeContact':
+        contacts = [...state.contacts]
+        contacts.forEach((contact, index) => {
+          id === contact.id && contacts.splice(index, 1)
+        })
+        console.log(contacts)
         return {
           ...state,
           contacts,
@@ -254,6 +266,10 @@ const AddLocation = ({ setAddL }) => {
 
   const addContact = () => {
     dispatch({ type: 'addContact' })
+  }
+
+  const removeContact = id => {
+    dispatch({ type: 'removeContact', id: id })
   }
 
   const addPhone = id => {
@@ -358,39 +374,45 @@ const AddLocation = ({ setAddL }) => {
   }
 
   const getPhones = id => {
-    const phones = fieldValues.contacts[id].phones.map(phone => (
-      <>
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Phone"
-          value={phone.phone}
-          onChange={updatePhoneFieldById('phone', id, phone.id)}
-        />
-        <FormControl className={classes.input} variant="outlined">
-          <InputLabel>Phone Type</InputLabel>
-          <Select
-            value={phone.phoneTypeId}
-            onChange={updatePhoneFieldById('phoneTypeId', id, phone.id)}
-          >
-            {phoneTypes()}
-          </Select>
-        </FormControl>
-      </>
-    ))
+    let phones = null
+    if (fieldValues.contacts[id]) {
+      phones = fieldValues.contacts[id].phones.map(phone => (
+        <>
+          <TextField
+            className={classes.input}
+            variant="outlined"
+            label="Phone"
+            value={phone.phone}
+            onChange={updatePhoneFieldById('phone', id, phone.id)}
+          />
+          <FormControl className={classes.input} variant="outlined">
+            <InputLabel>Phone Type</InputLabel>
+            <Select
+              value={phone.phoneTypeId}
+              onChange={updatePhoneFieldById('phoneTypeId', id, phone.id)}
+            >
+              {phoneTypes()}
+            </Select>
+          </FormControl>
+        </>
+      ))
+    }
     return phones
   }
 
   const getEmails = id => {
-    const emails = fieldValues.contacts[id].emails.map(email => (
-      <TextField
-        className={classes.input}
-        variant="outlined"
-        label="Email"
-        value={email.email}
-        onChange={updateEmailById(id, email.id)}
-      />
-    ))
+    let emails = null
+    if (fieldValues.contacts[id]) {
+      emails = fieldValues.contacts[id].emails.map(email => (
+        <TextField
+          className={classes.input}
+          variant="outlined"
+          label="Email"
+          value={email.email}
+          onChange={updateEmailById(id, email.id)}
+        />
+      ))
+    }
     return emails
   }
 
@@ -413,7 +435,7 @@ const AddLocation = ({ setAddL }) => {
       <CardHeader
         action={
           fieldValues.contacts.length > 1 && (
-            <IconButton>
+            <IconButton onClick={() => removeContact(contact.id)}>
               <FontAwesomeIcon icon={faTimes} />
             </IconButton>
           )
