@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import Typography from '@material-ui/core/Typography'
 import AppBar from '@material-ui/core/AppBar'
@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
+import Alert from '@material-ui/lab/Alert'
 import CloseIcon from '@material-ui/icons/Close'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faTimes } from '@fortawesome/pro-light-svg-icons/'
@@ -707,6 +708,12 @@ const AddLocation = ({ setAddL }) => {
           Add Contact
         </Button>
       </Grid>
+      {mutationData && !mutationData.addDeliveryLocation.success && (
+        <Alert severity="error">
+          {mutationData.addDeliveryLocation.message}
+        </Alert>
+      )}
+      {mutationError && <Alert severity="error">Error</Alert>}
     </>
   )
 }
