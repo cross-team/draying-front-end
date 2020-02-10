@@ -1,11 +1,10 @@
 import React from 'react'
 import { Paper, Grid, makeStyles } from '@material-ui/core/'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   item: {
-    height: '100%',
+    flex: 1,
+    width: '100%',
     overflow: 'auto',
   },
   column: {
@@ -15,30 +14,10 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const GET_COLUMN_STATE = gql`
-  query getColumnState {
-    columnState @client {
-      middleHidden
-      rightHidden
-    }
-  }
-`
-
 const MiddleColumn = ({ children }) => {
   const classes = useStyles()
-  const {
-    data: {
-      columnState: { middleHidden, rightHidden },
-    },
-  } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid
-      item
-      xs={12}
-      md={rightHidden ? 8 : 4}
-      hidden={middleHidden}
-      className={classes.item}
-    >
+    <Grid item className={classes.item}>
       <Paper className={classes.column}>{children}</Paper>
     </Grid>
   )

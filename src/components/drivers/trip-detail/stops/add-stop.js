@@ -17,6 +17,7 @@ import { faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import PriceFields from './price-fields'
+import Loading from '../../../loading'
 
 export const GET_LOCATIONS = gql`
   query deliveryLocations {
@@ -176,7 +177,9 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
                     </MenuItem>
                   ))
                 ) : (
-                  <Typography>Loading...</Typography>
+                  <Typography>
+                    <Loading />
+                  </Typography>
                 )}
               </Select>
             </FormControl>

@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import Loading from '../../../loading'
 
 export const GET_LOCATIONS = gql`
   query deliveryLocations {
@@ -30,6 +31,22 @@ export const GET_TERMINALS = gql`
     activeTerminalLocations {
       id
       nickName
+    }
+  }
+`
+
+export const UPDATE_DELIVERY_LOCATION = gql`
+  mutation updateDrayingDeliveryLocation(
+    $drayingId: Int!
+    $deliveryLocationId: Int!
+  ) {
+    updateDrayingDeliveryLocation(
+      drayingId: $drayingId
+      deliveryLocationId: $deliveryLocationId
+    ) {
+      success
+      message
+      updatedId
     }
   }
 `
@@ -93,7 +110,9 @@ const EditStop = ({
   stop,
   stopLocation,
   setEdit,
+  isDL,
   isTerminal,
+  setIsDL,
   setIsTerminal,
   drayingId,
 }) => {
@@ -129,6 +148,7 @@ const EditStop = ({
     onCompleted: () => {
       setEdit(false)
       setIsTerminal(false)
+      setIsDL(false)
     },
     awaitRefetchQueries: true,
   })
@@ -137,9 +157,22 @@ const EditStop = ({
     onCompleted: () => {
       setEdit(false)
       setIsTerminal(false)
+      setIsDL(false)
     },
     awaitRefetchQueries: true,
   })
+  const [updateDrayingDeliveryLocation] = useMutation(
+    UPDATE_DELIVERY_LOCATION,
+    {
+      refetchQueries: ['allDriverRoutes', 'getSelectedTrip', 'currentTrip'],
+      onCompleted: () => {
+        setEdit(false)
+        setIsTerminal(false)
+        setIsDL(false)
+      },
+      awaitRefetchQueries: true,
+    },
+  )
 
   const handleChange = event => {
     setLocation(event.target.value)
@@ -152,6 +185,13 @@ const EditStop = ({
         variables: {
           drayingId: parseInt(drayingId),
           returnTerminalId: parseInt(location),
+        },
+      })
+    } else if (isDL) {
+      updateDrayingDeliveryLocation({
+        variables: {
+          drayingId: parseInt(drayingId),
+          deliveryLocationId: parseInt(location),
         },
       })
     } else {
@@ -222,7 +262,9 @@ const EditStop = ({
                 </MenuItem>
               ))
             ) : (
-              <Typography>Loading...</Typography>
+              <Typography>
+                <Loading />
+              </Typography>
             )}
           </Select>
         </FormControl>
