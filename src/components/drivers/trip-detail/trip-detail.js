@@ -12,6 +12,7 @@ import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'
 import StopsPanel from './stops/stops-panel'
+import AppointmentsPanel from './appointments-panel'
 import Grid from '@material-ui/core/Grid'
 import Slide from '@material-ui/core/Slide'
 
@@ -244,6 +245,7 @@ const TripDetail = ({ width }) => {
                 <OrderPanel draying={trip.draying} />
                 <ContainerPanel draying={trip.draying} />
                 <StopsPanel draying={trip.draying} />
+                <AppointmentsPanel draying={trip.draying} />
                 <TripPanel trip={trip} />
               </>
             )}
