@@ -20,7 +20,6 @@ const LocationInput = ({ updateLocation, appendCoordinates }) => {
   const [address, setAddress] = useState('')
 
   const handleChange = addr => {
-    console.log(addr)
     setAddress(addr)
   }
 
@@ -32,7 +31,6 @@ const LocationInput = ({ updateLocation, appendCoordinates }) => {
         return getLatLng(results[0])
       })
       .then(latLng => {
-        console.log('Success', latLng)
         appendCoordinates(latLng)
       })
       .catch(error => console.error('Error', error))

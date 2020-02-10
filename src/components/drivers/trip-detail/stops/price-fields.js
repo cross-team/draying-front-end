@@ -69,7 +69,6 @@ const PriceFields = ({
   }
 
   if (error) {
-    console.log(error)
     return <Typography>Error</Typography>
   }
 

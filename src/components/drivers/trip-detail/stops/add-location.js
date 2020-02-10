@@ -181,13 +181,11 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
       contacts.forEach((contact, index) => {
         id === contact.id && contacts.splice(index, 1)
       })
-      console.log(contacts)
       return {
         ...state,
         contacts,
       }
     case 'addPhone':
-      console.log('Phone Added')
       contacts = [...state.contacts]
       contacts.forEach((contact, index) => {
         if (id === contact.id) {
@@ -213,13 +211,11 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
           })
         }
       })
-      console.log(contacts)
       return {
         ...state,
         contacts,
       }
     case 'addEmail':
-      console.log('Email Added')
       contacts = [...state.contacts]
       contacts.forEach((contact, index) => {
         if (id === contact.id) {
@@ -244,7 +240,6 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
           })
         }
       })
-      console.log(contacts)
       return {
         ...state,
         contacts,
@@ -419,7 +414,6 @@ const AddLocation = ({ setAddL }) => {
 
   const phoneTypes = () => {
     if (error) {
-      console.log(error)
       return <Typography>Error</Typography>
     }
     if (loading) {
@@ -494,7 +488,6 @@ const AddLocation = ({ setAddL }) => {
 
   const contactTypes = () => {
     if (error) {
-      console.log(error)
       return <Typography>Error</Typography>
     }
     if (loading) {
