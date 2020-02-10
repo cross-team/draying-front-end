@@ -69,13 +69,11 @@ const PriceFields = ({
   }
 
   if (error) {
-    console.log(error)
     return <Typography>Error</Typography>
   }
 
   let fields
   if (data && data.quoteExtraStopPrices) {
-    console.log(data)
     fields = data.quoteExtraStopPrices.map(action => (
       <TextField
         className={classes.input}

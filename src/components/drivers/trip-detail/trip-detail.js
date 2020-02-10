@@ -198,7 +198,6 @@ const TripDetail = ({ width }) => {
   if (tripData && tripData.currentTrip) {
     trip = tripData.currentTrip
   }
-  console.log(trip)
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
 
