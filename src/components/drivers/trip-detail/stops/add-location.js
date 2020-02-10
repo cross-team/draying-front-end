@@ -79,6 +79,127 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const fieldReducer = (state, { type, field, value, id, subId }) => {
+  let contacts
+  let location
+  let subObjects
+  switch (type) {
+    case 'updateField':
+      return {
+        ...state,
+        [field]: value,
+      }
+    case 'updateContactFieldById':
+      contacts = state.contacts.map(contact => {
+        if (contact.id === id) {
+          return {
+            ...contact,
+            [field]: value,
+          }
+        }
+        return contact
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'updatePhoneFieldById':
+      contacts = state.contacts.map(contact => {
+        if (contact.id === id) {
+          subObjects = contact.phones.map(phone => {
+            if (phone.id === subId) {
+              return {
+                ...phone,
+                [field]: value,
+              }
+            }
+            return phone
+          })
+          return {
+            ...contact,
+            phones: subObjects,
+          }
+        }
+        return contact
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'updateEmailById':
+      contacts = state.contacts.map(contact => {
+        if (contact.id === id) {
+          subObjects = contact.emails.map(email => {
+            if (email.id === subId) {
+              return {
+                ...email,
+                email: value,
+              }
+            }
+            return email
+          })
+          return {
+            ...contact,
+            emails: subObjects,
+          }
+        }
+        return contact
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'addContact':
+      contacts = [...state.contacts]
+      contacts.push({
+        id: contacts.length,
+        name: '',
+        contactTypeId: '',
+        active: true,
+        phones: [{ id: 0, phone: '', phoneTypeId: '', active: true }],
+        emails: [{ id: 0, email: '', active: true }],
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'addPhone':
+      console.log('Phone Added')
+      contacts = [...state.contacts]
+      contacts[id].phones.push({
+        id: contacts[id].phones.length,
+        phone: '',
+        phoneTypeId: '',
+        active: true,
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'addEmail':
+      console.log('Email Added')
+      contacts = [...state.contacts]
+      contacts[id].emails.push({
+        id: contacts[id].emails.length,
+        email: '',
+        active: true,
+      })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'appendCoordinates':
+      location = { ...state.location }
+      location.coordinates = value
+      return {
+        ...state,
+        location,
+      }
+    default:
+      throw new Error(`Unhandled action: ${type}`)
+  }
+}
+
 const AddLocation = ({ setAddL }) => {
   const classes = useStyles()
   const { loading, error, data } = useQuery(GET_TYPES)
@@ -94,126 +215,6 @@ const AddLocation = ({ setAddL }) => {
     awaitRefetchQueries: true,
   })
 
-  const fieldReducer = (state, { type, field, value, id, subId }) => {
-    let contacts
-    let location
-    let subObjects
-    switch (type) {
-      case 'updateField':
-        return {
-          ...state,
-          [field]: value,
-        }
-      case 'updateContactFieldById':
-        contacts = state.contacts.map(contact => {
-          if (contact.id === id) {
-            return {
-              ...contact,
-              [field]: value,
-            }
-          }
-          return contact
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'updatePhoneFieldById':
-        contacts = state.contacts.map(contact => {
-          if (contact.id === id) {
-            subObjects = contact.phones.map(phone => {
-              if (phone.id === subId) {
-                return {
-                  ...phone,
-                  [field]: value,
-                }
-              }
-              return phone
-            })
-            return {
-              ...contact,
-              phones: subObjects,
-            }
-          }
-          return contact
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'updateEmailById':
-        contacts = state.contacts.map(contact => {
-          if (contact.id === id) {
-            subObjects = contact.emails.map(email => {
-              if (email.id === subId) {
-                return {
-                  ...email,
-                  email: value,
-                }
-              }
-              return email
-            })
-            return {
-              ...contact,
-              emails: subObjects,
-            }
-          }
-          return contact
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'addContact':
-        contacts = [...state.contacts]
-        contacts.push({
-          id: contacts.length,
-          name: '',
-          contactTypeId: '',
-          active: true,
-          phones: [{ id: 0, phone: '', phoneTypeId: '', active: true }],
-          emails: [{ id: 0, email: '', active: true }],
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'addPhone':
-        console.log('Phone Added')
-        contacts = [...state.contacts]
-        contacts[id].phones.push({
-          id: contacts[id].phones.length,
-          phone: '',
-          phoneTypeId: '',
-          active: true,
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'addEmail':
-        console.log('Email Added')
-        contacts = [...state.contacts]
-        contacts[id].emails.push({
-          id: contacts[id].emails.length,
-          email: '',
-          active: true,
-        })
-        return {
-          ...state,
-          contacts,
-        }
-      case 'appendCoordinates':
-        location = { ...state.location }
-        location.coordinates = value
-        return {
-          ...state,
-          location,
-        }
-      default:
-        throw new Error(`Unhandled action: ${type}`)
-    }
-  }
   const [fieldValues, dispatch] = React.useReducer(fieldReducer, {
     nickName: '',
     hoursBegin: '',
