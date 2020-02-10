@@ -19,6 +19,8 @@ import gql from 'graphql-tag'
 import PriceFields from './price-fields'
 import Loading from '../../../loading'
 
+import { Helmet } from 'react-helmet'
+
 export const GET_LOCATIONS = gql`
   query deliveryLocations {
     deliveryLocations {
@@ -69,7 +71,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
 
-  const [location, setLocation] = useState('create')
+  const [selectedLocation, setLocation] = useState('create')
   const [tripActions, setTripActions] = useState([])
   const [saving, setSaving] = useState(false)
 
@@ -100,7 +102,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
   }
 
   const handleSave = () => {
-    if (location === 'create') {
+    if (selectedLocation === 'create') {
       setAddL(true)
     } else {
       setSaving(true)
@@ -110,7 +112,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
             extraStops: [
               {
                 drayingId: +draying.id,
-                deliveryLocationId: location,
+                deliveryLocationId: selectedLocation,
               },
             ],
             tripActionPrices: tripActions,
@@ -122,6 +124,9 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
 
   return (
     <>
+      <Helmet>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwLTFeBJLrgR7zOb3zbBwRFVWOLZJO0Tw&libraries=places"></script>
+      </Helmet>
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
           <Grid
@@ -165,7 +170,7 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
             <FormControl className={classes.formControl} variant="outlined">
               <InputLabel ref={inputLabel}>Add Stop</InputLabel>
               <Select
-                value={location}
+                value={selectedLocation}
                 onChange={handleChange}
                 labelWidth={labelWidth}
               >
@@ -183,10 +188,10 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
                 )}
               </Select>
             </FormControl>
-            <Collapse in={typeof location === 'number'}>
+            <Collapse in={typeof selectedLocation === 'number'}>
               <PriceFields
                 drayingId={draying.id}
-                locationId={location}
+                locationId={selectedLocation}
                 tripActions={tripActions}
                 setTripActions={setTripActions}
                 handlePriceChange={handlePriceChange}

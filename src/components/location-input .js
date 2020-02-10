@@ -7,7 +7,6 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete'
-import { Helmet } from 'react-helmet'
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -39,9 +38,6 @@ const LocationInput = ({ updateLocation, appendCoordinates }) => {
 
   return (
     <>
-      <Helmet>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwLTFeBJLrgR7zOb3zbBwRFVWOLZJO0Tw&libraries=places"></script>
-      </Helmet>
       <PlacesAutocomplete
         value={address}
         onChange={handleChange}
