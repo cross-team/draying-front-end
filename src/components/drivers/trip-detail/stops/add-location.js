@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
+import CloseIcon from '@material-ui/icons/Close'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faTimes } from '@fortawesome/pro-light-svg-icons/'
 import { useQuery, useMutation } from '@apollo/react-hooks'
@@ -72,10 +72,20 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
-  contactContainer: {
+  contactCard: {
     marginTop: theme.spacing(1),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
+  },
+  subCard: {
+    marginTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
+  },
+  addContact: {
+    marginTop: theme.spacing(2),
+    width: '100%',
   },
 }))
 
@@ -83,6 +93,7 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
   let contacts
   let location
   let subObjects
+  let newId
   switch (type) {
     case 'updateField':
       return {
@@ -177,12 +188,31 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
     case 'addPhone':
       console.log('Phone Added')
       contacts = [...state.contacts]
-      contacts[id].phones.push({
-        id: contacts[id].phones.length,
-        phone: '',
-        phoneTypeId: '',
-        active: true,
+      contacts.forEach((contact, index) => {
+        if (id === contact.id) {
+          newId = contact.phones[contact.phones.length - 1].id + 1
+          contact.phones.push({
+            id: newId,
+            phone: '',
+            phoneTypeId: '',
+            active: true,
+          })
+        }
       })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'removePhone':
+      contacts = [...state.contacts]
+      contacts.forEach(contact => {
+        if (id === contact.id) {
+          contact.phones.forEach((phone, index) => {
+            subId === phone.id && contact.phones.splice(index, 1)
+          })
+        }
+      })
+      console.log(contacts)
       return {
         ...state,
         contacts,
@@ -190,11 +220,30 @@ const fieldReducer = (state, { type, field, value, id, subId }) => {
     case 'addEmail':
       console.log('Email Added')
       contacts = [...state.contacts]
-      contacts[id].emails.push({
-        id: contacts[id].emails.length,
-        email: '',
-        active: true,
+      contacts.forEach((contact, index) => {
+        if (id === contact.id) {
+          newId = contact.emails[contact.emails.length - 1].id + 1
+          contact.emails.push({
+            id: newId,
+            email: '',
+            active: true,
+          })
+        }
       })
+      return {
+        ...state,
+        contacts,
+      }
+    case 'removeEmail':
+      contacts = [...state.contacts]
+      contacts.forEach(contact => {
+        if (id === contact.id) {
+          contact.emails.forEach((email, index) => {
+            subId === email.id && contact.emails.splice(index, 1)
+          })
+        }
+      })
+      console.log(contacts)
       return {
         ...state,
         contacts,
@@ -276,8 +325,16 @@ const AddLocation = ({ setAddL }) => {
     dispatch({ type: 'addPhone', id: id })
   }
 
+  const removePhone = (id, subId) => {
+    dispatch({ type: 'removePhone', id: id, subId: subId })
+  }
+
   const addEmail = id => {
     dispatch({ type: 'addEmail', id: id })
+  }
+
+  const removeEmail = (id, subId) => {
+    dispatch({ type: 'removeEmail', id: id, subId: subId })
   }
 
   const appendCoordinates = value => {
@@ -374,45 +431,63 @@ const AddLocation = ({ setAddL }) => {
   }
 
   const getPhones = id => {
-    let phones = null
-    if (fieldValues.contacts[id]) {
-      phones = fieldValues.contacts[id].phones.map(phone => (
-        <>
-          <TextField
-            className={classes.input}
-            variant="outlined"
-            label="Phone"
-            value={phone.phone}
-            onChange={updatePhoneFieldById('phone', id, phone.id)}
-          />
-          <FormControl className={classes.input} variant="outlined">
-            <InputLabel>Phone Type</InputLabel>
-            <Select
-              value={phone.phoneTypeId}
-              onChange={updatePhoneFieldById('phoneTypeId', id, phone.id)}
-            >
-              {phoneTypes()}
-            </Select>
-          </FormControl>
-        </>
-      ))
-    }
+    let phones
+    fieldValues.contacts.forEach(contact => {
+      if (contact.id === id) {
+        phones = contact.phones.map(phone => (
+          <>
+            <TextField
+              className={classes.input}
+              variant="outlined"
+              label="Phone"
+              value={phone.phone}
+              onChange={updatePhoneFieldById('phone', id, phone.id)}
+              InputProps={{
+                endAdornment: contact.phones.length > 1 && (
+                  <IconButton onClick={() => removePhone(contact.id, phone.id)}>
+                    <CloseIcon />
+                  </IconButton>
+                ),
+              }}
+            />
+            <FormControl className={classes.input} variant="outlined">
+              <InputLabel>Phone Type</InputLabel>
+              <Select
+                value={phone.phoneTypeId}
+                onChange={updatePhoneFieldById('phoneTypeId', id, phone.id)}
+              >
+                {phoneTypes()}
+              </Select>
+            </FormControl>
+          </>
+        ))
+      }
+    })
     return phones
   }
 
   const getEmails = id => {
-    let emails = null
-    if (fieldValues.contacts[id]) {
-      emails = fieldValues.contacts[id].emails.map(email => (
-        <TextField
-          className={classes.input}
-          variant="outlined"
-          label="Email"
-          value={email.email}
-          onChange={updateEmailById(id, email.id)}
-        />
-      ))
-    }
+    let emails
+    fieldValues.contacts.forEach(contact => {
+      if (contact.id === id) {
+        emails = contact.emails.map(email => (
+          <TextField
+            className={classes.input}
+            variant="outlined"
+            label="Email"
+            value={email.email}
+            onChange={updateEmailById(id, email.id)}
+            InputProps={{
+              endAdornment: contact.emails.length > 1 && (
+                <IconButton onClick={() => removeEmail(contact.id, email.id)}>
+                  <CloseIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        ))
+      }
+    })
     return emails
   }
 
@@ -431,7 +506,7 @@ const AddLocation = ({ setAddL }) => {
   }
 
   const contacts = fieldValues.contacts.map(contact => (
-    <Card className={classes.contactContainer} variant="outlined">
+    <Card className={classes.contactCard} variant="outlined">
       <CardHeader
         action={
           fieldValues.contacts.length > 1 && (
@@ -623,7 +698,12 @@ const AddLocation = ({ setAddL }) => {
           onChange={updateField('suite')}
         />
         {contacts}
-        <Button variant="contained" color="primary" onClick={addContact}>
+        <Button
+          className={classes.addContact}
+          variant="contained"
+          color="primary"
+          onClick={addContact}
+        >
           Add Contact
         </Button>
       </Grid>
