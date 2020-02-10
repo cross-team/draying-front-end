@@ -1,12 +1,15 @@
 import React from 'react'
+import { Link } from 'gatsby'
 
-import Layout from '../components/layout'
+const NotFoundPage = () => {
+  return (
+    <>
+      <h1>NOT FOUND</h1>
+      <p>Redirecting</p>
 
-const NotFoundPage = () => (
-  <Layout>
-    <h1>NOT FOUND</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
-  </Layout>
-)
+      <Link to="/">Go To Home -></Link>
+    </>
+  )
+}
 
 export default NotFoundPage

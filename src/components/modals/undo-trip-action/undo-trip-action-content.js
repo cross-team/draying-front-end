@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import React, { useState } from 'react'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -10,10 +10,10 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Collapse from '@material-ui/core/Collapse'
 
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Loading from '../../loading'
 
 const useStyles = makeStyles({
   title: {
@@ -39,12 +39,26 @@ const UNDO_TRIP_MUTATION = gql`
   }
 `
 
+const CAN_UNDO_TRIP_QUERY = gql`
+  query CanUndo($drayingId: Int) {
+    drayingGetUndoTripActionMessage(drayingId: $drayingId) {
+      driverId
+      tripStatusId
+      drayingId
+      tripMessages {
+        id
+        body
+      }
+    }
+  }
+`
+
 export const CLOSE_PANEL = gql`
-  mutation setColumnState(
+  mutation closePanel(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
-    $selectedTrip: ID
+    $selectedTrip: SelectedTripInput
   ) {
     setColumnState(
       hideLeft: $hideLeft
@@ -57,7 +71,9 @@ export const CLOSE_PANEL = gql`
     }
 
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `
@@ -65,20 +81,19 @@ export const CLOSE_PANEL = gql`
 export default function UndoTripActionContent({
   handleClose: closeModal,
   drayingId,
-  tripMessages,
 }) {
   const classes = useStyles()
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(true)
-  useEffect(() => {
-    if (tripMessages && tripMessages.length > 0) {
-      setBody(tripMessages[0].body)
-    }
-  }, [tripMessages])
 
   const [closeTripPanel] = useMutation(CLOSE_PANEL)
   const theme = useTheme()
   const isBigScreen = useMediaQuery(theme.breakpoints.up('sm'))
+
+  const { loading, error, data } = useQuery(CAN_UNDO_TRIP_QUERY, {
+    variables: { drayingId: +drayingId },
+    fetchPolicy: 'cache-and-network',
+  })
 
   const closePanel = () => {
     closeModal()
@@ -106,16 +121,34 @@ export default function UndoTripActionContent({
     callUndoTripAction,
     { data: undoResponse, loading: saving, error: errorSaving },
   ] = useMutation(UNDO_TRIP_MUTATION, {
-    variables: { drayingId },
+    variables: { drayingId: +drayingId },
     refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
     awaitRefetchQueries: true,
     onCompleted: () => closePanel(),
   })
 
+  if (loading && !data) {
+    return (
+      <Typography>
+        <Loading />
+      </Typography>
+    )
+  }
+
+  if (error) {
+    return <Typography color="error">Error</Typography>
+  }
+  if (
+    data.drayingGetUndoTripActionMessage &&
+    !data.drayingGetUndoTripActionMessage.tripMessages
+  ) {
+    return null
+  }
+
   if (saving && !undoResponse) {
     return (
       <CardContent>
-        <CircularProgress />
+        <Loading />
       </CardContent>
     )
   }
@@ -179,8 +212,10 @@ export default function UndoTripActionContent({
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           Are you sure you want to undo the previous trip action?
         </Typography>
-        {tripMessages.length > 0 ? (
-          tripMessages.map(message => <SendMessagePanel message={message} />)
+        {data.drayingGetUndoTripActionMessage.tripMessages.length > 0 ? (
+          data.drayingGetUndoTripActionMessage.tripMessages.map(message => (
+            <SendMessagePanel key={message.id} message={message} />
+          ))
         ) : (
           <SendMessagePanel message={{ body: '' }} />
         )}
@@ -198,7 +233,7 @@ export default function UndoTripActionContent({
               Success!
             </Typography>
           )}
-          <Button size="small" color="secondary" onClick={closePanel}>
+          <Button size="small" color="secondary" onClick={closeModal}>
             {undoResponse ? 'Close' : 'Cancel'}
           </Button>
         </CardActions>

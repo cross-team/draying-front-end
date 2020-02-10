@@ -1,19 +1,19 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import {
-  withWidth,
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-} from '@material-ui/core/'
+import withWidth from '@material-ui/core/withWidth'
+import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons/'
 import OrderPanel from './order-panel'
 import ContainerPanel from './container-panel'
 import TripPanel from './trip-panel'
 import StopsPanel from './stops/stops-panel'
+import Grid from '@material-ui/core/Grid'
+import Slide from '@material-ui/core/Slide'
 
 export const GET_DISPATCH_STATE = gql`
   query getDispatchState {
@@ -26,7 +26,7 @@ export const GET_DISPATCH_STATE = gql`
 `
 
 export const GET_CURRENT_TRIP = gql`
-  query getCurrentTrip($tripId: Int) {
+  query getCurrentTrip($tripId: Int!) {
     currentTrip(tripId: $tripId) @client {
       id
       __typename
@@ -53,9 +53,9 @@ export const GET_CURRENT_TRIP = gql`
         name
       }
       status {
+        id
         __typename
         name
-        id
       }
       draying {
         __typename
@@ -135,13 +135,21 @@ export const GET_CURRENT_TRIP = gql`
           __typename
           id
         }
+        trips {
+          id
+          __typename
+          status {
+            id
+            __typename
+          }
+        }
       }
     }
   }
 `
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation closeTripDetail(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -159,9 +167,11 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedTrip: ID) {
+  mutation resetSelectedTrip($selectedTrip: SelectedTripInput) {
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `
@@ -212,25 +222,33 @@ const TripDetail = ({ width }) => {
     }
   }
 
+  const showRightColumn = typeof trip !== 'undefined'
+
   return (
     <>
-      {trip && trip.draying && (
-        <>
-          <AppBar position="sticky">
-            <Toolbar>
-              <IconButton onClick={handleClose}>
-                <FontAwesomeIcon icon={faTimes} />
-              </IconButton>
-              <Typography>{`Trip ${selectedTripId &&
-                selectedTripId} Details`}</Typography>
-            </Toolbar>
-          </AppBar>
-          <OrderPanel draying={trip.draying} />
-          <ContainerPanel draying={trip.draying} />
-          <StopsPanel draying={trip.draying} />
-          <TripPanel trip={trip} />
-        </>
-      )}
+      <Slide direction="left" in={showRightColumn}>
+        <Grid>
+          <>
+            <AppBar position="sticky">
+              <Toolbar>
+                <IconButton onClick={handleClose}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </IconButton>
+                <Typography>{`Trip ${selectedTripId &&
+                  selectedTripId} Details`}</Typography>
+              </Toolbar>
+            </AppBar>
+            {trip && (
+              <>
+                <OrderPanel draying={trip.draying} />
+                <ContainerPanel draying={trip.draying} />
+                <StopsPanel draying={trip.draying} />
+                <TripPanel trip={trip} />
+              </>
+            )}
+          </>
+        </Grid>
+      </Slide>
     </>
   )
 }

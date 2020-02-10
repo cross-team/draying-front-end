@@ -10,6 +10,7 @@ const StopsPanel = ({ draying }) => {
   const [addS, setAddS] = useState(false)
   const [addL, setAddL] = useState(false)
   const [isTerminal, setIsTerminal] = useState(false)
+  const [isDL, setIsDL] = useState(false)
 
   const content = () => {
     if (addL) {
@@ -23,7 +24,9 @@ const StopsPanel = ({ draying }) => {
           stopLocation={edit}
           setEdit={setEdit}
           isTerminal={isTerminal}
+          isDL={isDL}
           setIsTerminal={setIsTerminal}
+          setIsDL={setIsDL}
           drayingId={draying.id}
         />
       )
@@ -34,6 +37,7 @@ const StopsPanel = ({ draying }) => {
           setEdit={setEdit}
           setAddS={setAddS}
           setIsTerminal={setIsTerminal}
+          setIsDL={setIsDL}
           setSelectedStop={setSelectedStop}
         />
       )

@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation showTripsPanel(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -68,15 +68,17 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedDriver: SelectedDriver) {
+  mutation setDispatchState($selectedDriver: SelectedDriverInput) {
     setDispatchState(selectedDriver: $selectedDriver) @client {
-      selectedDriver
+      selectedDriver {
+        id
+      }
     }
   }
 `
 
 export const GET_DISPATCH_STATE = gql`
-  query getDispatchState {
+  query getSelectedDriverId {
     dispatchState @client {
       selectedDriver {
         id

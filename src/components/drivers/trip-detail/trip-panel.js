@@ -83,7 +83,7 @@ const TripPanel = ({ trip }) => {
       <AppBar position="static">
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Trip</Typography>
-          <EditTripMenu drayingId={parseInt(trip.draying.id)} />
+          <EditTripMenu drayingId={trip.draying.id} tripId={trip.id} />
         </Toolbar>
       </AppBar>
       <div className={classes.details}>

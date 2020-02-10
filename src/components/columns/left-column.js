@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const GET_COLUMN_STATE = gql`
-  query getColumnState {
+  query getLeftColumnState {
     columnState @client {
       leftHidden
     }
@@ -31,7 +31,15 @@ const LeftColumn = ({ children }) => {
     },
   } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid item xs={12} md={4} hidden={leftHidden} className={classes.item}>
+    <Grid
+      item
+      xs={12}
+      md={4}
+      lg={3}
+      xl={2}
+      hidden={leftHidden}
+      className={classes.item}
+    >
       <Paper className={classes.column}>{children}</Paper>
     </Grid>
   )
