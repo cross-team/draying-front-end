@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faChevronLeft } from '@fortawesome/pro-light-svg-icons/'
 import AllAppointments from './all-appointments'
+import AddOrEdit from './add-or-edit'
 
 const useStyles = makeStyles(theme => ({
   headerText: {
@@ -74,7 +75,12 @@ const AppointmentsPanel = ({ draying }) => {
         </Toolbar>
       </AppBar>
       <Grid className={classes.details}>
-        <AllAppointments draying={draying} setView={setView} />
+        {view === 'all' && (
+          <AllAppointments draying={draying} setView={setView} />
+        )}
+        {(view === 'add' || view === 'edit') && (
+          <AddOrEdit draying={draying} view={view} />
+        )}
       </Grid>
     </>
   )
