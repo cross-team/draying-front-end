@@ -61,11 +61,7 @@ const PriceFields = ({
   }, [data, drayingId, setTripActions])
 
   if (loading) {
-    return (
-      <Typography>
-        <Loading />
-      </Typography>
-    )
+    return <Loading />
   }
 
   if (error) {
@@ -74,9 +70,10 @@ const PriceFields = ({
 
   let fields
   if (data && data.quoteExtraStopPrices) {
-    fields = data.quoteExtraStopPrices.map(action => (
+    fields = data.quoteExtraStopPrices.map((action, index) => (
       <TextField
         className={classes.input}
+        key={index}
         variant="outlined"
         label={action.name}
         defaultValue={action.suggestedPrice}

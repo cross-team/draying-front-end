@@ -68,6 +68,7 @@ const AllStops = ({
   const extraStops = draying.extraStops.map((stop, index) => (
     <TextField
       className={classes.input}
+      key={index}
       variant="outlined"
       label={`Stop ${index + 2} `}
       value={stop.deliveryLocation.nickName}
