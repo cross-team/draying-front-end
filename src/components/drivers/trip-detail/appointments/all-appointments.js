@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 const AllAppointments = ({ draying }) => {
   const classes = useStyles()
-  const [saving, setSaving] = useState(false)
+  const saving = false
   const appointments = draying.appointments.map((appointment, index) => {
     const date = new Date(
       `${appointment.appointmentDate.substring(0, 10)}${
