@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -94,6 +94,12 @@ export default function UndoTripActionContent({
     variables: { drayingId: +drayingId },
     fetchPolicy: 'cache-and-network',
   })
+
+  useEffect(() => {
+    if (data) {
+      setBody(data.drayingGetUndoTripActionMessage.tripMessages[0].body)
+    }
+  }, [data])
 
   const closePanel = () => {
     closeModal()
@@ -195,7 +201,6 @@ export default function UndoTripActionContent({
               <TextareaAutosize
                 aria-label="Send message text."
                 rowsMin={3}
-                placeholder={message.body}
                 onChange={e => setBody(e.target.value)}
                 value={body}
               />

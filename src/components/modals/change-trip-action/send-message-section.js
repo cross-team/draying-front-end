@@ -293,7 +293,7 @@ export default function SendMessageSection({
         <TextField
           label="End Locations"
           // className={classes.textField}
-          value={selectedEndLocationTypeId}
+          value={selectedEndLocationTypeId || ''}
           select
           onChange={e => setSelectedEndLocationTypeId(e.target.value)}
           margin="normal"

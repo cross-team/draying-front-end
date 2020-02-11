@@ -230,7 +230,7 @@ export default function ChangeTripActionContent({
         <TextField
           label="Trip Action"
           // className={classes.textField}
-          value={selectedTripActionId}
+          value={selectedTripActionId || ''}
           select
           onChange={e => setSelectedTripActionId(e.target.value)}
           margin="normal"
@@ -258,7 +258,7 @@ export default function ChangeTripActionContent({
         <TextField
           label="Driver"
           // className={classes.textField}
-          value={selectedDriverId}
+          value={selectedDriverId || ''}
           select
           onChange={e => setSelectedDriverId(e.target.value)}
           margin="normal"
@@ -286,7 +286,7 @@ export default function ChangeTripActionContent({
         <TextField
           label="Start Location"
           // className={classes.textField}
-          value={selectedStartLocationTypeId}
+          value={selectedStartLocationTypeId || ''}
           select
           onChange={e => setSelectedStartLocationTypeId(e.target.value)}
           margin="normal"
