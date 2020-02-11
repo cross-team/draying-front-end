@@ -16,14 +16,12 @@ import {
   drayingIsPreDispatched,
   // getClientDestinations,
 } from '../../../utils/draying-helpers'
-import {
-  tripIsCompletable,
-  tripHasSequenceAction,
-} from '../../../utils/trip-helpers'
+import { tripHasSequenceAction } from '../../../utils/trip-helpers'
 import UpdateTripButton from './update-trip-button'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Loading from '../../loading'
+// import CreateTripButton from './create-trip-button'
 
 const GET_NEXT_DESTINATIONS = gql`
   query getNextDestination(
@@ -40,6 +38,9 @@ const GET_NEXT_DESTINATIONS = gql`
         id
         hasSequenceAction
         name
+        loadType {
+          id
+        }
       }
     }
   }
@@ -53,11 +54,12 @@ export default function SendMessageSection({
   drayingTrip,
   draying,
   selectedDriverId,
+  isCompletable,
 }) {
   const [body, setBody] = useState('')
   const [sendMessage, setSendMessage] = useState(false)
-  const [selectedEndLocationTypeId, setSelectedEndLocationTypeId] = useState()
-
+  const [selectedEndLocationTypeId, setSelectedEndLocationTypeId] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const { loading, error, data } = useQuery(GET_NEXT_DESTINATIONS, {
     variables: {
       drayingId: +drayingId,
@@ -214,46 +216,53 @@ export default function SendMessageSection({
   }
 
   const { drayingTripDestinations } = data
-
+  const hasTripToUpdate =
+    typeof drayingTrip !== 'undefined' && drayingTrip.id !== '0'
   const tripInput = {
-    tripId: +drayingTrip.id,
-    drayingId: +selectedDriverId,
+    ...(hasTripToUpdate && { tripId: +drayingTrip.id }),
+    drayingId: +drayingId,
     tripActionId: +selectedTripActionId,
-    tripStatusId: +drayingTrip.status.id,
-    driverId: +drayingTrip.driver.id,
-    tripActionLocationId: +drayingTrip.tripActionLocation.id,
+    ...(hasTripToUpdate && { tripStatusId: +drayingTrip.status.id }),
+    driverId: +selectedDriverId,
+    ...(hasTripToUpdate && {
+      tripActionLocationId: +drayingTrip.tripActionLocation.id,
+    }),
     startLocationTypeId: +selectedStartLocationTypeId,
     endLocationTypeId: +selectedEndLocationTypeId,
   }
 
-  const hasTripToUpdate = typeof drayingTrip !== 'undefined'
+  const isPreDispatched = drayingIsPreDispatched(draying)
+  // const isCompletable = tripIsCompletable(drayingTrip)
 
-  const showPredispatchCheckbox =
-    drayingIsPreDispatched(draying) && !tripIsCompletable(drayingTrip)
+  const showPredispatchCheckbox = isPreDispatched && !isCompletable
 
   const showPredispatchButton =
-    drayingIsPreDispatched(draying) && !tripIsCompletable(drayingTrip)
+    isPreDispatched && hasTripToUpdate && !isCompletable
 
-  const showDispatchButton =
-    drayingIsPreDispatched(draying) &&
-    hasTripToUpdate &&
-    tripIsCompletable(drayingTrip)
+  const showDispatchButton = isPreDispatched && isCompletable
 
-  const showSaveButton =
-    !drayingIsPreDispatched(draying) && !tripIsCompletable(drayingTrip)
+  const showSaveButton = !isPreDispatched && !isCompletable
+
+  const hasNextTripActionLocations =
+    drayingTrip &&
+    drayingTrip.tripActionLocation !== null &&
+    drayingTripDestinations.tripActionLocations.length > 0
 
   const showCompleteButton =
-    !drayingIsPreDispatched(draying) &&
-    tripIsCompletable(drayingTrip) &&
+    !isPreDispatched &&
+    isCompletable &&
     hasTripToUpdate &&
+    hasNextTripActionLocations &&
     !tripHasSequenceAction(
       drayingTrip,
       drayingTripDestinations.tripActionLocations,
     )
 
   const showNextActionButton =
-    !drayingIsPreDispatched(draying) &&
+    !isPreDispatched &&
+    isCompletable &&
     hasTripToUpdate &&
+    hasNextTripActionLocations &&
     tripHasSequenceAction(
       drayingTrip,
       drayingTripDestinations.tripActionLocations,
@@ -283,7 +292,7 @@ export default function SendMessageSection({
   }
 
   const EndLocationDropdown = ({ endLocations, onChange }) => {
-    if (endLocations && endLocations.length > 0) {
+    if (endLocations && endLocations.length > 1) {
       const menuItems = endLocations.map(item => (
         <MenuItem key={item.id} value={item.id}>
           {item.name}
@@ -293,7 +302,7 @@ export default function SendMessageSection({
         <TextField
           label="End Locations"
           // className={classes.textField}
-          value={selectedEndLocationTypeId || ''}
+          value={selectedEndLocationTypeId}
           select
           onChange={e => setSelectedEndLocationTypeId(e.target.value)}
           margin="normal"
@@ -308,6 +317,12 @@ export default function SendMessageSection({
       )
     }
     return null
+  }
+
+  const getSelectedEndLocationLoadTypeId = () => {
+    drayingTripDestinations.tripActionLocations.filter(
+      loc => loc.id === selectedEndLocationTypeId,
+    )
   }
 
   return (
@@ -342,39 +357,46 @@ export default function SendMessageSection({
             <UpdateTripButton
               handleClose={handleClose}
               buttonText={
-                tripIsCompletable(drayingTrip)
-                  ? 'Update Predispatch'
-                  : 'Predispatch'
+                hasTripToUpdate ? 'Update Predispatch' : 'Predispatch'
               }
               tripInput={tripInput}
+              setErrorMessage={setErrorMessage}
             />
           )}
           {showDispatchButton && (
             <UpdateTripButton
               handleClose={handleClose}
               buttonText="Dispatch"
-              tripInput={tripInput}
+              tripInput={{ ...tripInput, tripStatusId: 5 }}
+              setErrorMessage={setErrorMessage}
             />
           )}
           {showSaveButton && (
             <UpdateTripButton
               handleClose={handleClose}
-              buttonText="Save"
+              buttonText={hasTripToUpdate ? 'Update' : 'Create'}
               tripInput={tripInput}
+              setErrorMessage={setErrorMessage}
             />
           )}
           {showCompleteButton && (
             <UpdateTripButton
               handleClose={handleClose}
               buttonText="Complete"
-              tripInput={tripInput}
+              tripInput={{ ...tripInput, tripStatusId: 6 }}
+              setErrorMessage={setErrorMessage}
             />
           )}
 
           {showNextActionButton && (
             <UpdateTripButton
               handleClose={handleClose}
-              buttonText="Next Action"
+              buttonText={
+                getSelectedEndLocationLoadTypeId() &&
+                getSelectedEndLocationLoadTypeId().loadType.id === '1'
+                  ? 'Unloaded'
+                  : 'Loaded'
+              }
               tripInput={tripInput}
             />
           )}
@@ -383,6 +405,8 @@ export default function SendMessageSection({
         <Button size="small" color="secondary" onClick={handleClose}>
           {'Cancel'}
         </Button>
+
+        <Typography color="error">{errorMessage}</Typography>
       </CardActions>
     </>
   )

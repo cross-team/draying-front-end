@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import { Loading } from '../components'
 
 const IS_LOGGED_IN = gql`
-  query IsUserLoggedIn {
+  query IndexIsUserLoggedIn {
     isLoggedIn @client
   }
 `

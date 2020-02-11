@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Menu, MenuItem, IconButton, makeStyles } from '@material-ui/core/'
+import { Menu, IconButton, makeStyles } from '@material-ui/core/'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisV } from '@fortawesome/pro-light-svg-icons/'
 import UndoTripActionPopUp from '../modals/undo-trip-action'
 import ChangeTripActionPopUp from '../modals/change-trip-action'
+import LostTripPopUp from '../modals/lost-trip'
 
 const useStyles = makeStyles(theme => ({
   headerText: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const EditTripMenu = ({ drayingId, tripId }) => {
+const EditTripMenu = ({ drayingId, tripId, trip }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -31,8 +32,12 @@ const EditTripMenu = ({ drayingId, tripId }) => {
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <UndoTripActionPopUp drayingId={drayingId} />
-        <ChangeTripActionPopUp drayingId={drayingId} tripId={tripId} />
-        <MenuItem onClick={handleClose}>Lost Trip</MenuItem>
+        {trip.status.id !== '6' && (
+          <ChangeTripActionPopUp drayingId={drayingId} tripId={tripId} />
+        )}
+        {trip.status.id === '5' && (
+          <LostTripPopUp tripId={tripId}></LostTripPopUp>
+        )}
       </Menu>
     </>
   )

@@ -4,12 +4,24 @@ import PopUp from '../../common/pop-up'
 import ChangeTripActionContent from './change-trip-action-content'
 
 const ChangeTripActionPopUp = React.forwardRef(
-  ({ OpenPopUpButton, drayingId, tripId }, ref) => {
+  (
+    { drayingId, tripId, className, Component, buttonText, isCompletable },
+    ref,
+  ) => {
     const OpenChangeTripActionButton = ({ onClick }) => (
-      <MenuItem ref={ref} onClick={onClick}>
-        Change Trip Action
-      </MenuItem>
+      <>
+        {Component ? (
+          <Component ref={ref} onClick={onClick} className={className}>
+            {buttonText || 'Change Trip Action'}
+          </Component>
+        ) : (
+          <MenuItem ref={ref} onClick={onClick} className={className}>
+            Change Trip Action
+          </MenuItem>
+        )}
+      </>
     )
+
     return (
       <>
         <PopUp ActionButton={OpenChangeTripActionButton}>
@@ -19,6 +31,7 @@ const ChangeTripActionPopUp = React.forwardRef(
                 handleClose={handleClose}
                 drayingId={drayingId}
                 tripId={tripId}
+                isCompletable={isCompletable}
               />
             )
           }}
