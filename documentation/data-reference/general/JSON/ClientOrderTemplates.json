@@ -1,0 +1,21 @@
+{
+  "status": true,
+  "data": [
+    {
+      "ClientOrderTemplateId": 1,
+      "Name": "Capacity Only",
+      "Active": true
+    },
+    {
+      "ClientOrderTemplateId": 2,
+      "Name": "Capacity with fixed price",
+      "Active": true
+    },
+    {
+      "ClientOrderTemplateId": 3,
+      "Name": "Capacity with dinamic price",
+      "Active": true
+    }
+  ],
+  "message": ""
+}

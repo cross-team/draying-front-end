@@ -1,0 +1,121 @@
+{
+  "status": true,
+  "data": {
+    "places": [
+      {
+        "DeliveryPlaceId": 12,
+        "CompanyName": "CIF",
+        "Description": "",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-03-16T15:29:24.72",
+        "ModifiedOn": "2019-03-16T15:29:24.72",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 1,
+        "CompanyName": "M&S Cargo",
+        "Description": "description",
+        "Phone": "7865992124",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-01-05T23:58:27.69",
+        "ModifiedOn": "2019-01-25T15:08:45.31",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 9,
+        "CompanyName": "nueva en orden",
+        "Description": "nueva en orden",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-03-01T21:34:40.573",
+        "ModifiedOn": "2019-03-01T21:34:40.573",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 11,
+        "CompanyName": "place 3",
+        "Description": "place 3",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-03-01T21:42:41.787",
+        "ModifiedOn": "2019-03-01T21:42:41.787",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 10,
+        "CompanyName": "place in order 2",
+        "Description": "place in order 2",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-03-01T21:37:32.503",
+        "ModifiedOn": "2019-03-01T21:37:32.503",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 3,
+        "CompanyName": "Raleigh Metal",
+        "Description": "",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-01-25T15:13:29.597",
+        "ModifiedOn": "2019-01-25T15:13:29.597",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 13,
+        "CompanyName": "VINCENT INTERNATIONAL",
+        "Description": "",
+        "Phone": "",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-03-29T20:09:25.003",
+        "ModifiedOn": "2019-03-29T20:09:25.003",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      },
+      {
+        "DeliveryPlaceId": 4,
+        "CompanyName": "WeWork",
+        "Description": "",
+        "Phone": "5555555555",
+        "DeliveryTypeId": 1,
+        "DeliveryTypeName": "Business",
+        "Active": true,
+        "CreatedOn": "2019-01-29T19:49:11.797",
+        "ModifiedOn": "2019-01-29T19:49:11.797",
+        "DeliveryLocations": null,
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": []
+      }
+    ],
+    "count": 8
+  },
+  "message": ""
+}

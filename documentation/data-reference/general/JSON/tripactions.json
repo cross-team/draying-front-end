@@ -1,0 +1,120 @@
+{
+  "status": true,
+  "data": [
+    {
+      "TripActionId": 1,
+      "Name": "Pre-Pull",
+      "ShortName": "PP",
+      "Active": true
+    },
+    {
+      "TripActionId": 2,
+      "Name": "Full to Yard",
+      "ShortName": "FY",
+      "Active": true
+    },
+    {
+      "TripActionId": 3,
+      "Name": "Empty to Yard",
+      "ShortName": "EY",
+      "Active": true
+    },
+    {
+      "TripActionId": 4,
+      "Name": "Live Load",
+      "ShortName": "Live L",
+      "Active": true
+    },
+    {
+      "TripActionId": 5,
+      "Name": "Live Unload",
+      "ShortName": "Live U",
+      "Active": true
+    },
+    {
+      "TripActionId": 6,
+      "Name": "Drop",
+      "ShortName": "Drop",
+      "Active": true
+    },
+    {
+      "TripActionId": 7,
+      "Name": "Yard Stop",
+      "ShortName": "YS",
+      "Active": true
+    },
+    {
+      "TripActionId": 8,
+      "Name": "Return to Terminal",
+      "ShortName": "RT",
+      "Active": true
+    },
+    {
+      "TripActionId": 9,
+      "Name": "Return to Depot",
+      "ShortName": "RD",
+      "Active": true
+    },
+    {
+      "TripActionId": 10,
+      "Name": "Drop Extra Stop",
+      "ShortName": "EXD",
+      "Active": true
+    },
+    {
+      "TripActionId": 11,
+      "Name": "Live Extra Stop",
+      "ShortName": "EXL",
+      "Active": true
+    },
+    {
+      "TripActionId": 12,
+      "Name": "Container to Yard",
+      "ShortName": "CTY",
+      "Active": true
+    },
+    {
+      "TripActionId": 13,
+      "Name": "Skip",
+      "ShortName": "SK",
+      "Active": true
+    },
+    {
+      "TripActionId": 14,
+      "Name": "Street Turn",
+      "ShortName": "ST",
+      "Active": true
+    },
+    {
+      "TripActionId": 15,
+      "Name": "Pick At Client",
+      "ShortName": "PK",
+      "Active": true
+    },
+    {
+      "TripActionId": 16,
+      "Name": "Pick And Return",
+      "ShortName": "P&R",
+      "Active": true
+    },
+    {
+      "TripActionId": 17,
+      "Name": "Return From Client",
+      "ShortName": "RfC",
+      "Active": true
+    },
+    {
+      "TripActionId": 18,
+      "Name": "Drop From Terminal",
+      "ShortName": "DfT",
+      "Active": true
+    },
+    {
+      "TripActionId": 19,
+      "Name": "Yard to Client",
+      "ShortName": "YtC",
+      "Active": true
+    }
+  ],
+  "message": ""
+}

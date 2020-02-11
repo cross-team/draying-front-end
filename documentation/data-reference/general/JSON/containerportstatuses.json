@@ -1,0 +1,48 @@
+{
+  "status": true,
+  "data": [
+    {
+      "ContainerPortStatusId": 1,
+      "Name": "On The Sea",
+      "ShortName": "OS",
+      "Order": 5
+    },
+    {
+      "ContainerPortStatusId": 2,
+      "Name": "Available",
+      "ShortName": "AV",
+      "Order": 2
+    },
+    {
+      "ContainerPortStatusId": 3,
+      "Name": "Not released ",
+      "ShortName": "NR",
+      "Order": 3
+    },
+    {
+      "ContainerPortStatusId": 4,
+      "Name": "In Vessel",
+      "ShortName": "IV",
+      "Order": 4
+    },
+    {
+      "ContainerPortStatusId": 5,
+      "Name": "Out of Port",
+      "ShortName": "OP",
+      "Order": 1
+    },
+    {
+      "ContainerPortStatusId": 6,
+      "Name": "Street Trun",
+      "ShortName": "ST",
+      "Order": 1
+    },
+    {
+      "ContainerPortStatusId": 7,
+      "Name": "Returned",
+      "ShortName": "RT",
+      "Order": 1
+    }
+  ],
+  "message": ""
+}
