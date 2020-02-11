@@ -1,0 +1,78 @@
+{
+  "status": true,
+  "data": [
+    {
+      "DrayingActionId": 1,
+      "Name": "Pick Empty",
+      "Active": true,
+      "Time": 15,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 2,
+      "Name": "Pick Loaded",
+      "Active": true,
+      "Time": 15,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 3,
+      "Name": "Drop Empty",
+      "Active": true,
+      "Time": 20,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 4,
+      "Name": "Drop Loaded",
+      "Active": true,
+      "Time": 20,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 5,
+      "Name": "Load",
+      "Active": true,
+      "Time": 90,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 6,
+      "Name": "Unload",
+      "Active": true,
+      "Time": 90,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 7,
+      "Name": "Chassis Swap",
+      "Active": true,
+      "Time": 15,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 8,
+      "Name": "End Of Day",
+      "Active": true,
+      "Time": 15,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2018-12-16T19:43:17.14"
+    },
+    {
+      "DrayingActionId": 9,
+      "Name": "Start Day",
+      "Active": true,
+      "Time": 15,
+      "ModifiedBy": "seralma",
+      "ModifiedOn": "2019-08-08T14:34:14.2833333"
+    }
+  ],
+  "message": ""
+}

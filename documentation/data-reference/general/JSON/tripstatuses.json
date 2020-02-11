@@ -1,0 +1,48 @@
+{
+  "status": true,
+  "data": [
+    {
+      "TripStatusId": 1,
+      "Name": "Cancel",
+      "Order": 1,
+      "Active": true
+    },
+    {
+      "TripStatusId": 2,
+      "Name": "Lost",
+      "Order": 2,
+      "Active": true
+    },
+    {
+      "TripStatusId": 3,
+      "Name": "To dispatch",
+      "Order": 3,
+      "Active": true
+    },
+    {
+      "TripStatusId": 4,
+      "Name": "Pre-dispatch",
+      "Order": 4,
+      "Active": true
+    },
+    {
+      "TripStatusId": 5,
+      "Name": "In movement",
+      "Order": 5,
+      "Active": true
+    },
+    {
+      "TripStatusId": 6,
+      "Name": "Completed",
+      "Order": 6,
+      "Active": true
+    },
+    {
+      "TripStatusId": 7,
+      "Name": "Reviewed",
+      "Order": 7,
+      "Active": true
+    }
+  ],
+  "message": ""
+}

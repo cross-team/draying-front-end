@@ -91,8 +91,22 @@ export const GET_ROUTES = gql`
             __typename
             appointmentDate
             appointmentTime
+            extraStop {
+              id
+              __typename
+              deliveryLocation {
+                id
+                __typename
+                nickName
+              }
+            }
             type {
               id
+              __typename
+              name
+              shortName
+            }
+            locationType {
               __typename
               name
             }

@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "data": [
+    {
+      "AppointmentTypeId": 1,
+      "Name": "Delivery",
+      "Active": true,
+      "ShortName": "DL"
+    },
+    {
+      "AppointmentTypeId": 2,
+      "Name": "PickUp",
+      "Active": true,
+      "ShortName": "PU"
+    }
+  ],
+  "message": ""
+}

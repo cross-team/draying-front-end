@@ -188,14 +188,16 @@ const AddStop = ({ setAddS, setAddL, draying }) => {
                 )}
               </Select>
             </FormControl>
-            <Collapse in={typeof selectedLocation === 'number'}>
-              <PriceFields
-                drayingId={draying.id}
-                locationId={selectedLocation}
-                tripActions={tripActions}
-                setTripActions={setTripActions}
-                handlePriceChange={handlePriceChange}
-              />
+            <Collapse in={selectedLocation !== 'create'}>
+              {selectedLocation !== 'create' && (
+                <PriceFields
+                  drayingId={draying.id}
+                  locationId={selectedLocation}
+                  tripActions={tripActions}
+                  setTripActions={setTripActions}
+                  handlePriceChange={handlePriceChange}
+                />
+              )}
             </Collapse>
           </>
         )}

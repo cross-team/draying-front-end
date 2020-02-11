@@ -1,0 +1,525 @@
+{
+  "status": true,
+  "data": {
+    "deliverylocations": [
+      {
+        "DeliveryLocationId": 51,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": "05:00:00",
+        "ReceivingHoursClose": "22:30:00",
+        "LocationNickNameId": 164,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 42,
+            "DeliveryLocationId": 0,
+            "Name": "asd",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 44,
+                "DeliveryContactId": 42,
+                "Email": "asdf@asdf.com",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 44,
+                "DeliveryContactId": 42,
+                "PhoneTypeId": 1,
+                "Phone": "23456",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 51,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 169,
+          "LocStreet": "112 Fontainebleau Blvd",
+          "LocSuite": "",
+          "LocCity": "Miami",
+          "LocZip": "33172",
+          "LocState": "FL",
+          "LocCountry": "US",
+          "GoogleAddress": "112 Fontainebleau Blvd, Miami, FL 33172, USA",
+          "Latitude": 25.7697564,
+          "Longitude": -80.339279499999975
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "Fontainebleau",
+        "LocationId": 0,
+        "LocStreet": "112 Fontainebleau Blvd",
+        "LocSuite": "",
+        "LocCity": "Miami",
+        "LocZip": "33172",
+        "LocState": "FL",
+        "LocCountry": "US",
+        "GoogleAddress": "112 Fontainebleau Blvd, Miami, FL 33172, USA",
+        "Latitude": 25.7697564,
+        "Longitude": -80.339279499999975
+      },
+      {
+        "DeliveryLocationId": 54,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": null,
+        "ReceivingHoursClose": null,
+        "LocationNickNameId": 179,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 45,
+            "DeliveryLocationId": 0,
+            "Name": "na",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 47,
+                "DeliveryContactId": 45,
+                "Email": "na",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 47,
+                "DeliveryContactId": 45,
+                "PhoneTypeId": 1,
+                "Phone": "na",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 54,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 186,
+          "LocStreet": "77365 380 Ave",
+          "LocSuite": "232",
+          "LocCity": "Lakefield",
+          "LocZip": "56150",
+          "LocState": "MN",
+          "LocCountry": "US",
+          "GoogleAddress": "77365 380 Ave, Lakefield, MN 56150, USA",
+          "Latitude": 43.6074399,
+          "Longitude": -95.315856
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "from rates",
+        "LocationId": 0,
+        "LocStreet": "77365 380 Ave",
+        "LocSuite": "232",
+        "LocCity": "Lakefield",
+        "LocZip": "56150",
+        "LocState": "MN",
+        "LocCountry": "US",
+        "GoogleAddress": "77365 380 Ave, Lakefield, MN 56150, USA",
+        "Latitude": 43.6074399,
+        "Longitude": -95.315856
+      },
+      {
+        "DeliveryLocationId": 52,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": "08:00:00",
+        "ReceivingHoursClose": "18:00:00",
+        "LocationNickNameId": 168,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 43,
+            "DeliveryLocationId": 0,
+            "Name": "Will Cheon",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 45,
+                "DeliveryContactId": 43,
+                "Email": "drayage@loadsmart.com",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 45,
+                "DeliveryContactId": 43,
+                "PhoneTypeId": 1,
+                "Phone": "929-259-5438",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 52,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 171,
+          "LocStreet": "459 W Broadway",
+          "LocSuite": "",
+          "LocCity": "New York",
+          "LocZip": "10012",
+          "LocState": "NY",
+          "LocCountry": "US",
+          "GoogleAddress": "459 W Broadway, New York, NY 10012, USA",
+          "Latitude": 40.7261324,
+          "Longitude": -74.000196599999981
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "Loadsmart",
+        "LocationId": 0,
+        "LocStreet": "459 W Broadway",
+        "LocSuite": "",
+        "LocCity": "New York",
+        "LocZip": "10012",
+        "LocState": "NY",
+        "LocCountry": "US",
+        "GoogleAddress": "459 W Broadway, New York, NY 10012, USA",
+        "Latitude": 40.7261324,
+        "Longitude": -74.000196599999981
+      },
+      {
+        "DeliveryLocationId": 53,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": "08:00:00",
+        "ReceivingHoursClose": "18:00:00",
+        "LocationNickNameId": 169,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 44,
+            "DeliveryLocationId": 0,
+            "Name": "Will Cheon",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 46,
+                "DeliveryContactId": 44,
+                "Email": "drayage@loadsmart.com",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 46,
+                "DeliveryContactId": 44,
+                "PhoneTypeId": 1,
+                "Phone": "929-259-5438",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 53,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 171,
+          "LocStreet": "459 W Broadway",
+          "LocSuite": "",
+          "LocCity": "New York",
+          "LocZip": "10012",
+          "LocState": "NY",
+          "LocCountry": "US",
+          "GoogleAddress": "459 W Broadway, New York, NY 10012, USA",
+          "Latitude": 40.7261324,
+          "Longitude": -74.000196599999981
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "Loadsmart",
+        "LocationId": 0,
+        "LocStreet": "459 W Broadway",
+        "LocSuite": "",
+        "LocCity": "New York",
+        "LocZip": "10012",
+        "LocState": "NY",
+        "LocCountry": "US",
+        "GoogleAddress": "459 W Broadway, New York, NY 10012, USA",
+        "Latitude": 40.7261324,
+        "Longitude": -74.000196599999981
+      },
+      {
+        "DeliveryLocationId": 46,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": "08:00:00",
+        "ReceivingHoursClose": "18:00:00",
+        "LocationNickNameId": 135,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 37,
+            "DeliveryLocationId": 0,
+            "Name": "n/a",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 39,
+                "DeliveryContactId": 37,
+                "Email": "seralma@gmail.com",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 39,
+                "DeliveryContactId": 37,
+                "PhoneTypeId": 1,
+                "Phone": "34567890",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 46,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 185,
+          "LocStreet": "9099 NW 5th Ln",
+          "LocSuite": "122",
+          "LocCity": "Miami",
+          "LocZip": "33126",
+          "LocState": "FL",
+          "LocCountry": "US",
+          "GoogleAddress": "9099 NW 5th Ln, Miami, FL 33126, USA",
+          "Latitude": 25.7750801,
+          "Longitude": -80.330045599999991
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "Test Address1",
+        "LocationId": 0,
+        "LocStreet": "9099 NW 5th Ln",
+        "LocSuite": "122",
+        "LocCity": "Miami",
+        "LocZip": "33126",
+        "LocState": "FL",
+        "LocCountry": "US",
+        "GoogleAddress": "9099 NW 5th Ln, Miami, FL 33126, USA",
+        "Latitude": 25.7750801,
+        "Longitude": -80.330045599999991
+      },
+      {
+        "DeliveryLocationId": 55,
+        "DeliveryPlaceId": null,
+        "IsDefault": false,
+        "Active": true,
+        "LocationTypeId": 1,
+        "LocationTypeName": "Default",
+        "ReceivingHoursOpen": null,
+        "ReceivingHoursClose": null,
+        "LocationNickNameId": 180,
+        "Partial": false,
+        "DeliveryContacts": [
+          {
+            "DeliveryContactId": 46,
+            "DeliveryLocationId": 0,
+            "Name": "test",
+            "Description": "",
+            "ContactTypeId": 1,
+            "ContactTypeName": null,
+            "ContactType": {
+              "ContactTypeId": 1,
+              "Name": "Ops / Logistics",
+              "Order": 0,
+              "Active": false
+            },
+            "DeliveryContactEmails": [
+              {
+                "DeliveryContactEmailId": 48,
+                "DeliveryContactId": 46,
+                "Email": "eeef@ee.com",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0
+              }
+            ],
+            "DeliveryContactPhones": [
+              {
+                "DeliveryContactPhoneId": 48,
+                "DeliveryContactId": 46,
+                "PhoneTypeId": 1,
+                "Phone": "11221",
+                "Active": true,
+                "CreatedOn": "0001-01-01T00:00:00",
+                "CreatedBy": 0,
+                "PhoneType": {
+                  "PhoneTypeId": 1,
+                  "Name": "Mobile"
+                }
+              }
+            ]
+          }
+        ],
+        "DeliveryPlace": null,
+        "Location": {
+          "LocationNickNameId": 55,
+          "Preferred": true,
+          "Partial": false,
+          "ContactName": null,
+          "ContactPhone": null,
+          "ModifiedBy": null,
+          "NickName": null,
+          "LocationId": 187,
+          "LocStreet": "2335 NW 107th Ave",
+          "LocSuite": "",
+          "LocCity": "Doral",
+          "LocZip": "33172",
+          "LocState": "FL",
+          "LocCountry": "US",
+          "GoogleAddress": "2335 NW 107th Ave, Doral, FL 33172, USA",
+          "Latitude": 25.7951102,
+          "Longitude": -80.364646999999991
+        },
+        "DeliveryOrders": [],
+        "DeliveryOrderDrayings": [],
+        "NickName": "test test",
+        "LocationId": 0,
+        "LocStreet": "2335 NW 107th Ave",
+        "LocSuite": "",
+        "LocCity": "Doral",
+        "LocZip": "33172",
+        "LocState": "FL",
+        "LocCountry": "US",
+        "GoogleAddress": "2335 NW 107th Ave, Doral, FL 33172, USA",
+        "Latitude": 25.7951102,
+        "Longitude": -80.364646999999991
+      }
+    ],
+    "count": 6
+  },
+  "message": ""
+}
