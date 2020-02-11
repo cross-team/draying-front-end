@@ -5,7 +5,6 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import {
   MuiPickersUtilsProvider,
@@ -20,12 +19,46 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const AddOrEdit = ({ draying, view }) => {
+const fieldReducer = (state, { type, field, value }) => {
+  switch (type) {
+    case 'updateField':
+      return {
+        ...state,
+        [field]: value,
+      }
+    default:
+      throw new Error(`Unhandled action: ${type}`)
+  }
+}
+
+const AddOrEdit = ({ draying, view, setArgument }) => {
   const classes = useStyles()
-  const [stop, setStop] = useState('')
-  const [type, setType] = useState('')
-  const [dateTime, setDateTime] = useState('')
-  const [note, setNote] = useState('')
+  const [fieldValues, dispatch] = React.useReducer(fieldReducer, {
+    stop: '',
+    type: '',
+    dateTime: new Date(),
+    note: '',
+  })
+
+  const updateField = field => event => {
+    const value = event.target.value
+    dispatch({ type: 'updateField', field, value })
+    if (view === 'add') {
+      setArgument({
+        drayingId: 0,
+        extraStopId: 0,
+        appointmentTypeId: 0,
+        appointmentLocationTypeId: 0,
+        appointmentDate: '',
+        appointmentTime: '',
+        note: '',
+      })
+    }
+  }
+
+  const updateDateTime = value => {
+    dispatch({ type: 'updateField', field: 'dateTime', value: value })
+  }
 
   console.log(draying.appointments)
 
@@ -59,16 +92,29 @@ const AddOrEdit = ({ draying, view }) => {
     return menuItems
   }
 
+  const queryData = [
+    { id: '1', name: 'Type 1' },
+    { id: '2', name: 'Type 2' },
+  ]
+
+  const types = queryData.map(type => (
+    <MenuItem value={+type.id}>{type.name}</MenuItem>
+  ))
+
   return (
     <>
       <Typography>{view === 'add' ? 'Add' : 'Edit'} Appointment</Typography>
       <FormControl className={classes.input} variant="outlined">
         <InputLabel>Stop</InputLabel>
-        <Select value={stop}>{stops()}</Select>
+        <Select value={fieldValues.stop} onChange={updateField('stop')}>
+          {stops()}
+        </Select>
       </FormControl>
       <FormControl className={classes.input} variant="outlined">
         <InputLabel>Appointment Type</InputLabel>
-        <Select value={type}></Select>
+        <Select value={fieldValues.type} onChange={updateField('type')}>
+          {types}
+        </Select>
       </FormControl>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDateTimePicker
@@ -76,15 +122,19 @@ const AddOrEdit = ({ draying, view }) => {
           inputVariant="outlined"
           format="yyyy/MM/dd HH:mm"
           label="Date & Time"
+          disablePast
           InputLabelProps={{ shrink: true }}
           className={classes.input}
+          value={fieldValues.dateTime}
+          onChange={updateDateTime}
         />
       </MuiPickersUtilsProvider>
       <TextField
         variant="outlined"
         multiline
         label="Note"
-        value={note}
+        value={fieldValues.note}
+        onChange={updateField('note')}
         className={classes.input}
       />
     </>
