@@ -1,7 +1,7 @@
-import React from "react"
-import { Helmet } from "react-helmet"
-import PropTypes from "prop-types"
-import { StaticQuery, graphql } from "gatsby"
+import React from 'react'
+import { Helmet } from 'react-helmet'
+import PropTypes from 'prop-types'
+import { StaticQuery, graphql } from 'gatsby'
 
 const SEO = ({ title, description, author, lang }) => (
   <StaticQuery
@@ -13,8 +13,8 @@ const SEO = ({ title, description, author, lang }) => (
           defaultDescription,
           defaultAuthor,
           defaultLang,
-        }
-      }
+        },
+      },
     }) => {
       const seo = {
         title: title || defaultTitle,
@@ -26,15 +26,17 @@ const SEO = ({ title, description, author, lang }) => (
         <>
           <Helmet title={seo.title}>
             <html lang={seo.lang} />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0, user-scalable=no"
+            />
             {seo.title && <meta property="og:title" content={seo.title} />}
             <meta name="description" content={seo.description} />
             {seo.description && (
               <meta property="og:description" content={seo.description} />
             )}
             <meta name="author" content={seo.author} />
-            {seo.author && (
-              <meta property="og:author" content={seo.author} />
-            )}
+            {seo.author && <meta property="og:author" content={seo.author} />}
           </Helmet>
         </>
       )

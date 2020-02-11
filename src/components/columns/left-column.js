@@ -4,21 +4,19 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    height: '100%'
-  },
   item: {
-    overflow: 'scroll',
+    height: '100%',
+    overflow: 'auto',
   },
   column: {
-    height: '100%',
+    minHeight: '100%',
     borderRight: '1px solid #d6d6d6',
-    borderLeft: '1px solid #d6d6d6'
-  }
+    borderLeft: '1px solid #d6d6d6',
+  },
 }))
 
 export const GET_COLUMN_STATE = gql`
-  query getColumnState {
+  query getLeftColumnState {
     columnState @client {
       leftHidden
     }
@@ -27,12 +25,22 @@ export const GET_COLUMN_STATE = gql`
 
 const LeftColumn = ({ children }) => {
   const classes = useStyles()
-  const { data: { columnState: { leftHidden } } } = useQuery(GET_COLUMN_STATE)
+  const {
+    data: {
+      columnState: { leftHidden },
+    },
+  } = useQuery(GET_COLUMN_STATE)
   return (
-    <Grid item xs={12} sm={4} hidden={leftHidden} className={classes.item}>
-      <Paper className={classes.column}>
-        {children}
-      </Paper>
+    <Grid
+      item
+      xs={12}
+      md={4}
+      lg={3}
+      xl={2}
+      hidden={leftHidden}
+      className={classes.item}
+    >
+      <Paper className={classes.column}>{children}</Paper>
     </Grid>
   )
 }

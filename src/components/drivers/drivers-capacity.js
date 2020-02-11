@@ -1,22 +1,41 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { Typography } from '@material-ui/core/'
-import Loading from '../loading'
+import Typography from '@material-ui/core/Typography'
+import makeStyles from '@material-ui/styles/makeStyles'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
 import CollapsedDriverCard from './collapsed-driver-card'
+import FindAndSort from './find-and-sort'
+import Skeleton from '@material-ui/lab/Skeleton'
+
+export const GET_DISPATCH_STATE = gql`
+  query getSelectedDate {
+    dispatchState @client {
+      selectedDate {
+        day
+        month
+        year
+      }
+    }
+  }
+`
 
 export const GET_DRIVERS = gql`
-  query allDriversCapacity($first: Int) {
-    drivers: driversCapacity(first: $first) {
+  query allDriversCapacity($first: Int, $date: String) {
+    drivers: driversCapacity(first: $first, date: $date) {
       nodes {
         id
         firstName
         lastName
-        capacity
-        pendingTripsCount
-        trip {
-          currentDestination {
-            estimatedScheduledCompletedAt
+        phone
+        capacityInfo {
+          pendingTripsCount
+          capacity
+          activeTripCapacity {
+            currentDestination {
+              estimatedScheduledCompletedAt
+            }
           }
         }
       }
@@ -24,27 +43,56 @@ export const GET_DRIVERS = gql`
   }
 `
 
+const useStyles = makeStyles(theme => ({
+  card: {
+    padding: theme.spacing(2),
+    width: '275px',
+  },
+}))
+
 export default function DriversCapacity() {
-  const { loading, error, data } = useQuery(GET_DRIVERS, { variables: { first: 25 } })
+  const classes = useStyles()
+  const {
+    data: {
+      dispatchState: { selectedDate },
+    },
+  } = useQuery(GET_DISPATCH_STATE)
+  const queryDate = `${selectedDate.month}/${selectedDate.day}/${selectedDate.year}`
+  const { loading, error, data } = useQuery(GET_DRIVERS, {
+    variables: { first: 25, date: queryDate },
+    pollInterval: 30000,
+    fetchPolicy: 'cache-and-network',
+  })
 
-  if ( loading ) {
-    return <Loading />
+  if (loading && !data) {
+    const driversSkeletonIds = [1, 2, 3, 4, 5, 6]
+    return driversSkeletonIds.map(key => (
+      <Card key={key}>
+        <Grid container spacing={1} className={classes.card}>
+          <Grid item>
+            <Skeleton variant="circle" width={40} height={40} />
+          </Grid>
+          <Grid item>
+            <Skeleton variant="text" width={180} />
+            <Skeleton variant="text" width={90} />
+          </Grid>
+        </Grid>
+      </Card>
+    ))
   }
 
-  if ( error ) {
-    console.log(error)
-    return (
-      <Typography color='danger'>
-        Error
-      </Typography>
-    )
+  if (error) {
+    return <Typography color="danger">Error</Typography>
   }
 
-  console.log(data.drivers)
+  const driverCards = data.drivers.nodes.map(driver => (
+    <CollapsedDriverCard key={driver.id} driver={driver} />
+  ))
 
-  const driverCards = data.drivers.nodes.map((driver) =>
-    <CollapsedDriverCard driver={driver} />
+  return (
+    <>
+      <FindAndSort />
+      {driverCards}
+    </>
   )
-
-  return driverCards
 }
