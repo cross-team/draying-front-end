@@ -15,6 +15,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Button from '@material-ui/core/Button'
 import Fab from '@material-ui/core/Fab'
 import Checkbox from '@material-ui/core/Checkbox'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
@@ -54,6 +60,12 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   fab: {
+    margin: theme.spacing(2),
+  },
+  table: {
+    width: '100%',
+  },
+  button: {
     margin: theme.spacing(2),
   },
 }))
@@ -278,6 +290,53 @@ const NewOrder = ({ open, setOpen }) => {
               <Button variant="contained">Clean</Button>
             </Grid>
           </Grid>
+        </Grid>
+        <Grid
+          className={classes.input}
+          container
+          alignItems="center"
+          justify="flex-start"
+        >
+          <Typography>Configured Containers</Typography>
+        </Grid>
+        <TableContainer>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Checkbox />
+                </TableCell>
+                <TableCell>Container ID</TableCell>
+                <TableCell>Size/Type</TableCell>
+                <TableCell>Terminal</TableCell>
+                <TableCell>Shipping Line</TableCell>
+                <TableCell>Last Free Day</TableCell>
+                <TableCell>Appointment</TableCell>
+                <TableCell>Port Status</TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+        </TableContainer>
+        <Grid
+          className={classes.input}
+          container
+          alignItems="center"
+          justify="flex-end"
+        >
+          <Button
+            className={classes.button}
+            variant="contained"
+            onClick={() => setOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+          >
+            Save
+          </Button>
         </Grid>
       </Paper>
     </Backdrop>
