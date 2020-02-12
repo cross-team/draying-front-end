@@ -21,4 +21,13 @@ jobs:
           yarn install
           yarn run lint
           yarn run build
+          yarn run test:e2e:ci
+  cypress-run:
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: cypress-io/github-action@v1
+        with:
+          browser: chrome
+          headless: true
           # yarn run test:e2e
