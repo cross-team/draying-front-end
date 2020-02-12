@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
       - name: 'run test server'
         run: yarn run build:serve
       - uses: cypress-io/github-action@v1
