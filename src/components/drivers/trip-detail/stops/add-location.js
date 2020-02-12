@@ -264,7 +264,7 @@ const AddLocation = ({ setAddL }) => {
     addDeliveryLocation,
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(ADD_LOCATION, {
-    refetchQueries: ['deliveryLocations'],
+    refetchQueries: ['editStopsDeliveryLocations', 'addStopDeliveryLocations'],
     onCompleted: () => {
       setAddL(false)
     },

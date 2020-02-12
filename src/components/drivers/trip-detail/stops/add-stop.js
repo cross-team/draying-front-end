@@ -22,7 +22,7 @@ import Loading from '../../../loading'
 import { Helmet } from 'react-helmet'
 
 export const GET_LOCATIONS = gql`
-  query deliveryLocations {
+  query addStopDeliveryLocations {
     deliveryLocations {
       __typename
       id

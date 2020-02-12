@@ -1,30 +1,15 @@
-import React, { useState } from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import React from 'react'
 import {
   makeStyles,
   Typography,
   AppBar,
   Toolbar,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Button,
 } from '@material-ui/core/'
 import DriverTripCard from '../driver-trip-card'
-import Loading from '../../loading'
 import EditTripMenu from '../../menus/edit-trip-menu'
-
-export const GET_ACTIONS = gql`
-  query drayingNextActions($drayingId: Int, $tripId: Int) {
-    drayingNextActions(drayingId: $drayingId, tripId: $tripId) {
-      tripActions {
-        name
-      }
-    }
-  }
-`
+import ChangeTripActionPopUp from '../../modals/change-trip-action/index'
+import AutoCompleteTripPopUp from '../../modals/auto-complete-trip'
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -37,9 +22,6 @@ const useStyles = makeStyles(theme => ({
   },
   details: {
     margin: theme.spacing(1),
-  },
-  formControl: {
-    width: '100%',
   },
   complete: {
     width: '100%',
@@ -57,51 +39,48 @@ const useStyles = makeStyles(theme => ({
 
 const TripPanel = ({ trip }) => {
   const classes = useStyles()
-  const [action, setAction] = useState('')
-
-  const { loading, error, data } = useQuery(GET_ACTIONS, {
-    variables: {
-      drayingId: parseInt(trip.draying.id),
-      tripId: parseInt(trip.id),
-    },
-  })
-
-  if (loading) {
-    return <Loading />
-  }
-
-  if (error) {
-    return <Typography color="danger">{`Error: ${error}`}</Typography>
-  }
-
-  const handleActionChange = event => {
-    setAction(event.target.value)
-  }
-
   return (
     <>
       <AppBar position="static">
         <Toolbar className={classes.header}>
           <Typography className={classes.headerText}>Trip</Typography>
-          <EditTripMenu drayingId={trip.draying.id} tripId={trip.id} />
+          <EditTripMenu
+            drayingId={trip.draying.id}
+            tripId={trip.id}
+            trip={trip}
+          />
         </Toolbar>
       </AppBar>
       <div className={classes.details}>
-        <FormControl className={classes.formControl}>
-          <InputLabel>Available Trip Actions</InputLabel>
-          <Select value={action} onChange={handleActionChange}>
-            {data.drayingNextActions.tripActions.map(action => (
-              <MenuItem key={action.name} value={action.name}>
-                {action.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
         <DriverTripCard trip={trip} />
-        {trip.status.id === '5' ? (
-          <Button className={classes.complete}>Complete Trip</Button>
-        ) : (
-          <Button className={classes.dispatch}>Dispatch Trip</Button>
+        {trip.status.id === '5' && (
+          <AutoCompleteTripPopUp
+            drayingId={trip.draying.id}
+            tripId={trip.id}
+            Component={Button}
+            className={classes.complete}
+            buttonText={'Complete Trip'}
+          />
+        )}
+        {trip.status.id === '5' && (
+          <ChangeTripActionPopUp
+            drayingId={trip.draying.id}
+            tripId={trip.id}
+            Component={Button}
+            className={classes.complete}
+            buttonText={'Complete Trip'}
+            isCompletable={true}
+          />
+        )}
+        {trip.status.id === '4' && (
+          <ChangeTripActionPopUp
+            tripId={trip.id}
+            drayingId={trip.draying.id}
+            Component={Button}
+            className={classes.dispatch}
+            buttonText={'Dispatch Trip'}
+            isCompletable={true}
+          />
         )}
       </div>
     </>

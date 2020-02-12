@@ -135,21 +135,117 @@ const DRAYING_INFO_QUERY = gql`
   }
 `
 
+const CREATE_TRIP_QUERY = gql`
+  query createTripInfo($drayingId: Int!) {
+    draying(drayingId: $drayingId) {
+      id
+      __typename
+      trips {
+        __typename
+        id
+        status {
+          id
+          __typename
+          name
+        }
+        action {
+          id
+          __typename
+        }
+        startLocationType {
+          __typename
+          name
+        }
+        endLocationType {
+          __typename
+          name
+        }
+      }
+      booking
+      container
+      deliveryLocation {
+        id
+        __typename
+      }
+      client {
+        id
+        __typename
+        companyName
+      }
+      order {
+        id
+        __typename
+      }
+      terminalLocation {
+        id
+        __typename
+      }
+      extraStops {
+        id
+        status {
+          id
+        }
+        deliveryLocation {
+          id
+        }
+      }
+    }
+    drayingNextActions(drayingId: $drayingId) {
+      tripActions {
+        id
+        __typename
+        name
+      }
+      startLocationTypes {
+        id
+        __typename
+        name
+      }
+      drayingTrip {
+        id
+        __typename
+        driver {
+          id
+        }
+        action {
+          id
+        }
+        status {
+          id
+        }
+        tripActionLocation {
+          id
+        }
+      }
+    }
+    drivers(first: 25, active: true) {
+      nodes {
+        id
+        __typename
+        firstName
+        lastName
+      }
+    }
+  }
+`
+
 export default function ChangeTripActionContent({
   handleClose,
   drayingId,
   tripId,
+  isCompletable,
 }) {
   const classes = useStyles()
   const [skipInMovement, setSkipInMovement] = useState(false)
-  const [selectedTripActionId, setSelectedTripActionId] = useState(0)
+  const [selectedTripActionId, setSelectedTripActionId] = useState('')
   const [
     selectedStartLocationTypeId,
     setSelectedStartLocationTypeId,
-  ] = useState(0)
-  const [selectedDriverId, setSelectedDriverId] = useState(0)
+  ] = useState('')
+  const [selectedDriverId, setSelectedDriverId] = useState('')
 
-  const { loading, error, data } = useQuery(DRAYING_INFO_QUERY, {
+  const query = tripId ? DRAYING_INFO_QUERY : CREATE_TRIP_QUERY
+  const { loading, error, data } = useQuery(query, {
     variables: { drayingId: +drayingId, ...(tripId && { tripId: +tripId }) },
     fetchPolicy: 'cache-and-network',
   })
@@ -189,12 +285,20 @@ export default function ChangeTripActionContent({
       //   }
       //   return res
       // }
+      if (
+        data.drayingNextActions.drayingTrip &&
+        data.drayingNextActions.drayingTrip.action.id !== '0'
+      ) {
+        setSelectedTripActionId(data.drayingNextActions.drayingTrip.action.id)
+      }
 
-      setSelectedTripActionId(data.drayingNextActions.drayingTrip.action.id)
       setSelectedStartLocationTypeId(
         data.drayingNextActions.startLocationTypes[0].id,
       )
-      setSelectedDriverId(data.currentTrip.driver.id)
+      if (data.currentTrip) {
+        setSelectedDriverId(data.currentTrip.driver.id)
+      }
+
       // setSkipInMovement(shouldSendMessageForTrip())
     }
   }, [
@@ -230,7 +334,7 @@ export default function ChangeTripActionContent({
         <TextField
           label="Trip Action"
           // className={classes.textField}
-          value={selectedTripActionId || ''}
+          value={selectedTripActionId}
           select
           onChange={e => setSelectedTripActionId(e.target.value)}
           margin="normal"
@@ -258,7 +362,7 @@ export default function ChangeTripActionContent({
         <TextField
           label="Driver"
           // className={classes.textField}
-          value={selectedDriverId || ''}
+          value={selectedDriverId}
           select
           onChange={e => setSelectedDriverId(e.target.value)}
           margin="normal"
@@ -276,28 +380,30 @@ export default function ChangeTripActionContent({
   }
 
   const StartLocationTypeDropdown = ({ startLocationTypes }) => {
-    if (startLocationTypes && startLocationTypes.length > 0) {
+    if (startLocationTypes && startLocationTypes.length > 1) {
       const menuItems = startLocationTypes.map(item => (
         <MenuItem key={item.id} value={item.id}>
           {item.name}
         </MenuItem>
       ))
       return (
-        <TextField
-          label="Start Location"
-          // className={classes.textField}
-          value={selectedStartLocationTypeId || ''}
-          select
-          onChange={e => setSelectedStartLocationTypeId(e.target.value)}
-          margin="normal"
-          variant="outlined"
-          fullWidth
-          InputLabelProps={{
-            shrink: true,
-          }}
-        >
-          {menuItems}
-        </TextField>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Start Location"
+            // className={classes.textField}
+            value={selectedStartLocationTypeId}
+            select
+            onChange={e => setSelectedStartLocationTypeId(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            {menuItems}
+          </TextField>
+        </Grid>
       )
     }
     return null
@@ -306,9 +412,7 @@ export default function ChangeTripActionContent({
   const DropDowns = () => {
     return (
       <Grid container>
-        <Grid item xs={12} sm={6}>
-          <StartLocationTypeDropdown startLocationTypes={startLocationTypes} />
-        </Grid>
+        <StartLocationTypeDropdown startLocationTypes={startLocationTypes} />
         <Grid item xs={12} sm={6}>
           <TripActionDropDown tripActions={drayingNextActions.tripActions} />
         </Grid>
@@ -333,8 +437,10 @@ export default function ChangeTripActionContent({
       ? getLastTrip(draying).startLocationType.name
       : getLastTrip(draying).endLocationType.name
 
+  const currentTripNotComplete = currentTrip && +currentTrip.action.id !== 14
+
   const displaySkipInMovement =
-    !drayingIsPreDispatched(draying) && +currentTrip.action.id !== 14
+    (!drayingIsPreDispatched(draying) && currentTripNotComplete) || !currentTrip
 
   return (
     <>
@@ -372,6 +478,7 @@ export default function ChangeTripActionContent({
           drayingTrip={drayingTrip}
           draying={draying}
           selectedDriverId={selectedDriverId}
+          isCompletable={isCompletable}
         />
       </CardContent>
     </>

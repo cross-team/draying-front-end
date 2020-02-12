@@ -19,13 +19,19 @@ export default function UpdateTripButton({
   handleClose,
   buttonText,
   tripInput,
+  setErrorMessage,
 }) {
   const [callUpdateTripAction, { data, loading, error }] = useMutation(
     UPDATE_TRIP_MUTATION,
     {
       variables: { trip: tripInput },
       refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
-      onCompleted: () => handleClose(),
+      onCompleted: ({ updateTrip }) => {
+        if (updateTrip.success) {
+          handleClose()
+        }
+        setErrorMessage(updateTrip.message)
+      },
     },
   )
 
@@ -34,11 +40,7 @@ export default function UpdateTripButton({
   }
 
   if (loading && !data) {
-    return (
-      <Typography>
-        <Loading />
-      </Typography>
-    )
+    return <Loading />
   }
 
   if (error) {

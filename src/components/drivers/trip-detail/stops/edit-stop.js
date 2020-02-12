@@ -18,7 +18,7 @@ import gql from 'graphql-tag'
 import Loading from '../../../loading'
 
 export const GET_LOCATIONS = gql`
-  query deliveryLocations {
+  query editStopsDeliveryLocations {
     deliveryLocations {
       id
       nickName

@@ -54,7 +54,7 @@ const CAN_UNDO_TRIP_QUERY = gql`
 `
 
 export const CLOSE_PANEL = gql`
-  mutation closePanel(
+  mutation undoTripClosePanel(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -96,7 +96,11 @@ export default function UndoTripActionContent({
   })
 
   useEffect(() => {
-    if (data) {
+    if (
+      data &&
+      data.drayingGetUndoTripActionMessage.tripMessages &&
+      data.drayingGetUndoTripActionMessage.tripMessages.length > 0
+    ) {
       setBody(data.drayingGetUndoTripActionMessage.tripMessages[0].body)
     }
   }, [data])
@@ -134,21 +138,11 @@ export default function UndoTripActionContent({
   })
 
   if (loading && !data) {
-    return (
-      <Typography>
-        <Loading />
-      </Typography>
-    )
+    return <Loading />
   }
 
   if (error) {
     return <Typography color="error">Error</Typography>
-  }
-  if (
-    data.drayingGetUndoTripActionMessage &&
-    !data.drayingGetUndoTripActionMessage.tripMessages
-  ) {
-    return null
   }
 
   if (saving && !undoResponse) {
@@ -217,7 +211,8 @@ export default function UndoTripActionContent({
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           Are you sure you want to undo the previous trip action?
         </Typography>
-        {data.drayingGetUndoTripActionMessage.tripMessages.length > 0 ? (
+        {data.drayingGetUndoTripActionMessage.tripMessages &&
+        data.drayingGetUndoTripActionMessage.tripMessages.length > 0 ? (
           data.drayingGetUndoTripActionMessage.tripMessages.map(message => (
             <SendMessagePanel key={message.id} message={message} />
           ))
