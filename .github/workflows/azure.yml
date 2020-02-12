@@ -17,10 +17,9 @@ jobs:
         with:
           node-version: '10.x'
       - name: 'run yarn'
-        run:
+        run: |
           yarn install
           yarn run build
-          # yarn run test:e2e:ci
       - name: Azure Static Website Deploy
         uses: bacongobbler/azure-blob-storage-upload@v1.0.0
         with:
