@@ -211,7 +211,8 @@ export default function UndoTripActionContent({
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           Are you sure you want to undo the previous trip action?
         </Typography>
-        {data.drayingGetUndoTripActionMessage.tripMessages.length > 0 ? (
+        {data.drayingGetUndoTripActionMessage.tripMessages &&
+        data.drayingGetUndoTripActionMessage.tripMessages.length > 0 ? (
           data.drayingGetUndoTripActionMessage.tripMessages.map(message => (
             <SendMessagePanel key={message.id} message={message} />
           ))

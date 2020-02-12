@@ -268,6 +268,9 @@ export default function SendMessageSection({
       drayingTripDestinations.tripActionLocations,
     )
 
+  if (showCompleteButton) {
+  }
+
   const SendMessagePanel = () => {
     return (
       <>

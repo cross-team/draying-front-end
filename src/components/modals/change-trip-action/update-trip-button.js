@@ -40,11 +40,7 @@ export default function UpdateTripButton({
   }
 
   if (loading && !data) {
-    return (
-      <Typography>
-        <Loading />
-      </Typography>
-    )
+    return <Loading />
   }
 
   if (error) {

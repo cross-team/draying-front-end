@@ -9,6 +9,7 @@ import {
 import DriverTripCard from '../driver-trip-card'
 import EditTripMenu from '../../menus/edit-trip-menu'
 import ChangeTripActionPopUp from '../../modals/change-trip-action/index'
+import AutoCompleteTripPopUp from '../../modals/auto-complete-trip'
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -52,6 +53,15 @@ const TripPanel = ({ trip }) => {
       </AppBar>
       <div className={classes.details}>
         <DriverTripCard trip={trip} />
+        {trip.status.id === '5' && (
+          <AutoCompleteTripPopUp
+            drayingId={trip.draying.id}
+            tripId={trip.id}
+            Component={Button}
+            className={classes.complete}
+            buttonText={'Complete Trip'}
+          />
+        )}
         {trip.status.id === '5' && (
           <ChangeTripActionPopUp
             drayingId={trip.draying.id}
