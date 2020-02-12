@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
-import {
-  makeStyles,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  IconButton,
-  TextField,
-} from '@material-ui/core/'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/pro-light-svg-icons/'
+import makeStyles from '@material-ui/styles/makeStyles'
+import TextField from '@material-ui/core/TextField'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faSearch } from '@fortawesome/pro-light-svg-icons/'
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +21,6 @@ const useStyles = makeStyles(theme => ({
 const FindAndSort = ({ driver }) => {
   const classes = useStyles()
   const [order, setOrder] = useState('capacity')
-  const [findMode, setFindMode] = useState(false)
   const [find, setFind] = useState('')
 
   const handleOrderChange = event => {
@@ -38,35 +31,29 @@ const FindAndSort = ({ driver }) => {
     setFind(event.target.value)
   }
 
-  const handleClick = () => {
-    setFindMode(!findMode)
-  }
-
   return (
-    <div className={classes.root}>
-      {findMode ? (
+    <Grid container>
+      <Grid item xs={6}>
         <TextField
           className={classes.formControl}
-          label="Find Driver"
+          label="Sort by:"
+          select
+          value={order}
+          onChange={handleOrderChange}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          className={classes.formControl}
+          label="Search Drivers"
           value={find}
           onChange={handleFindChange}
         />
-      ) : (
-        <FormControl className={classes.formControl}>
-          <InputLabel>Drivers</InputLabel>
-          <Select value={order} onChange={handleOrderChange}>
-            <MenuItem value="capacity">Today's Capacity</MenuItem>
-            <MenuItem value="a-z">Driver A-Z</MenuItem>
-            <MenuItem value="z-a">Driver Z-A</MenuItem>
-            <MenuItem value="time2finish">Time to Finish</MenuItem>
-            <MenuItem value="#legs">Number of Legs</MenuItem>
-          </Select>
-        </FormControl>
-      )}
-      <IconButton onClick={handleClick}>
+      </Grid>
+      {/* <IconButton onClick={handleClick}>
         <FontAwesomeIcon icon={faSearch} />
-      </IconButton>
-    </div>
+      </IconButton> */}
+    </Grid>
   )
 }
 
