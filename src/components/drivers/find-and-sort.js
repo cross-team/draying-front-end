@@ -1,58 +1,87 @@
-import React, { useState } from 'react'
-import makeStyles from '@material-ui/styles/makeStyles'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faSearch } from '@fortawesome/pro-light-svg-icons/'
+import { useApolloClient, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import Grid from '@material-ui/core/Grid'
+import MenuItem from '@material-ui/core/MenuItem'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  formControl: {
-    width: '100%',
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-  },
-}))
+export const GET_DISPATCH_STATE = gql`
+  query getFindAndSortDispatchState {
+    dispatchState @client {
+      selectedDate {
+        day
+        month
+        year
+      }
+      sortDriversBy
+      searchDrivers
+    }
+  }
+`
 
 const FindAndSort = ({ driver }) => {
-  const classes = useStyles()
-  const [order, setOrder] = useState('capacity')
-  const [find, setFind] = useState('')
+  const client = useApolloClient()
+
+  const { data } = useQuery(GET_DISPATCH_STATE)
 
   const handleOrderChange = event => {
-    setOrder(event.target.value)
+    client.writeData({
+      data: {
+        dispatchState: {
+          sortDriversBy: event.target.value,
+          __typename: 'DispatchState',
+        },
+      },
+    })
   }
 
   const handleFindChange = event => {
-    setFind(event.target.value)
+    client.writeData({
+      data: {
+        dispatchState: {
+          searchDrivers: event.target.value,
+          __typename: 'DispatchState',
+        },
+      },
+    })
   }
+  const orderByValues = [
+    { name: 'Name', value: 'NAME' },
+    { name: 'Capacity', value: 'CAPACITY' },
+  ]
+  const menuItems = orderByValues.map(({ name, value }) => (
+    <MenuItem key={name} value={value}>
+      {name}
+    </MenuItem>
+  ))
 
   return (
-    <Grid container>
+    <Grid container alignItems="flex-end">
       <Grid item xs={6}>
         <TextField
-          className={classes.formControl}
-          label="Sort by:"
+          label="Sort By:"
+          value={data.dispatchState.sortDriversBy}
           select
-          value={order}
           onChange={handleOrderChange}
-        />
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        >
+          {menuItems}
+        </TextField>
       </Grid>
       <Grid item xs={6}>
         <TextField
-          className={classes.formControl}
           label="Search Drivers"
-          value={find}
+          value={data.dispatchState.searchDrivers}
+          margin="normal"
+          variant="outlined"
           onChange={handleFindChange}
         />
       </Grid>
-      {/* <IconButton onClick={handleClick}>
-        <FontAwesomeIcon icon={faSearch} />
-      </IconButton> */}
     </Grid>
   )
 }

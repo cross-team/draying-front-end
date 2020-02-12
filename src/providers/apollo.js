@@ -52,6 +52,8 @@ cache.writeData({
         month: today.getMonth() + 1,
         year: today.getFullYear(),
       },
+      searchDrivers: '',
+      sortDriversBy: 'NAME',
     },
     columnState: {
       __typename: 'ColumnState',
