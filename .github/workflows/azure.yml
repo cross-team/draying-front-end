@@ -20,10 +20,18 @@ jobs:
         run: |
           yarn install
           yarn run build
-          yarn run test:e2e:ci
+          # yarn run test:e2e:ci
       - name: Azure Static Website Deploy
         uses: bacongobbler/azure-blob-storage-upload@v1.0.0
         with:
           source_dir: ./public
           container_name: $web
           connection_string: ${{ secrets.ConnectionString }}
+  cypress-run:
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: cypress-io/github-action@v1
+        with:
+          browser: chrome
+          headless: true
