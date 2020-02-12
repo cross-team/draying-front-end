@@ -19,6 +19,8 @@ export const typeDefs = gql`
       selectedTrip: SelectedTripInput
       selectedDriver: SelectedDriverInput
       selectedDate: DateInput
+      searchDrivers: String
+      sortDriversBy: String
     ): DispatchState!
   }
 
@@ -32,6 +34,8 @@ export const typeDefs = gql`
     selectedTrip: SelectedTrip!
     selectedDriver: SelectedDriver!
     selectedDate: Date!
+    searchDrivers: String
+    sortDriversBy: String
   }
 
   type SelectedTrip {

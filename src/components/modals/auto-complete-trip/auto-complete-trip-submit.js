@@ -20,7 +20,7 @@ const UPDATE_TRIP_MUTATION = gql`
 `
 
 const GET_NEXT_DESTINATIONS = gql`
-  query getNextDestination(
+  query autoCompletGetNextDestination(
     $drayingId: Int!
     $tripActionId: Int!
     $startLocationTypeId: Int!
