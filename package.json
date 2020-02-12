@@ -18,8 +18,7 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "test:e2e": "start-server-and-test build:serve http://localhost:8000 cy:open",
-    "test:e2e:ci": "start-server-and-test build:serve http://localhost:8000 cy:run",
-    "start:test-server": "start-server-and-test build:serve http://localhost:8000"
+    "test:e2e:ci": "start-server-and-test build:serve http://localhost:8000 cy:run"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
