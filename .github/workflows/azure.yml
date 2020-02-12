@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '10.x'
       - name: 'run yarn'
-        run: |
+        run:
           yarn install
           yarn run build
           # yarn run test:e2e:ci
@@ -32,6 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: cypress-io/github-action@v1
+        run: yarn run start:test-server
         with:
           browser: chrome
           headless: true
