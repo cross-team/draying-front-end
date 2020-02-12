@@ -291,8 +291,6 @@ export default function AutoCompleteTripSubmit({
         <ChangeTripActionContent
           handleClose={handleClose}
           drayingId={drayingId}
-          tripId={drayingTrip.id}
-          isCompletable={true}
         />
       )}
     </>

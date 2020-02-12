@@ -21,6 +21,7 @@ import UpdateTripButton from './update-trip-button'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Loading from '../../loading'
+import CreateTripButton from './create-trip-button'
 // import CreateTripButton from './create-trip-button'
 
 const GET_NEXT_DESTINATIONS = gql`
@@ -374,10 +375,18 @@ export default function SendMessageSection({
               setErrorMessage={setErrorMessage}
             />
           )}
-          {showSaveButton && (
+          {showSaveButton && hasTripToUpdate && (
             <UpdateTripButton
               handleClose={handleClose}
-              buttonText={hasTripToUpdate ? 'Update' : 'Create'}
+              buttonText={'Update'}
+              tripInput={tripInput}
+              setErrorMessage={setErrorMessage}
+            />
+          )}
+          {showSaveButton && !hasTripToUpdate && (
+            <CreateTripButton
+              handleClose={handleClose}
+              buttonText={'Create'}
               tripInput={tripInput}
               setErrorMessage={setErrorMessage}
             />
