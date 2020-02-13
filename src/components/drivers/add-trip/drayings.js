@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Typography from '@material-ui/core/Typography'
 import Loading from '../../loading'
-import ContainerPanel from '../trip-detail/container-panel'
+import DrayingCard from './draying-card'
 
 export const GET_AVAILABLE_DRAYINGS = gql`
   query getAvailableDrayings(
@@ -147,7 +147,7 @@ const Drayings = ({ orderBy, searchBookings, currentLocationTypes }) => {
   return (
     <>
       {data.drayings.edges.map(edge => (
-        <ContainerPanel key={edge.cursor} draying={edge.draying} />
+        <DrayingCard key={edge.cursor} draying={edge.draying} />
       ))}
     </>
   )
