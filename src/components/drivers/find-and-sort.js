@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import { useApolloClient, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
+import debounce from 'lodash/debounce'
 
 export const GET_DISPATCH_STATE = gql`
   query getFindAndSortDispatchState {
@@ -19,9 +20,13 @@ export const GET_DISPATCH_STATE = gql`
   }
 `
 
+const handleFilter = debounce((val, callback) => {
+  callback(val)
+}, 250)
+
 const FindAndSort = ({ driver }) => {
   const client = useApolloClient()
-
+  const [searchDriversInput, setSearchDriversInput] = useState('')
   const { data } = useQuery(GET_DISPATCH_STATE)
 
   const handleOrderChange = event => {
@@ -35,16 +40,23 @@ const FindAndSort = ({ driver }) => {
     })
   }
 
-  const handleFindChange = event => {
+  const writeToCache = val => {
     client.writeData({
       data: {
         dispatchState: {
-          searchDrivers: event.target.value,
+          searchDrivers: val,
           __typename: 'DispatchState',
         },
       },
     })
   }
+
+  const handleFindChange = event => {
+    const val = event.target.value
+    setSearchDriversInput(val)
+    handleFilter(val, writeToCache)
+  }
+
   const orderByValues = [
     { name: 'Name', value: 'NAME' },
     { name: 'Capacity', value: 'CAPACITY' },
@@ -76,9 +88,10 @@ const FindAndSort = ({ driver }) => {
       <Grid item xs={6}>
         <TextField
           label="Search Drivers"
-          value={data.dispatchState.searchDrivers}
+          value={searchDriversInput}
           margin="normal"
           variant="outlined"
+          fullWidth
           onChange={handleFindChange}
         />
       </Grid>

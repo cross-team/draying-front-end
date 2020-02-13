@@ -289,7 +289,7 @@ export default function DriverTrips() {
                 {dayText}
               </Typography>
             </Grid>
-            <AddTripButton />
+            <AddTripButton addTripDate={dayText} />
           </Grid>
         </>
       )
@@ -308,7 +308,7 @@ export default function DriverTrips() {
                 {dayLabel(route.scheduledStartDateTime)}
               </Typography>
             </Grid>
-            <AddTripButton />
+            <AddTripButton addTripDate={route.scheduledStartDateTime} />
           </Grid>
           <Grid container spacing={1} direction="column">
             {route.trips.map(trip => (

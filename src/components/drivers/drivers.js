@@ -7,7 +7,8 @@ import TripDetail from './trip-detail/trip-detail'
 import Shell from '../columns/shell'
 import Grow from '@material-ui/core/Grow'
 import Grid from '@material-ui/core/Grid'
-
+import AddTrip from './add-trip'
+import Slide from '@material-ui/core/Slide'
 export const GET_DISPATCH_STATE = gql`
   query getSelectedDriverAndTrip {
     dispatchState @client {
@@ -17,6 +18,7 @@ export const GET_DISPATCH_STATE = gql`
       selectedTrip {
         id
       }
+      addTripOpen
     }
   }
 `
@@ -24,7 +26,7 @@ export const GET_DISPATCH_STATE = gql`
 export default function Drivers() {
   const {
     data: {
-      dispatchState: { selectedDriver, selectedTrip },
+      dispatchState: { selectedDriver, selectedTrip, addTripOpen },
     },
   } = useQuery(GET_DISPATCH_STATE)
   const showMiddleColumn = selectedDriver.id !== ''
@@ -38,10 +40,15 @@ export default function Drivers() {
   const showRightColumn = selectedTrip.id !== ''
   const right = (
     <>
-      <Grow in={showRightColumn}>
-        {}
-        <Grid>{showRightColumn && <TripDetail />}</Grid>
-      </Grow>
+      {!addTripOpen && showRightColumn ? (
+        <Grow in={showRightColumn}>
+          <Grid>{showRightColumn && <TripDetail />}</Grid>
+        </Grow>
+      ) : (
+        <Slide direction="left" in={showRightColumn}>
+          <Grid>{addTripOpen && <AddTrip />}</Grid>
+        </Slide>
+      )}
     </>
   )
 
