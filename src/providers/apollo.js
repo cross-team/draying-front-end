@@ -54,6 +54,8 @@ cache.writeData({
       },
       searchDrivers: '',
       sortDriversBy: 'NAME',
+      addTripOpen: false,
+      addTripDate: '',
     },
     columnState: {
       __typename: 'ColumnState',

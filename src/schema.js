@@ -36,6 +36,8 @@ export const typeDefs = gql`
     selectedDate: Date!
     searchDrivers: String
     sortDriversBy: String
+    addTripOpen: Boolean
+    addTripDate: String
   }
 
   type SelectedTrip {

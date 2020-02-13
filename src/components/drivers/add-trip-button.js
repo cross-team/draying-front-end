@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Fab from '@material-ui/core/Fab'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/pro-light-svg-icons'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -26,10 +26,22 @@ export const SET_COLUMN_STATE = gql`
     }
   }
 `
-const AddTripButton = () => {
+const AddTripButton = ({ addTripDate }) => {
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
   const theme = useTheme()
+  const client = useApolloClient()
   const isBigScreen = useMediaQuery(theme.breakpoints.up('sm'))
+  const handleOpenAddTrip = () => {
+    client.writeData({
+      data: {
+        dispatchState: {
+          addTripOpen: true,
+          addTripDate,
+          __typename: 'DispatchState',
+        },
+      },
+    })
+  }
   const handleAddTrip = () => {
     if (!isBigScreen) {
       setColumnState({
@@ -48,6 +60,7 @@ const AddTripButton = () => {
         },
       })
     }
+    handleOpenAddTrip()
   }
 
   return (
