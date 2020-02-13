@@ -1,0 +1,24 @@
+{
+  "status": true,
+  "data": [
+    {
+      "AppointmentLocationTypeId": 2,
+      "Name": "Client",
+      "Active": true,
+      "ShortName": "C"
+    },
+    {
+      "AppointmentLocationTypeId": 3,
+      "Name": "Return Terminal",
+      "Active": true,
+      "ShortName": "RT"
+    },
+    {
+      "AppointmentLocationTypeId": 1,
+      "Name": "Terminal",
+      "Active": true,
+      "ShortName": "T"
+    }
+  ],
+  "message": ""
+}

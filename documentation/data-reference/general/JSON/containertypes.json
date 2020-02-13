@@ -1,0 +1,54 @@
+{
+  "status": true,
+  "data": [
+    {
+      "ContainerTypeId": 1,
+      "Name": "Standard",
+      "ShortName": "ST",
+      "Order": 1
+    },
+    {
+      "ContainerTypeId": 2,
+      "Name": "High Cube",
+      "ShortName": "HC",
+      "Order": 2
+    },
+    {
+      "ContainerTypeId": 3,
+      "Name": "Reefer",
+      "ShortName": "RF",
+      "Order": 3
+    },
+    {
+      "ContainerTypeId": 4,
+      "Name": "Tank",
+      "ShortName": "TNK",
+      "Order": 4
+    },
+    {
+      "ContainerTypeId": 5,
+      "Name": "Flatrack",
+      "ShortName": "FLAT",
+      "Order": 5
+    },
+    {
+      "ContainerTypeId": 6,
+      "Name": "Open Top",
+      "ShortName": "OPEN",
+      "Order": 6
+    },
+    {
+      "ContainerTypeId": 7,
+      "Name": "FlatBed",
+      "ShortName": "FLB",
+      "Order": 7
+    },
+    {
+      "ContainerTypeId": 8,
+      "Name": "Non-Operating Reefers",
+      "ShortName": "NOR",
+      "Order": 8
+    }
+  ],
+  "message": ""
+}

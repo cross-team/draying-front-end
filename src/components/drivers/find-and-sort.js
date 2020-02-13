@@ -1,72 +1,101 @@
 import React, { useState } from 'react'
-import {
-  makeStyles,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  IconButton,
-  TextField,
-} from '@material-ui/core/'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/pro-light-svg-icons/'
+import TextField from '@material-ui/core/TextField'
+import { useApolloClient, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import Grid from '@material-ui/core/Grid'
+import MenuItem from '@material-ui/core/MenuItem'
+import debounce from 'lodash/debounce'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  formControl: {
-    width: '100%',
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-  },
-}))
+export const GET_DISPATCH_STATE = gql`
+  query getFindAndSortDispatchState {
+    dispatchState @client {
+      selectedDate {
+        day
+        month
+        year
+      }
+      sortDriversBy
+      searchDrivers
+    }
+  }
+`
+
+const handleFilter = debounce((val, callback) => {
+  callback(val)
+}, 250)
 
 const FindAndSort = ({ driver }) => {
-  const classes = useStyles()
-  const [order, setOrder] = useState('capacity')
-  const [findMode, setFindMode] = useState(false)
-  const [find, setFind] = useState('')
+  const client = useApolloClient()
+  const [searchDriversInput, setSearchDriversInput] = useState('')
+  const { data } = useQuery(GET_DISPATCH_STATE)
 
   const handleOrderChange = event => {
-    setOrder(event.target.value)
+    client.writeData({
+      data: {
+        dispatchState: {
+          sortDriversBy: event.target.value,
+          __typename: 'DispatchState',
+        },
+      },
+    })
+  }
+
+  const writeToCache = val => {
+    client.writeData({
+      data: {
+        dispatchState: {
+          searchDrivers: val,
+          __typename: 'DispatchState',
+        },
+      },
+    })
   }
 
   const handleFindChange = event => {
-    setFind(event.target.value)
+    const val = event.target.value
+    setSearchDriversInput(val)
+    handleFilter(val, writeToCache)
   }
 
-  const handleClick = () => {
-    setFindMode(!findMode)
-  }
+  const orderByValues = [
+    { name: 'Name', value: 'NAME' },
+    { name: 'Capacity', value: 'CAPACITY' },
+  ]
+  const menuItems = orderByValues.map(({ name, value }) => (
+    <MenuItem key={name} value={value}>
+      {name}
+    </MenuItem>
+  ))
 
   return (
-    <div className={classes.root}>
-      {findMode ? (
+    <Grid container alignItems="flex-end">
+      <Grid item xs={6}>
         <TextField
-          className={classes.formControl}
-          label="Find Driver"
-          value={find}
+          label="Sort By:"
+          value={data.dispatchState.sortDriversBy}
+          select
+          onChange={handleOrderChange}
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        >
+          {menuItems}
+        </TextField>
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          label="Search Drivers"
+          value={searchDriversInput}
+          margin="normal"
+          variant="outlined"
+          fullWidth
           onChange={handleFindChange}
         />
-      ) : (
-        <FormControl className={classes.formControl}>
-          <InputLabel>Drivers</InputLabel>
-          <Select value={order} onChange={handleOrderChange}>
-            <MenuItem value="capacity">Today's Capacity</MenuItem>
-            <MenuItem value="a-z">Driver A-Z</MenuItem>
-            <MenuItem value="z-a">Driver Z-A</MenuItem>
-            <MenuItem value="time2finish">Time to Finish</MenuItem>
-            <MenuItem value="#legs">Number of Legs</MenuItem>
-          </Select>
-        </FormControl>
-      )}
-      <IconButton onClick={handleClick}>
-        <FontAwesomeIcon icon={faSearch} />
-      </IconButton>
-    </div>
+      </Grid>
+    </Grid>
   )
 }
 

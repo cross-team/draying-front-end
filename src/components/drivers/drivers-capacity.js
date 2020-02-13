@@ -10,20 +10,32 @@ import FindAndSort from './find-and-sort'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export const GET_DISPATCH_STATE = gql`
-  query getDispatchState {
+  query getSelectedDate {
     dispatchState @client {
       selectedDate {
         day
         month
         year
       }
+      sortDriversBy
+      searchDrivers
     }
   }
 `
 
 export const GET_DRIVERS = gql`
-  query allDriversCapacity($first: Int, $date: String) {
-    drivers: driversCapacity(first: $first, date: $date) {
+  query allDriversCapacity(
+    $first: Int
+    $date: String
+    $driverName: String
+    $orderBy: OrderBy
+  ) {
+    drivers: driversCapacity(
+      first: $first
+      date: $date
+      driverName: $driverName
+      orderBy: $orderBy
+    ) {
       nodes {
         id
         firstName
@@ -54,12 +66,17 @@ export default function DriversCapacity() {
   const classes = useStyles()
   const {
     data: {
-      dispatchState: { selectedDate },
+      dispatchState: { selectedDate, sortDriversBy, searchDrivers },
     },
   } = useQuery(GET_DISPATCH_STATE)
   const queryDate = `${selectedDate.month}/${selectedDate.day}/${selectedDate.year}`
   const { loading, error, data } = useQuery(GET_DRIVERS, {
-    variables: { first: 25, date: queryDate },
+    variables: {
+      first: 25,
+      date: queryDate,
+      ...(searchDrivers !== '' && { driverName: searchDrivers }),
+      orderBy: sortDriversBy,
+    },
     pollInterval: 30000,
     fetchPolicy: 'cache-and-network',
   })

@@ -1,0 +1,22 @@
+{
+  "status": true,
+  "data": [
+    {
+      "ContainerSizeId": 1,
+      "Name": "20'"
+    },
+    {
+      "ContainerSizeId": 2,
+      "Name": "40'"
+    },
+    {
+      "ContainerSizeId": 3,
+      "Name": "45'"
+    },
+    {
+      "ContainerSizeId": 4,
+      "Name": "53'"
+    }
+  ],
+  "message": ""
+}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles, withWidth, Card, Typography } from '@material-ui/core/'
 import TripCard from './trip-card'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
@@ -38,11 +38,12 @@ const useStyles = makeStyles(theme => ({
   },
   tabText: {
     color: '#979797',
+    marginRight: theme.spacing(1),
   },
 }))
 
 export const SET_COLUMN_STATE = gql`
-  mutation setColumnState(
+  mutation showTripDetail(
     $hideLeft: Boolean
     $hideMiddle: Boolean
     $hideRight: Boolean
@@ -60,9 +61,11 @@ export const SET_COLUMN_STATE = gql`
 `
 
 export const SET_DISPATCH_STATE = gql`
-  mutation setDispatchState($selectedTrip: SelectedTrip) {
+  mutation setSelectedTrip($selectedTrip: SelectedTripInput) {
     setDispatchState(selectedTrip: $selectedTrip) @client {
-      selectedTrip
+      selectedTrip {
+        id
+      }
     }
   }
 `
@@ -71,7 +74,17 @@ const DriverTripCard = ({ trip, width }) => {
   const classes = useStyles()
   const [setDispatchState] = useMutation(SET_DISPATCH_STATE)
   const [setColumnState] = useMutation(SET_COLUMN_STATE)
-
+  const client = useApolloClient()
+  const closeAddTrip = event => {
+    client.writeData({
+      data: {
+        dispatchState: {
+          addTripOpen: false,
+          __typename: 'DispatchState',
+        },
+      },
+    })
+  }
   const handleClick = () => {
     setDispatchState({
       variables: {
@@ -97,6 +110,7 @@ const DriverTripCard = ({ trip, width }) => {
         },
       })
     }
+    closeAddTrip()
   }
 
   return (

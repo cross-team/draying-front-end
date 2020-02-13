@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import {
-  makeStyles,
-  Typography,
-  IconButton,
-  AppBar,
-  Toolbar,
-  Card,
-  Menu,
-  MenuItem,
-  Chip,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  CircularProgress,
-} from '@material-ui/core/'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import Card from '@material-ui/core/Card'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -23,14 +21,15 @@ import DateFnsUtils from '@date-io/date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCheck,
-  faArrowRight,
   faTimes,
-  faCircle,
   faEllipsisV,
 } from '@fortawesome/pro-light-svg-icons/'
-import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
+// import { faCircle as faCircleFull } from '@fortawesome/pro-solid-svg-icons/'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import format from 'date-fns/format'
+import formatISO from 'date-fns/formatISO'
+import Loading from '../../loading'
 
 export const UPDATE_DRAYING_FIELDS = gql`
   mutation updateDrayingFields(
@@ -51,35 +50,26 @@ export const UPDATE_DRAYING_FIELDS = gql`
 export const GET_DROPDOWN_OPTIONS = gql`
   query allDropdowns {
     containerSizes {
+      __typename
       id
       name
       size
     }
     containerTypes {
+      __typename
       id
       name
       shortName
     }
     deliveryLocations {
+      __typename
+      id
       nickName
     }
   }
 `
 
-const addZero = value => {
-  let newValue = value.toString()
-  if (newValue.length === 1) {
-    newValue = '0' + newValue
-  }
-  return newValue
-}
-
 const useStyles = makeStyles(theme => ({
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   headerText: {
     color: theme.palette.primary.contrastText,
   },
@@ -91,59 +81,59 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  cardRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  stopContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  headerIcons: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  appointment: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   margin: {
     margin: theme.spacing(1),
-  },
-  locationStatus: {
-    display: 'flex',
-    alignItems: 'center',
   },
   formControl: {
     width: '100%',
     margin: theme.spacing(1),
   },
-  editContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+  rightContainer: {
+    width: '36%',
+  },
+  priorityContainer: {
+    width: '100%',
+    backgroundColor: theme.palette.danger.light,
+    marginBottom: theme.spacing(1),
+  },
+  locationTypeContainer: {
+    width: '100%',
+    backgroundColor: '#f0f0f0',
+  },
+  tabText: {
+    color: '#979797',
+    marginRight: theme.spacing(1),
   },
 }))
 
 const ContainerPanel = ({ draying }) => {
   const classes = useStyles()
-  // const client = useApolloClient()
-  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS)
-  const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
-
   const [anchorEl, setAnchorEl] = useState(null)
   const [edit, setEdit] = useState(false)
   const [saving, setSaving] = useState(false)
 
+  const sizeLabel = React.useRef(null)
+  const typeLabel = React.useRef(null)
+  const [sizeWidth, setSizeWidth] = React.useState(0)
+  const [typeWidth, setTypeWidth] = React.useState(0)
+  React.useEffect(() => {
+    edit && setSizeWidth(sizeLabel.current.offsetWidth)
+    edit && setTypeWidth(typeLabel.current.offsetWidth)
+  }, [edit])
+
+  const [updateDrayingFields] = useMutation(UPDATE_DRAYING_FIELDS, {
+    refetchQueries: ['allDriversCapacity', 'allDriverRoutes', 'currentTrip'],
+    onCompleted: () => {
+      setSaving(false)
+      setEdit(false)
+    },
+    awaitRefetchQueries: true,
+  })
+  const { loading, data: dropdownData } = useQuery(GET_DROPDOWN_OPTIONS)
+
   const cutOffDateObject = draying.cutOffDate
     ? new Date(draying.cutOffDate)
     : new Date()
-  const cutOffDateString = `${addZero(
-    cutOffDateObject.getMonth() + 1,
-  )}/${addZero(cutOffDateObject.getMonth())}/${cutOffDateObject.getFullYear()}`
 
   const fieldReducer = (state, { type, field, value }) => {
     switch (type) {
@@ -156,9 +146,9 @@ const ContainerPanel = ({ draying }) => {
         return {
           booking: draying.booking,
           containerNum: draying.container,
-          cutOffDate: cutOffDateString,
-          size: draying.containerSize.name,
-          type: draying.containerType.name,
+          cutOffDate: format(cutOffDateObject, 'MM/dd/yyyy'),
+          size: draying.containerSize.id,
+          type: draying.containerType.id,
         }
       default:
         throw new Error(`Unhandled action: ${type}`)
@@ -168,63 +158,14 @@ const ContainerPanel = ({ draying }) => {
   const [fieldValues, dispatch] = React.useReducer(fieldReducer, {
     booking: draying.booking,
     containerNum: draying.container,
-    cutOffDate: cutOffDateString,
+    cutOffDate: format(cutOffDateObject, 'MM/dd/yyyy'),
     size: draying.containerSize.id,
     type: draying.containerType.id,
   })
   const update = (field, value) => dispatch({ type: 'update', field, value })
   const cancel = () => dispatch({ type: 'cancel' })
 
-  useEffect(() => {
-    update('booking', draying.booking)
-    update('containerNum', draying.container)
-    update('cutOffDate', cutOffDateString)
-    update('size', draying.containerSize.name)
-    update('type', draying.containerType.name)
-  }, [draying, cutOffDateString])
-
-  /*
-  const writeToCache = data => {
-    if (data && data.updateDrayingFields.success) {
-      client.writeFragment({
-        id: `${draying.id}`,
-        fragment: gql`
-          fragment currentDraying on Draying {
-            booking
-            container
-            containerSize {
-              id
-              name
-            }
-            containerType {
-              id
-              name
-            }
-          }
-        `,
-        data: {
-          booking: fieldValues.booking,
-          container: fieldValues.containerNum,
-          containerSize: {
-            id: fieldValues.size,
-            name: dropdownData.containerSizes[fieldValues.size - 1].name,
-            __typename: 'ContainerSize',
-          },
-          containerType: {
-            id: fieldValues.type,
-            name: dropdownData.containerTypes[fieldValues.type - 1].name,
-            __typename: 'ContainerType',
-          },
-          __typename: 'Draying',
-        },
-      })
-      setSaving(false)
-      setEdit(false)
-    }
-  }
-
-  useEffect(() => writeToCache(data), [data, writeToCache])
-  */
+  useEffect(() => cancel(), [draying])
 
   const handleSave = () => {
     setSaving(true)
@@ -232,10 +173,14 @@ const ContainerPanel = ({ draying }) => {
       variables: {
         drayingId: parseInt(draying.id),
         drayingFields: [
-          { field: 'booking', value: fieldValues.booking },
-          { field: 'container', value: fieldValues.containerNum },
-          { field: 'containerSize', value: fieldValues.size },
-          { field: 'containerType', value: fieldValues.type },
+          { field: 'Booking', value: fieldValues.booking },
+          { field: 'Container', value: fieldValues.containerNum },
+          { field: 'ContainerSizeId', value: fieldValues.size.toString() },
+          { field: 'ContainerTypeId', value: fieldValues.type.toString() },
+          {
+            field: 'CutOffDate',
+            value: formatISO(new Date(fieldValues.cutOffDate)),
+          },
         ],
       },
     })
@@ -243,6 +188,10 @@ const ContainerPanel = ({ draying }) => {
 
   const handleChange = field => event => {
     update(field, event.target.value)
+  }
+
+  const handleDateChange = date => {
+    update('cutOffDate', date)
   }
 
   const handleClick = event => {
@@ -267,7 +216,7 @@ const ContainerPanel = ({ draying }) => {
   const content = (
     <>
       <Card className={classes.card}>
-        <div className={classes.cardRow}>
+        <Grid container justify="space-between" alignItems="center">
           <div>
             <Typography>
               {draying.loadType.name === 'Export'
@@ -276,27 +225,41 @@ const ContainerPanel = ({ draying }) => {
             </Typography>
             <Typography variant="caption">{`${draying.containerSize.name}, ${draying.containerType.name}`}</Typography>
           </div>
-          <div>
-            <Typography>{draying.priority}</Typography>
-            <Typography>
-              {draying.deliveryLocation.locationType.name}
-            </Typography>
-          </div>
-        </div>
-        <div className={classes.cardRow}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              className={classes.priorityContainer}
+              justify="flex-end"
+            >
+              <Typography className={classes.tabText}>
+                {draying.priority}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              className={classes.locationTypeContainer}
+              justify="flex-end"
+            >
+              <Typography className={classes.tabText}>
+                {draying.deliveryLocation.locationType.name}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container justify="space-between" alignItems="center">
           <Typography>{draying.loadType.name}</Typography>
           <Typography>
-            {draying.cutOffDate && draying.cutOffDate.slice(0, 10)}
+            {cutOffDateObject && format(cutOffDateObject, 'MM/dd/yyyy')}
           </Typography>
           <Typography>{draying.portStatus.name}</Typography>
-        </div>
+        </Grid>
       </Card>
     </>
   )
 
   const contentEdit = (
     <>
-      <div className={classes.editContainer}>
+      <Grid container alignItems="center" direction="column">
         <TextField
           label="Container #"
           variant="outlined"
@@ -312,32 +275,42 @@ const ContainerPanel = ({ draying }) => {
           className={classes.formControl}
         />
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel>Size (Ft)</InputLabel>
-          <Select value={fieldValues.size} onChange={handleChange('size')}>
-            {!loading ? (
-              dropdownData &&
+          <InputLabel ref={sizeLabel}>Size (Ft)</InputLabel>
+          <Select
+            value={fieldValues.size}
+            onChange={handleChange('size')}
+            labelWidth={sizeWidth}
+          >
+            {!loading && dropdownData ? (
               dropdownData.containerSizes.map(size => (
                 <MenuItem key={size.id} value={size.id}>
                   {size.name}
                 </MenuItem>
               ))
             ) : (
-              <Typography>Loading...</Typography>
+              <Typography>
+                <Loading />
+              </Typography>
             )}
           </Select>
         </FormControl>
         <FormControl className={classes.formControl} variant="outlined">
-          <InputLabel>Type</InputLabel>
-          <Select value={fieldValues.type} onChange={handleChange('type')}>
-            {!loading ? (
-              dropdownData &&
+          <InputLabel ref={typeLabel}>Type</InputLabel>
+          <Select
+            value={parseInt(fieldValues.type)}
+            onChange={handleChange('type')}
+            labelWidth={typeWidth}
+          >
+            {!loading && dropdownData ? (
               dropdownData.containerTypes.map(type => (
-                <MenuItem key={type.id} value={type.id}>
+                <MenuItem key={type.id} value={parseInt(type.id)}>
                   {type.name}
                 </MenuItem>
               ))
             ) : (
-              <Typography>Loading...</Typography>
+              <Typography>
+                <Loading />.
+              </Typography>
             )}
           </Select>
         </FormControl>
@@ -345,14 +318,15 @@ const ContainerPanel = ({ draying }) => {
           <KeyboardDatePicker
             variant="inline"
             inputVariant="outlined"
-            format="dd/MM/yyyy"
+            format="MM/dd/yyyy"
             label="Cut Off Date"
             value={fieldValues.cutOffDate}
+            onChange={date => handleDateChange(date)}
             InputLabelProps={{ shrink: true }}
             className={classes.formControl}
           />
         </MuiPickersUtilsProvider>
-      </div>
+      </Grid>
     </>
   )
 
@@ -360,73 +334,50 @@ const ContainerPanel = ({ draying }) => {
     <>
       <AppBar position="static">
         <Toolbar className={classes.header}>
-          <Typography className={classes.headerText}>Container</Typography>
-          <div className={classes.headerIcons}>
-            {saving && <CircularProgress color="secondary" />}
-            {edit && !saving && (
-              <>
-                <IconButton onClick={handleSave}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faCheck}
-                  />
-                </IconButton>
-                <IconButton onClick={handleCancel}>
-                  <FontAwesomeIcon
-                    className={classes.headerText}
-                    icon={faTimes}
-                  />
-                </IconButton>
-              </>
-            )}
-            <IconButton onClick={handleClick}>
-              <FontAwesomeIcon
-                className={classes.headerText}
-                icon={faEllipsisV}
-              />
-            </IconButton>
-          </div>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleClose}>Add Appointment</MenuItem>
-            <MenuItem onClick={handleClose}>Add Stop</MenuItem>
-            <MenuItem onClick={handleClose}>Add Alert</MenuItem>
-            <MenuItem onClick={handleClose}>Add Cost</MenuItem>
-          </Menu>
+          <Grid container alignItems="center" justify="space-between">
+            <Typography className={classes.headerText}>Container</Typography>
+            <div>
+              {saving && <CircularProgress color="secondary" />}
+              {edit && !saving && (
+                <>
+                  <IconButton onClick={handleSave}>
+                    <FontAwesomeIcon
+                      className={classes.headerText}
+                      icon={faCheck}
+                    />
+                  </IconButton>
+                  <IconButton onClick={handleCancel}>
+                    <FontAwesomeIcon
+                      className={classes.headerText}
+                      icon={faTimes}
+                    />
+                  </IconButton>
+                </>
+              )}
+              <IconButton onClick={handleClick}>
+                <FontAwesomeIcon
+                  className={classes.headerText}
+                  icon={faEllipsisV}
+                />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                <MenuItem onClick={handleClose}>Add Appointment</MenuItem>
+                <MenuItem onClick={handleClose}>Add Stop</MenuItem>
+                <MenuItem onClick={handleClose}>Add Alert</MenuItem>
+                <MenuItem onClick={handleClose}>Add Cost</MenuItem>
+              </Menu>
+            </div>
+          </Grid>
         </Toolbar>
       </AppBar>
       <div className={classes.details}>
         {edit ? contentEdit : content}
-        <div className={classes.stopContainer}>
-          <Typography>
-            {draying.terminalLocation && draying.terminalLocation.nickName}
-          </Typography>
-          <div>
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>{draying.deliveryLocation.nickName}</Typography>
-            </div>
-            {draying.extraStops.map(stop => (
-              <div className={classes.stop}>
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className={classes.margin}
-                />
-                <Typography>{stop.deliveryLocation.nickName}</Typography>
-              </div>
-            ))}
-            <div className={classes.stop}>
-              <FontAwesomeIcon icon={faArrowRight} className={classes.margin} />
-              <Typography>
-                {draying.returnTerminal && draying.returnTerminal.nickName}
-              </Typography>
-            </div>
-          </div>
-        </div>
+        {/*
         <Typography>Appointments</Typography>
         {draying.appointments.map(appointment => (
           <div className={classes.appointment}>
@@ -478,6 +429,7 @@ const ContainerPanel = ({ draying }) => {
           )}
           <Typography>Completed</Typography>
         </div>
+          */}
       </div>
     </>
   )
