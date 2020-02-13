@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Chip from '@material-ui/core/Chip'
+import Box from '@material-ui/core/Box'
 import Drayings from './drayings'
 import debounce from 'lodash/debounce'
 
@@ -134,7 +135,7 @@ const AddTrip = ({ width }) => {
               }:`}</Typography>
             </Toolbar>
           </AppBar>
-          <Grid container spacing={2}>
+          <Grid container>
             <Grid item xs={6}>
               <TextField
                 label="Sort By:"
@@ -161,16 +162,15 @@ const AddTrip = ({ width }) => {
                 onChange={handleSearchChange}
               />
             </Grid>
-            <Grid container item xs={12} justify="space-evenly">
-              <Grid item>
+
+            <Box m={1} width="100%">
+              <Grid container item xs={12} justify="space-evenly" m={2}>
                 <Chip
                   label="All"
                   size="small"
                   onClick={handleChipClick(0)}
                   color={currentLocationTypes.length === 0 ? 'primary' : ''}
                 ></Chip>
-              </Grid>
-              <Grid item>
                 <Chip
                   label="To Dispatch"
                   size="small"
@@ -180,8 +180,6 @@ const AddTrip = ({ width }) => {
                     currentLocationTypes.indexOf(5) !== -1 ? 'primary' : ''
                   }
                 ></Chip>
-              </Grid>
-              <Grid item>
                 <Chip
                   label="Yard Before"
                   size="small"
@@ -191,8 +189,6 @@ const AddTrip = ({ width }) => {
                     currentLocationTypes.indexOf(6) !== -1 ? 'primary' : ''
                   }
                 ></Chip>
-              </Grid>
-              <Grid item>
                 <Chip
                   label="Client"
                   size="small"
@@ -202,8 +198,6 @@ const AddTrip = ({ width }) => {
                     currentLocationTypes.indexOf(7) !== -1 ? 'primary' : ''
                   }
                 ></Chip>
-              </Grid>
-              <Grid item>
                 <Chip
                   label="Yard After"
                   size="small"
@@ -214,7 +208,8 @@ const AddTrip = ({ width }) => {
                   }
                 ></Chip>
               </Grid>
-            </Grid>
+            </Box>
+
             <Grid item xs={12}>
               <Drayings
                 orderBy={orderBy}

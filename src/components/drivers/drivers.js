@@ -45,7 +45,7 @@ export default function Drivers() {
           <Grid>{showRightColumn && <TripDetail />}</Grid>
         </Grow>
       ) : (
-        <Slide direction="left" in={showRightColumn}>
+        <Slide direction="left" in={addTripOpen}>
           <Grid>{addTripOpen && <AddTrip />}</Grid>
         </Slide>
       )}
